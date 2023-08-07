@@ -1,8 +1,12 @@
 import React from 'react'
 
+import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+
 function SignUp() {
     return (
-        <div>SignUp</div>
+        <View>
+            <Text>signup ekranı</Text>
+        </View>
     )
 }
 

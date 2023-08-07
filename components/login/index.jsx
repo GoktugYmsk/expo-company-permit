@@ -1,26 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 function Login() {
+    const navigation = useNavigation();
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleClick = () => {
+        if (username === 'Göktuğ' && password === '1234') {
+            navigation.navigate('Menu');
+        } else {
+            console.log("Hatalı giriş!");
+        }
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Giriş Yap</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Kullanıcı Adı"
+                value={username}
+                onChangeText={setUsername}
             />
             <TextInput
                 style={styles.input}
                 placeholder="Şifre"
                 secureTextEntry={true}
+                value={password}
+                onChangeText={setPassword}
             />
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handleClick}>
                 <Text style={styles.buttonText}>Giriş Yap</Text>
             </TouchableOpacity>
             <Text>Hesabınız mı yok mu</Text>
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>kaydolun</Text>
+            <TouchableOpacity style={styles.button} onPress={handleClick}>
+                <Text style={styles.buttonText}>Kaydolun</Text>
             </TouchableOpacity>
             <StatusBar style="auto" />
         </View>
