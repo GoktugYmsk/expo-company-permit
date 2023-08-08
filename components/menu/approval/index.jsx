@@ -27,7 +27,7 @@ function Approval() {
     const handleApprovalClick = () => {
         const existingWorker = workerInfo?.find((existingWorker) => existingWorker.name === worker);
 
-        if (!existingWorker) {
+        if (!existingWorker && worker) {
             const newWorkerInfo = {
                 name: worker,
                 startDay: startDay,

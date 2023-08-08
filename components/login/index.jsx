@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { setManageName, setWorker } from '../configure';
+import { setManageName, setManager, setWorker } from '../configure';
 
 function Login() {
     const navigation = useNavigation();
@@ -13,14 +13,21 @@ function Login() {
 
     const dispatch = useDispatch()
 
+    const validWorkers = ['Ahmet', 'Ayşe', 'Tuğkan', 'Tolga', 'Ayla', 'Cemal', 'Cemil', 'Hasan', 'Berk', 'Göktuğkan'];
 
     const handleClick = () => {
-        if (username === 'Ahmet' && password === '1234') {
-            dispatch(setWorker(username))
-            navigation.navigate('Menu');
-        }
-        else if (username === 'Hakan' && password === '1234') {
-            dispatch(setManageName(username))
+        const isValidWorker = validWorkers.includes(username);
+
+        if (!isValidWorker) {
+            if (username === 'Hakan' && password === '123456') {
+                dispatch(setManageName(username));
+                navigation.navigate('Menu');
+            }
+
+        } else if (password === '1234') {
+            dispatch(setWorker(username));
+            dispatch(setManageName(''))
+            dispatch(setManager(''))
             navigation.navigate('Menu');
         }
         else {

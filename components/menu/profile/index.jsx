@@ -23,6 +23,7 @@ function Profile() {
 
     const managers = ['Hakan', 'Gökhan'];
 
+
     // useEffect(() => {
     //     dispatch(setManager(''))
     // }, [])

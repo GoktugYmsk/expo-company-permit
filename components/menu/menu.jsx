@@ -35,7 +35,7 @@ function Menu() {
             </TouchableOpacity>
             {
                 adminHakan &&
-                <TouchableOpacity style={styles.button} >
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('OffDuty')} >
                     <Text style={styles.buttonText}>İzinlilerim</Text>
                 </TouchableOpacity>
             }
