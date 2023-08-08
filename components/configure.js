@@ -7,7 +7,8 @@ const initialState = {
     endDay: null,
     manager: null,
     manageName: '',
-    worker: ''
+    worker: '',
+    workerInfo: [],
 
 }
 
@@ -36,11 +37,12 @@ export const configure = createSlice({
         setWorker: (state, action) => {
             state.worker = action.payload;
         },
-
-
+        setWorkerInfo: (state, action) => {
+            state.workerInfo = action.payload;
+        },
     }
 })
 
-export const { setPassengerAmount, setReason, setStartDay, setEndDay, setManager, setManageName, setWorker } = configure.actions
+export const { setPassengerAmount, setReason, setStartDay, setEndDay, setManager, setManageName, setWorker, setWorkerInfo } = configure.actions
 
 export default configure.reducer

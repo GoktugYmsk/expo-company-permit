@@ -1,16 +1,23 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useState } from 'react';
 
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
 
 function Menu() {
+    const [adminHakan, setAdminHakan] = useState(false);
 
-
-    const reason = useSelector((state) => state.userReason.reason)
-
+    const manageName = useSelector((state) => state.management.manageName);
 
     const navigation = useNavigation();
+
+
+    useEffect(() => {
+        if (manageName === 'Hakan') {
+            setAdminHakan(true);
+        }
+    }, [manageName]);
 
     return (
         <View style={styles.container}  >
@@ -26,13 +33,15 @@ function Menu() {
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('PerRequest')} >
                 <Text style={styles.buttonText}>İzin talebi</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} >
-                <Text style={styles.buttonText}>İzinlerim</Text>
-            </TouchableOpacity>
+            {
+                adminHakan &&
+                <TouchableOpacity style={styles.button} >
+                    <Text style={styles.buttonText}>İzinlilerim</Text>
+                </TouchableOpacity>
+            }
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Approval')} >
                 <Text style={styles.buttonText}>Onay Bekleyen İşlemler</Text>
             </TouchableOpacity>
-            <Text>{reason}</Text>
         </View >
     );
 }

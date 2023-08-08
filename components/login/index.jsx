@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setManageName, setWorker } from '../configure';
 
 function Login() {
     const navigation = useNavigation();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
 
     const dispatch = useDispatch()
 
+
     const handleClick = () => {
-        if (username === 'Pinsoft' && password === '1234') {
+        if (username === 'Ahmet' && password === '1234') {
             dispatch(setWorker(username))
             navigation.navigate('Menu');
         }

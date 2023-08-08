@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setManager } from '../../configure';
 
+
 function Profile() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const manager = useSelector((state) => state.management.manager)
-    const worker = useSelector((state) => state.workerInfo.worker)
+    const worker = useSelector((state) => state.workerInfoTotal.worker)
 
     const dispatch = useDispatch()
 
@@ -20,6 +22,10 @@ function Profile() {
     }
 
     const managers = ['Hakan', 'Gökhan'];
+
+    // useEffect(() => {
+    //     dispatch(setManager(''))
+    // }, [])
 
     return (
         <View>

@@ -9,6 +9,7 @@ function PermissionRequest() {
     const [selectedStartDate, setSelectedStartDate] = useState(null);
     const [selectedEndDate, setSelectedEndDate] = useState(null);
     const [error, setError] = useState('')
+    const [switchDeneme, setSwitchDeneme] = useState(false)
 
 
     const dispatch = useDispatch()
@@ -16,17 +17,15 @@ function PermissionRequest() {
 
     const manager = useSelector((state) => state.management.manager)
     const reason = useSelector((state) => state.userReason.reason)
-    const startDay = useSelector((state) => state.offDays.startDay)
-    const endDay = useSelector((state) => state.offDays.endDay)
+    // const startDay = useSelector((state) => state.offDays.startDay)
+    // const endDay = useSelector((state) => state.offDays.endDay)
 
     const handleStartDate = (e) => {
-        const updateStartDay = [...startDay, e]
-        dispatch(setStartDay(updateStartDay))
+        dispatch(setStartDay(e))
         setSelectedStartDate(e)
     }
     const handleEndDate = (e) => {
-        const updateEndDay = [...endDay, e]
-        dispatch(setEndDay(updateEndDay))
+        dispatch(setEndDay(e))
         setSelectedEndDate(e)
     }
 
@@ -47,6 +46,10 @@ function PermissionRequest() {
         }
     }
 
+    const handleswitch = () => {
+        setSwitchDeneme(true)
+    }
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <>
@@ -55,12 +58,17 @@ function PermissionRequest() {
                 }
                 <Text>İzin Nedeni</Text>
                 <TextInput style={styles.input} onChangeText={handleReasonChange} />
-                <Text>{reason}</Text>
                 <View style={styles.middleContent}>
                     <Text style={styles.inlineText}>Tek gün izin</Text>
                     <Text style={styles.inlineText}>/</Text>
-                    <Text style={styles.inlineText}>Çoklu gün izin</Text>
-                    <Text>Switch</Text>
+                    {
+                        switchDeneme &&
+                        <Text style={styles.inlineText}>Çoklu gün izin</Text>
+                    }
+
+                    <TouchableOpacity onPress={handleswitch} >
+                        <Text>Switch</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.altContent}>
                     <Text>İzin Tarihi Aralığı</Text>
