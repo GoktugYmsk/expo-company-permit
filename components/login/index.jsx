@@ -9,7 +9,7 @@ function Login() {
     const [password, setPassword] = useState('');
 
     const handleClick = () => {
-        if (username === 'Göktuğ' && password === '1234') {
+        if (username === 'Pinsoft' && password === '1234') {
             navigation.navigate('Menu');
         } else {
             console.log("Hatalı giriş!");
