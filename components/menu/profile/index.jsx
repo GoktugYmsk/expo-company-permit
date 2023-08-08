@@ -21,8 +21,7 @@ function Profile() {
         toggleMenu();
     }
 
-    const managers = ['Hakan', 'Gökhan'];
-
+    const managers = ['Bora', 'Gökhan', 'Aydın', 'Hakan']
 
     // useEffect(() => {
     //     dispatch(setManager(''))

@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    passengerAmount: {},
     reason: '',
     startDay: null,
     endDay: null,
@@ -16,9 +15,6 @@ export const configure = createSlice({
     name: 'control',
     initialState,
     reducers: {
-        setPassengerAmount: (state, action) => {
-            state.passengerAmount = action.payload;
-        },
         setReason: (state, action) => {
             state.reason = action.payload;
         },

@@ -12,6 +12,8 @@ function Menu() {
 
     const navigation = useNavigation();
 
+    const isAdmin = manageName !== '';
+
 
     useEffect(() => {
         if (manageName === 'Hakan') {
@@ -34,7 +36,7 @@ function Menu() {
                 <Text style={styles.buttonText}>İzin talebi</Text>
             </TouchableOpacity>
             {
-                adminHakan &&
+                isAdmin &&
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('OffDuty')} >
                     <Text style={styles.buttonText}>İzinlilerim</Text>
                 </TouchableOpacity>

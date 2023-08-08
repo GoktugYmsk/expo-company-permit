@@ -4,25 +4,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setWorkerInfo, setStartDay, setEndDay, setWorker } from '../../configure';
 
 function Approval() {
-    const [adminHakan, setAdminHakan] = useState(false);
     const manageName = useSelector((state) => state.management.manageName);
+    const worker = useSelector((state) => state.workerInfoTotal.worker);
+    const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
 
     const dispatch = useDispatch();
 
     const startDay = useSelector((state) => state.offDays.startDay);
     const endDay = useSelector((state) => state.offDays.endDay);
     const reason = useSelector((state) => state.userReason.reason);
-    const worker = useSelector((state) => state.workerInfoTotal.worker);
-    const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
 
-    useEffect(() => {
-        if (manageName === 'Hakan') {
-            setAdminHakan(true);
-        }
-        else {
-            setAdminHakan(false);
-        }
-    }, [manageName]);
+    const isAdmin = manageName !== '';
 
     const handleApprovalClick = () => {
         const existingWorker = workerInfo?.find((existingWorker) => existingWorker.name === worker);
@@ -32,10 +24,17 @@ function Approval() {
                 name: worker,
                 startDay: startDay,
                 endDay: endDay,
-                reason: reason
+                reason: reason,
+                manager: manageName,
             };
             dispatch(setWorkerInfo([...workerInfo, newWorkerInfo]));
+
         }
+
+        dispatch(setWorker(''))
+        dispatch(setStartDay(''))
+        dispatch(setEndDay(''))
+
     };
 
     const handleRejectClick = () => {
@@ -46,33 +45,21 @@ function Approval() {
 
     return (
         <View>
-            {adminHakan && (
+            {isAdmin && (
                 <View>
                     <Text>{worker}</Text>
                     <Text>{startDay}</Text>
                     <Text>{endDay}</Text>
-                    {/* {workerInfo &&
-                        <View>
-                            {workerInfo?.map((worker) => (
-                                <View key={worker.name}>
-                                    <Text>Adı: {worker.name}</Text>
-                                    <Text>Başlangıç Tarihi: {worker.startDay}</Text>
-                                    <Text>Bitiş Tarihi: {worker.endDay}</Text>
-                                    <Text>Sebep: {worker.reason}</Text>
-                                </View>
-                            ))}
-                        </View>
-                    } */}
                     <TouchableOpacity onPress={handleApprovalClick}>
                         <Text>Onayla</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleRejectClick}>
                         <Text>Reddet</Text>
                     </TouchableOpacity>
-
-
-
                 </View>
+            )}
+            {!isAdmin && (
+                <Text>İzin taleplerini onaylama yetkiniz yok.</Text>
             )}
         </View>
     );

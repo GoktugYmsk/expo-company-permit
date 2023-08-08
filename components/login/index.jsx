@@ -3,34 +3,36 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { setManageName, setManager, setWorker } from '../configure';
+import { setEndDay, setManageName, setManager, setReason, setStartDay, setWorker, setWorkerInfo } from '../configure';
+import { useEffect } from 'react';
 
 function Login() {
     const navigation = useNavigation();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
 
     const dispatch = useDispatch()
 
     const validWorkers = ['Ahmet', 'Ayşe', 'Tuğkan', 'Tolga', 'Ayla', 'Cemal', 'Cemil', 'Hasan', 'Berk', 'Göktuğkan'];
+    const validManagement = ['Bora', 'Gökhan', 'Aydın', 'Hakan']
 
     const handleClick = () => {
         const isValidWorker = validWorkers.includes(username);
+        const isValidManagement = validManagement.includes(username);
 
-        if (!isValidWorker) {
-            if (username === 'Hakan' && password === '123456') {
-                dispatch(setManageName(username));
+        if (isValidWorker) {
+            if (password === '1234') {
+                dispatch(setWorker(username));
+                dispatch(setManageName(''))
+                dispatch(setManager('-'))
                 navigation.navigate('Menu');
+            } else {
+                console.log("Hatalı şifre!");
             }
-
-        } else if (password === '1234') {
-            dispatch(setWorker(username));
-            dispatch(setManageName(''))
-            dispatch(setManager(''))
+        } else if (isValidManagement && password === '123456') {
+            dispatch(setManageName(username));
             navigation.navigate('Menu');
-        }
-        else {
+        } else {
             console.log("Hatalı giriş!");
         }
     };
@@ -38,6 +40,16 @@ function Login() {
     const handleClickSignup = () => {
         navigation.navigate('SignUp')
     }
+
+    // useEffect(() => {
+    //     dispatch(setReason(''))
+    //     dispatch(setStartDay(''))
+    //     dispatch(setEndDay(''))
+    //     dispatch(setManager(''))
+    //     dispatch(setManageName(''))
+    //     dispatch(setWorker(''))
+    //     dispatch(setWorkerInfo(''))
+    // }, [])
 
     return (
         <View style={styles.container}>

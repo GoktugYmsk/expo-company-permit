@@ -5,7 +5,7 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-nativ
 function MyRequest() {
     return (
         <View>
-            <Text>İzinlierim</Text>
+            <Text>İzinlerim</Text>
             <Text>Beklenen</Text>
             <Text>Aktif</Text>
         </View>
