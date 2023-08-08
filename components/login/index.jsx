@@ -2,16 +2,26 @@ import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { setManageName, setWorker } from '../configure';
 
 function Login() {
     const navigation = useNavigation();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const dispatch = useDispatch()
+
     const handleClick = () => {
         if (username === 'Pinsoft' && password === '1234') {
+            dispatch(setWorker(username))
             navigation.navigate('Menu');
-        } else {
+        }
+        else if (username === 'Hakan' && password === '1234') {
+            dispatch(setManageName(username))
+            navigation.navigate('Menu');
+        }
+        else {
             console.log("Hatalı giriş!");
         }
     };

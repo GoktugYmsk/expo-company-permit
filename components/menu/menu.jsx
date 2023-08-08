@@ -20,7 +20,7 @@ function Menu() {
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')} >
                 <Text style={styles.buttonText}>Anasayfa</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} >
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Profile')} >
                 <Text style={styles.buttonText}>Profil</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('PerRequest')} >
@@ -29,7 +29,7 @@ function Menu() {
             <TouchableOpacity style={styles.button} >
                 <Text style={styles.buttonText}>İzinlerim</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} >
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Approval')} >
                 <Text style={styles.buttonText}>Onay Bekleyen İşlemler</Text>
             </TouchableOpacity>
             <Text>{reason}</Text>

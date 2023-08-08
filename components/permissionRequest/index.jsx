@@ -1,52 +1,88 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useDispatch, useSelector } from 'react-redux';
-import { setReason } from '../configure';
+import { setReason, setStartDay, setEndDay } from '../configure';
 
 function PermissionRequest() {
     const [selectedStartDate, setSelectedStartDate] = useState(null);
     const [selectedEndDate, setSelectedEndDate] = useState(null);
+    const [error, setError] = useState('')
 
-    const reason = useSelector((state) => state.userReason.reason)
 
     const dispatch = useDispatch()
+    const navigation = useNavigation()
+
+    const manager = useSelector((state) => state.management.manager)
+    const reason = useSelector((state) => state.userReason.reason)
+    const startDay = useSelector((state) => state.offDays.startDay)
+    const endDay = useSelector((state) => state.offDays.endDay)
+
+    const handleStartDate = (e) => {
+        const updateStartDay = [...startDay, e]
+        dispatch(setStartDay(updateStartDay))
+        setSelectedStartDate(e)
+    }
+    const handleEndDate = (e) => {
+        const updateEndDay = [...endDay, e]
+        dispatch(setEndDay(updateEndDay))
+        setSelectedEndDate(e)
+    }
+
 
     const handleReasonChange = (e) => {
         dispatch(setReason(e))
     }
 
+    const handleSendRequest = () => {
+        if (manager && selectedStartDate && selectedEndDate) {
+            navigation.navigate('MyRequest')
+        }
+        else if (!manager) {
+            setError('Lütfen profile sayfasından yönetici seçiniz')
+        }
+        else {
+            console.log('Tarih bilgilerini kontrol ediniz')
+        }
+    }
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text>İzin Nedeni</Text>
-            <TextInput style={styles.input} onChangeText={handleReasonChange} />
-            <Text>{reason}</Text>
-            <View style={styles.middleContent}>
-                <Text style={styles.inlineText}>Tek gün izin</Text>
-                <Text style={styles.inlineText}>/</Text>
-                <Text style={styles.inlineText}>Çoklu gün izin</Text>
-                <Text>Switch</Text>
-            </View>
-            <View style={styles.altContent}>
-                <Text>İzin Tarihi Aralığı</Text>
-                <View style={styles.datePicker}>
-                    <Text>Başlangıç</Text>
-                    <Calendar
-                        onDayPress={(day) => setSelectedStartDate(day.dateString)}
-                        selected={selectedStartDate}
-                    />
+            <>
+                {error &&
+                    <Text>{error}</Text>
+                }
+                <Text>İzin Nedeni</Text>
+                <TextInput style={styles.input} onChangeText={handleReasonChange} />
+                <Text>{reason}</Text>
+                <View style={styles.middleContent}>
+                    <Text style={styles.inlineText}>Tek gün izin</Text>
+                    <Text style={styles.inlineText}>/</Text>
+                    <Text style={styles.inlineText}>Çoklu gün izin</Text>
+                    <Text>Switch</Text>
                 </View>
-                <View style={styles.datePicker}>
-                    <Text>Bitiş</Text>
-                    <Calendar
-                        onDayPress={(day) => setSelectedEndDate(day.dateString)}
-                        selected={selectedEndDate}
-                    />
+                <View style={styles.altContent}>
+                    <Text>İzin Tarihi Aralığı</Text>
+                    <View style={styles.datePicker}>
+                        <Text>Başlangıç</Text>
+                        <Calendar
+                            onDayPress={(day) => handleStartDate(day.dateString)}
+                            selected={selectedStartDate}
+                        />
+                    </View>
+                    <View style={styles.datePicker}>
+                        <Text>Bitiş</Text>
+                        <Calendar
+                            onDayPress={(day) => handleEndDate(day.dateString)}
+                            selected={selectedEndDate}
+                        />
+                    </View>
                 </View>
-            </View>
-            <TouchableOpacity style={styles.button}>
-                <Text>İzni Onaya gönder</Text>
-            </TouchableOpacity>
+                <TouchableOpacity onPress={handleSendRequest} style={styles.button}>
+                    <Text>İzni Onaya gönder</Text>
+                </TouchableOpacity>
+            </>
         </ScrollView>
     );
 }

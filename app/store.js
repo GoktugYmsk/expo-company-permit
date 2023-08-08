@@ -8,13 +8,15 @@ import configure from '../components/configure';
 
 const rootReducer = combineReducers({
     userReason: configure,
-    passAmount: configure,
+    offDays: configure,
+    management: configure,
+    workerInfo: configure,
 });
 
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ['passAmount',],
+    whitelist: ['userReason', 'offDays', 'workerInfo'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
