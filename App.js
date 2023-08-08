@@ -1,6 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
+// App.js
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { Provider } from 'react-redux';
+import { store } from './app/store';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Login from './components/login';
@@ -13,16 +14,16 @@ const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="Menu" component={Menu} />
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="PerRequest" component={PermissionRequest} />
-      </Stack.Navigator>
-      <StatusBar style="auto" />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen name="Menu" component={Menu} />
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="PerRequest" component={PermissionRequest} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
-

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 
@@ -7,8 +8,9 @@ const users = [
         name: 'Ahmet',
         date: '2023-08-16',
     },
-    // Diğer çalışanları da buraya ekleyebilirsiniz.
 ];
+
+
 
 function Home() {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -20,7 +22,6 @@ function Home() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>İzinlilerin Listesi</Text>
             <Calendar
                 current={selectedDate}
                 onDayPress={(day) => setSelectedDate(new Date(day.dateString))}
@@ -43,8 +44,9 @@ function Home() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flexStart',
         alignItems: 'center',
+        padding: 20,
     },
     title: {
         fontSize: 24,

@@ -2,8 +2,13 @@ import { useNavigation } from '@react-navigation/native';
 import React from 'react'
 
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { useSelector } from 'react-redux';
 
 function Menu() {
+
+
+    const reason = useSelector((state) => state.userReason.reason)
+
 
     const navigation = useNavigation();
 
@@ -27,6 +32,7 @@ function Menu() {
             <TouchableOpacity style={styles.button} >
                 <Text style={styles.buttonText}>Onay Bekleyen İşlemler</Text>
             </TouchableOpacity>
+            <Text>{reason}</Text>
         </View >
     );
 }
