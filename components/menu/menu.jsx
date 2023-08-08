@@ -9,13 +9,16 @@ function Menu() {
 
     return (
         <View style={styles.container}  >
+            <Text style={styles.header}>
+                Pinsoft İzinlerim
+            </Text>
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')} >
                 <Text style={styles.buttonText}>Anasayfa</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} >
                 <Text style={styles.buttonText}>Profil</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} >
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('PerRequest')} >
                 <Text style={styles.buttonText}>İzin talebi</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} >
@@ -30,9 +33,14 @@ function Menu() {
 const styles = StyleSheet.create({
     container: {
         display: 'flex',
-        backgroundColor: 'green',
+        backgroundColor: 'blue',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
+        height: '100%',
+        padding: 20
+    },
+    header: {
+        fontSize: 20
     },
     button: {
         backgroundColor: 'red',

@@ -16,6 +16,10 @@ function Login() {
         }
     };
 
+    const handleClickSignup = () => {
+        navigation.navigate('SignUp')
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Giriş Yap</Text>
@@ -36,7 +40,7 @@ function Login() {
                 <Text style={styles.buttonText}>Giriş Yap</Text>
             </TouchableOpacity>
             <Text>Hesabınız mı yok mu</Text>
-            <TouchableOpacity style={styles.button} onPress={handleClick}>
+            <TouchableOpacity style={styles.button} onPress={handleClickSignup}>
                 <Text style={styles.buttonText}>Kaydolun</Text>
             </TouchableOpacity>
             <StatusBar style="auto" />
