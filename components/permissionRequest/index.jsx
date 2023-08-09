@@ -16,7 +16,7 @@ function PermissionRequest() {
     const navigation = useNavigation()
 
     const manager = useSelector((state) => state.management.manager)
-    const reason = useSelector((state) => state.userReason.reason)
+    // const reason = useSelector((state) => state.userReason.reason)
     // const startDay = useSelector((state) => state.offDays.startDay)
     // const endDay = useSelector((state) => state.offDays.endDay)
 

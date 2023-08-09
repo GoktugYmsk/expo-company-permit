@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ['userReason', 'offDays', 'workerInfoTotal'],
+    whitelist: ['userReason', 'management', 'offDays', 'workerInfoTotal'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

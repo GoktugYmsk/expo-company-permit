@@ -6,33 +6,62 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-nativ
 import { useSelector } from 'react-redux';
 
 function Menu() {
-    const [adminHakan, setAdminHakan] = useState(false);
-
-    const manageName = useSelector((state) => state.management.manageName);
-
     const navigation = useNavigation();
 
-    const isAdmin = manageName !== '';
+    const manageName = useSelector((state) => state.management.manageName);
+    const manager = useSelector((state) => state.management.manager)
 
-
-    useEffect(() => {
-        if (manageName === 'Hakan') {
-            setAdminHakan(true);
+    const handleMainClick = () => {
+        if (manager) {
+            navigation.navigate('Home')
         }
-    }, [manageName]);
+        else {
+            alert('Yönetici Seçimi yapınız')
+            setTimeout(() => {
+                navigation.navigate('Profile')
+            }, 3000);
+        }
+    }
+
+
+    const handleRequestClick = () => {
+        if (manager) {
+            navigation.navigate('PerRequest')
+        }
+        else {
+            alert('Yönetici Seçimi yapınız')
+            setTimeout(() => {
+                navigation.navigate('Profile')
+            }, 3000);
+        }
+    }
+
+    const handleApprovalClick = () => {
+        if (manager) {
+            navigation.navigate('Approval')
+        }
+        else {
+            alert('Yönetici Seçimi yapınız')
+            setTimeout(() => {
+                navigation.navigate('Profile')
+            }, 3000);
+        }
+    }
+
+    const isAdmin = manageName !== '';
 
     return (
         <View style={styles.container}  >
             <Text style={styles.header}>
                 Pinsoft İzinlerim
             </Text>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')} >
+            <TouchableOpacity style={styles.button} onPress={handleMainClick} >
                 <Text style={styles.buttonText}>Anasayfa</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Profile')} >
                 <Text style={styles.buttonText}>Profil</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('PerRequest')} >
+            <TouchableOpacity style={styles.button} onPress={handleRequestClick} >
                 <Text style={styles.buttonText}>İzin talebi</Text>
             </TouchableOpacity>
             {
@@ -41,7 +70,7 @@ function Menu() {
                     <Text style={styles.buttonText}>İzinlilerim</Text>
                 </TouchableOpacity>
             }
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Approval')} >
+            <TouchableOpacity style={styles.button} onPress={handleApprovalClick} >
                 <Text style={styles.buttonText}>Onay Bekleyen İşlemler</Text>
             </TouchableOpacity>
         </View >

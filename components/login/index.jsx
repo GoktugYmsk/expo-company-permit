@@ -24,7 +24,7 @@ function Login() {
             if (password === '1234') {
                 dispatch(setWorker(username));
                 dispatch(setManageName(''))
-                dispatch(setManager('-'))
+                dispatch(setManager(''))
                 navigation.navigate('Menu');
             } else {
                 console.log("Hatalı şifre!");

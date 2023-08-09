@@ -4,7 +4,7 @@ const initialState = {
     reason: '',
     startDay: null,
     endDay: null,
-    manager: null,
+    manager: '',
     manageName: '',
     worker: '',
     workerInfo: [],
