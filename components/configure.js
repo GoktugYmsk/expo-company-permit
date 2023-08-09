@@ -1,13 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    passengerAmount: {},
-    reason: '',
-    startDay: null,
-    endDay: null,
-    manager: null,
+    reason: [],
+    startDay: [],
+    endDay: [],
+    manager: '',
     manageName: '',
-    worker: ''
+    worker: [],
+    workerInfo: [],
+    workerPerReq: [],
 
 }
 
@@ -15,9 +16,6 @@ export const configure = createSlice({
     name: 'control',
     initialState,
     reducers: {
-        setPassengerAmount: (state, action) => {
-            state.passengerAmount = action.payload;
-        },
         setReason: (state, action) => {
             state.reason = action.payload;
         },
@@ -36,11 +34,15 @@ export const configure = createSlice({
         setWorker: (state, action) => {
             state.worker = action.payload;
         },
-
-
+        setWorkerInfo: (state, action) => {
+            state.workerInfo = action.payload;
+        },
+        setWorkerPerReq: (state, action) => {
+            state.workerPerReq = action.payload;
+        },
     }
 })
 
-export const { setPassengerAmount, setReason, setStartDay, setEndDay, setManager, setManageName, setWorker } = configure.actions
+export const { setPassengerAmount, setReason, setStartDay, setEndDay, setManager, setManageName, setWorker, setWorkerInfo, setWorkerPerReq } = configure.actions
 
 export default configure.reducer
