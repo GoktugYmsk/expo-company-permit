@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,  TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setEndDay, setManageName, setManager, setReason, setStartDay, setWorker, setWorkerInfo, setWorkerPerReq } from '../configure';
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
-import { TextInput, Button , IconButton} from "@react-native-material/core";
+import { TextInput, Button, IconButton } from "@react-native-material/core";
 import { useEffect } from 'react';
 
 function Login() {
@@ -58,8 +58,8 @@ function Login() {
     return (
         <View style={styles.container} >
             <Text style={styles.title}>Giriş Yap</Text>
-            
-            <View style={{ flexDirection: 'row', alignItems: 'center',marginBottom: 20, padding: 0 , width: 240,}}>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, padding: 0, width: 240, }}>
                 <Icon name="account" size={25} color="gray" />
                 <TextInput
                     value={username}
@@ -67,23 +67,23 @@ function Login() {
                     variant="outlined" label="Kullanıcı Adı" style={{ width: 200, flex: 1, marginLeft: 5 }}
                 />
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center',marginBottom: 20, padding: 0 , width: 240,}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, padding: 0, width: 240, }}>
                 <Icon name="lock" size={25} color="gray" />
                 <TextInput
                     secureTextEntry={true}
                     value={password}
                     onChangeText={setPassword}
-                    variant="outlined" label="Şifre" style={{ width: 200, flex: 1, marginLeft: 5}}
+                    variant="outlined" label="Şifre" style={{ width: 200, flex: 1, marginLeft: 5 }}
                 />
             </View>
             <TouchableOpacity  >
-                <Button title="Giriş Yap" onPress={handleClick} uppercase={false} color="#ff6131" tintColor="white"/>
+                <Button title="Giriş Yap" onPress={handleClick} uppercase={false} color="#ff6131" tintColor="white" />
             </TouchableOpacity>
 
             <Text style={styles.titleDown}>Hesabınız mı yok mu ?</Text>
 
             <TouchableOpacity  >
-                <Button title="Kayıt Ol" variant="outlined" onPress={handleClickSignup} uppercase={false} color="#ff6131" tintColor="white"/>
+                <Button title="Kayıt Ol" variant="outlined" onPress={handleClickSignup} uppercase={false} color="#ff6131" tintColor="white" />
             </TouchableOpacity>
 
             <StatusBar style="auto" />
