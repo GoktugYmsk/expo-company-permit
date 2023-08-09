@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useDispatch, useSelector } from 'react-redux';
-import { setReason, setStartDay, setEndDay } from '../configure';
+import { setReason, setStartDay, setEndDay, setPermit, setAllPermits } from '../configure';
 
 function PermissionRequest() {
     const [selectedStartDate, setSelectedStartDate] = useState(null);
@@ -16,9 +16,15 @@ function PermissionRequest() {
     const navigation = useNavigation()
 
     const manager = useSelector((state) => state.management.manager)
-    // const reason = useSelector((state) => state.userReason.reason)
-    // const startDay = useSelector((state) => state.offDays.startDay)
-    // const endDay = useSelector((state) => state.offDays.endDay)
+    const reason = useSelector((state) => state.userReason.reason)
+    const startDay = useSelector((state) => state.offDays.startDay)
+    const endDay = useSelector((state) => state.offDays.endDay)
+    const workerName = useSelector(state => state.workerInfoTotal.workerInfo)
+    const permit = useSelector(state => state.permits.permit)
+    const allPermits = useSelector(state => state.permits.allPermits)
+
+    console.log(allPermits);
+    
 
     const handleStartDate = (e) => {
         dispatch(setStartDay(e))
@@ -37,6 +43,14 @@ function PermissionRequest() {
     const handleSendRequest = () => {
         if (manager && selectedStartDate && selectedEndDate) {
             navigation.navigate('MyRequest')
+            const permit = {
+                name : workerName , 
+                selectedManager : manager , 
+                startDay:selectedStartDate,
+                endDay:selectedEndDate,
+                reason:reason
+            }
+            dispatch(setAllPermits('Hello'))
         }
         else if (!manager) {
             setError('Lütfen profile sayfasından yönetici seçiniz')

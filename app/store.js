@@ -11,6 +11,7 @@ const rootReducer = combineReducers({
     offDays: configure,
     management: configure,
     workerInfoTotal: configure,
+    permits : configure
 });
 
 const persistConfig = {
