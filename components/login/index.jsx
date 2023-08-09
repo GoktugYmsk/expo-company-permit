@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -7,7 +7,6 @@ import { setEndDay, setManageName, setManager, setReason, setStartDay, setWorker
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 import { TextInput, Button, IconButton } from "@react-native-material/core";
-import { useEffect } from 'react';
 
 function Login() {
     const navigation = useNavigation();
