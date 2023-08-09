@@ -19,6 +19,7 @@ function PermissionRequest() {
     const manager = useSelector((state) => state.management.manager)
     const worker = useSelector((state) => state.workerInfoTotal.worker);
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+    const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
     // const reason = useSelector((state) => state.userReason.reason)
     // const startDay = useSelector((state) => state.offDays.startDay)
     // const endDay = useSelector((state) => state.offDays.endDay)
@@ -41,26 +42,49 @@ function PermissionRequest() {
 
     const handleSendRequest = () => {
         if (manager && selectedStartDate && selectedEndDate) {
+            if (workerInfo) {
+                const isNameInWorkerInfo = workerInfo.find(workerInfoItem => workerInfoItem.name === worker);
+                // const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.name === worker.name);
 
-            const newWorkerInfo = {
-                name: worker,
-                startDay: selectedStartDate,
-                endDay: selectedEndDate,
-                reason: sreason,
-                manager: manager,
-                accept: false,
-            };
+                if (isNameInWorkerInfo) {
+                    setError('Bu işçinin zaten bir izin isteği bulunmaktadır.');
+                }
+                else {
+                    const newWorkerInfo = {
+                        name: worker,
+                        startDay: selectedStartDate,
+                        endDay: selectedEndDate,
+                        reason: sreason,
+                        manager: manager,
+                        accept: false,
 
-            dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
-            navigation.navigate('MyRequest')
+                    };
+                    dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+                    navigation.navigate('MyRequest');
+                }
+            }
+            else {
+                const newWorkerInfo = {
+                    name: worker,
+                    startDay: selectedStartDate,
+                    endDay: selectedEndDate,
+                    reason: sreason,
+                    manager: manager,
+                    accept: false,
+
+                };
+
+                dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+                navigation.navigate('MyRequest');
+            }
+        } else if (!manager) {
+            setError('Lütfen profil sayfasından yönetici seçiniz.');
+        } else {
+            console.log('Tarih bilgilerini kontrol ediniz.');
         }
-        else if (!manager) {
-            setError('Lütfen profile sayfasından yönetici seçiniz')
-        }
-        else {
-            console.log('Tarih bilgilerini kontrol ediniz')
-        }
-    }
+    };
+
+
 
     const handleswitch = () => {
         setSwitchDeneme(true)
@@ -72,6 +96,7 @@ function PermissionRequest() {
                 {error &&
                     <Text>{error}</Text>
                 }
+                <Text>{worker}</Text>
                 <Text>İzin Nedeni</Text>
                 <TextInput style={styles.input} onChangeText={handleReasonChange} />
                 <View style={styles.middleContent}>

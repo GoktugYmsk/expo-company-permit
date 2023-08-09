@@ -19,18 +19,25 @@ function Approval() {
     const handleApprovalClick = (index) => {
         if (isAdmin && index >= 0 && index < workerPerReq.length) {
             const approvedWorker = workerPerReq[index];
-            const newWorkerInfo = {
-                name: approvedWorker.name,
-                startDay: approvedWorker.startDay,
-                endDay: approvedWorker.endDay,
-                reason: approvedWorker.reason,
-                manager: approvedWorker.manager,
-                accept: approvedWorker.accept == true,
-            };
-            dispatch(setWorkerInfo([...workerInfo, newWorkerInfo]));
-            dispatch(setWorkerPerReq(workerPerReq.filter((_, i) => i !== index)));
+
+            const isWorkerAlreadyExists = workerInfo?.includes(worker => worker.name === approvedWorker.name);
+
+            if (!isWorkerAlreadyExists) {
+                const newWorkerInfo = {
+                    name: approvedWorker.name,
+                    startDay: approvedWorker.startDay,
+                    endDay: approvedWorker.endDay,
+                    reason: approvedWorker.reason,
+                    manager: approvedWorker.manager,
+                    accept: approvedWorker.accept === true,
+                };
+                dispatch(setWorkerInfo([...workerInfo, newWorkerInfo]));
+                dispatch(setWorkerPerReq(workerPerReq.filter((_, i) => i !== index)));
+            }
+
         }
     };
+
 
     const handleRejectClick = (index) => {
         if (isAdmin && index >= 0 && index < workerPerReq.length) {
