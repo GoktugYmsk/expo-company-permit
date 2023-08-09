@@ -72,25 +72,39 @@ function Menu() {
                     <Text style={styles.buttonText}>Profil</Text>
                     <Icon name="arrow-right" size={23} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button}  onPress={handleRequestClick} >
+                <TouchableOpacity style={styles.button} onPress={handleRequestClick} >
                     <Icon name="thumb-up" size={30} />
                     <Text style={styles.buttonText}>İzin talebi</Text>
                     <Icon name="arrow-right" size={23} />
                 </TouchableOpacity>
+<<<<<<< HEAD
+    {
+        isAdmin &&
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('OffDuty')} >
+                <Icon name="glasses" size={30} />
+                <Text style={styles.buttonText}>İzinlilerim</Text>
+                <Icon name="arrow-right" size={23} />
+            </TouchableOpacity>
+    }
+    <TouchableOpacity style={styles.button} onPress={ } >
+=======
+
                 {
-                isAdmin &&
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('OffDuty')} >
-                        <Icon name="glasses" size={30} />
-                        <Text style={styles.buttonText}>İzinlilerim</Text>
-                        <Icon name="arrow-right" size={23} />
-                    </TouchableOpacity>
-                }
-                <TouchableOpacity style={styles.button} onPress={handleApprovalClick} >
-                    <Icon name="progress-clock" size={30} />
-                    <Text style={styles.buttonText}>Onay Bekleyen İşlemler</Text>
-                    <Icon name="arrow-right" size={23} />
-                </TouchableOpacity>
-            </View>
+            isAdmin &&
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('OffDuty')}>
+                <Icon name="sunglasses" size={30} />
+                <Text style={styles.buttonText}>İzinlerim</Text>
+                <Icon name="arrow-right" size={23} />
+            </TouchableOpacity>
+        }
+
+        <TouchableOpacity style={styles.button} onPress={handleApprovalClick} >
+>>>>>>> 2efa53b36bc2d7e36b2a088d6d95890109ae6253
+            <Icon name="progress-clock" size={30} />
+            <Text style={styles.buttonText}>Onay Bekleyen İşlemler</Text>
+            <Icon name="arrow-right" size={23} />
+        </TouchableOpacity>
+    </View>
         </View >
     );
 }
@@ -113,7 +127,7 @@ const styles = StyleSheet.create({
         padding: 10,
         textAlign: "center",
         fontWeight: "bold",
-        
+
     },
     button: {
         flexDirection: 'row',
@@ -121,10 +135,10 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         marginTop: 10,
-        alignItems:"center",
+        alignItems: "center",
         paddingLeft: 10,
         borderWidth: 1,
-        borderColor:'#c4c4c4',
+        borderColor: '#c4c4c4',
     },
     buttonText: {
         width: '80%',

@@ -1,9 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
+<<<<<<< HEAD
 import { StyleSheet, Text, TouchableOpacity, View ,Modal} from 'react-native';
 import { Calendar, DotMarking } from 'react-native-calendars';
 import { useSelector } from 'react-redux';
 
+=======
+import { StyleSheet, Text, View } from 'react-native';
+import { Calendar } from 'react-native-calendars';
+import { useSelector } from 'react-redux';
+>>>>>>> 2efa53b36bc2d7e36b2a088d6d95890109ae6253
 
 const users = [
     {
@@ -75,29 +81,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         marginBottom: 20,
-    },
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 22,
-    },
-    modalView: {
-        margin: 20,
-        backgroundColor: 'white',
-        borderRadius:20,
-        width: '90%',
-        padding: 15,
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-
     },
 });
 
