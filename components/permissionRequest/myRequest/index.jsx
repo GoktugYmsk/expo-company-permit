@@ -13,6 +13,7 @@ function MyRequest() {
                 <Text style={styles.title} >İzinlerim</Text>
             </View>
             <Text>Beklenen</Text>
+
             <Text>Aktif</Text>
         </View>
     )

@@ -22,7 +22,7 @@ function Login() {
 
         if (isValidWorker) {
             if (password === '1234') {
-                dispatch(setWorker(username));
+                dispatch(setWorker());
                 dispatch(setManageName(''))
                 dispatch(setManager(''))
                 navigation.navigate('Menu');
