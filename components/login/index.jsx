@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { setEndDay, setManageName, setManager, setReason, setStartDay, setWorker, setWorkerInfo } from '../configure';
+import { setEndDay, setManageName, setManager, setReason, setStartDay, setWorker, setWorkerInfo, setWorkerPerReq } from '../configure';
 import { useEffect } from 'react';
 
 function Login() {
@@ -11,9 +11,11 @@ function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+
+
     const dispatch = useDispatch()
 
-    const validWorkers = ['Ahmet', 'Ayşe', 'Tuğkan', 'Tolga', 'Ayla', 'Cemal', 'Cemil', 'Hasan', 'Berk', 'Göktuğkan'];
+    const validWorkers = ['Ahmet', 'Ayşe', 'Tuğkan', 'Tolga', 'Ayla', 'Cemal', 'Cemil', 'Hasan', 'Berk', 'Göktuğkan', 'İbrahim', 'Berkan'];
     const validManagement = ['Bora', 'Gökhan', 'Aydın', 'Hakan']
 
     const handleClick = () => {
@@ -22,7 +24,7 @@ function Login() {
 
         if (isValidWorker) {
             if (password === '1234') {
-                dispatch(setWorker());
+                dispatch(setWorker(username));
                 dispatch(setManageName(''))
                 dispatch(setManager(''))
                 navigation.navigate('Menu');
@@ -49,6 +51,7 @@ function Login() {
     //     dispatch(setManageName(''))
     //     dispatch(setWorker(''))
     //     dispatch(setWorkerInfo(''))
+    //     dispatch(setWorkerPerReq(''))
     // }, [])
 
     return (
