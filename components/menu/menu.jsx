@@ -10,6 +10,7 @@ function Menu() {
 
     const manageName = useSelector((state) => state.management.manageName);
     const manager = useSelector((state) => state.management.manager)
+    const worker = useSelector((state) => state.workerInfoTotal.worker);
 
     const handleMainClick = () => {
         if (manager) {
@@ -23,7 +24,6 @@ function Menu() {
         }
     }
 
-
     const handleRequestClick = () => {
         if (manager) {
             navigation.navigate('PerRequest')
@@ -36,11 +36,15 @@ function Menu() {
         }
     }
 
+
     const handleApprovalClick = () => {
-        if (manager) {
+        if (manageName && worker) {
             navigation.navigate('Approval')
         }
-        else {
+        else if (!manageName && worker && manager) {
+            navigation.navigate('MyRequest')
+        }
+        else if (!manageName && worker && !manager) {
             alert('Yönetici Seçimi yapınız')
             setTimeout(() => {
                 navigation.navigate('Profile')

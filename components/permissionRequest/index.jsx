@@ -65,7 +65,6 @@ function PermissionRequest() {
                         switchDeneme &&
                         <Text style={styles.inlineText}>Çoklu gün izin</Text>
                     }
-
                     <TouchableOpacity onPress={handleswitch} >
                         <Text>Switch</Text>
                     </TouchableOpacity>

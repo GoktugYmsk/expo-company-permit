@@ -28,13 +28,11 @@ function Approval() {
                 manager: manageName,
             };
             dispatch(setWorkerInfo([...workerInfo, newWorkerInfo]));
-
         }
 
         dispatch(setWorker(''))
         dispatch(setStartDay(''))
         dispatch(setEndDay(''))
-
     };
 
     const handleRejectClick = () => {
@@ -50,12 +48,16 @@ function Approval() {
                     <Text>{worker}</Text>
                     <Text>{startDay}</Text>
                     <Text>{endDay}</Text>
-                    <TouchableOpacity onPress={handleApprovalClick}>
-                        <Text>Onayla</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleRejectClick}>
-                        <Text>Reddet</Text>
-                    </TouchableOpacity>
+                    {worker &&
+                        <View>
+                            <TouchableOpacity onPress={handleApprovalClick}>
+                                <Text>Onayla</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={handleRejectClick}>
+                                <Text>Reddet</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
                 </View>
             )}
             {!isAdmin && (
