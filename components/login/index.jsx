@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View,  TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { setManageName, setWorker } from '../configure';
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+
+import { TextInput, Button , IconButton} from "@react-native-material/core";
 
 function Login() {
     const navigation = useNavigation();
@@ -31,28 +34,36 @@ function Login() {
     }
 
     return (
-        <View style={styles.container}>
+        <View style={styles.container} >
             <Text style={styles.title}>Giriş Yap</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Kullanıcı Adı"
-                value={username}
-                onChangeText={setUsername}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Şifre"
-                secureTextEntry={true}
-                value={password}
-                onChangeText={setPassword}
-            />
-            <TouchableOpacity style={styles.button} onPress={handleClick}>
-                <Text style={styles.buttonText}>Giriş Yap</Text>
+            
+            <View style={{ flexDirection: 'row', alignItems: 'center',marginBottom: 20, padding: 0 , width: 240,}}>
+                <Icon name="account" size={25} color="gray" />
+                <TextInput
+                    value={username}
+                    onChangeText={setUsername}
+                    variant="outlined" label="Kullanıcı Adı" style={{ width: 200, flex: 1, marginLeft: 5 }}
+                />
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center',marginBottom: 20, padding: 0 , width: 240,}}>
+                <Icon name="lock" size={25} color="gray" />
+                <TextInput
+                    secureTextEntry={true}
+                    value={password}
+                    onChangeText={setPassword}
+                    variant="outlined" label="Şifre" style={{ width: 200, flex: 1, marginLeft: 5}}
+                />
+            </View>
+            <TouchableOpacity  >
+                <Button title="Giriş Yap" onPress={handleClick} uppercase={false} color="#ff6131" tintColor="white"/>
             </TouchableOpacity>
-            <Text>Hesabınız mı yok mu</Text>
-            <TouchableOpacity style={styles.button} onPress={handleClickSignup}>
-                <Text style={styles.buttonText}>Kaydolun</Text>
+
+            <Text style={styles.titleDown}>Hesabınız mı yok mu ?</Text>
+
+            <TouchableOpacity  >
+                <Button title="Kayıt Ol" variant="outlined" onPress={handleClickSignup} uppercase={false} color="#ff6131" tintColor="white"/>
             </TouchableOpacity>
+
             <StatusBar style="auto" />
         </View>
     );
@@ -67,25 +78,22 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 24,
-        marginBottom: 20,
-    },
-    input: {
-        width: '80%',
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
         marginBottom: 10,
-        paddingHorizontal: 10,
     },
-    button: {
-        backgroundColor: 'blue',
-        padding: 10,
-        borderRadius: 5,
+    titleDown: {
+        fontSize: 14,
         marginTop: 10,
+        marginBottom: 10,
     },
-    buttonText: {
-        color: 'white',
-        textAlign: 'center',
+    buttonTextDownDiv: {
+        backgroundColor: "white",
+        padding: 10,
+        borderWidth: 1,
+        borderColor: "#ff6131",
+        borderRadius: 5,
+    },
+    buttonTextDown: {
+        color: "#ff6131",
     },
 });
 
