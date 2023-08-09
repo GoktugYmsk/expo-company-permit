@@ -80,7 +80,9 @@ function Menu() {
                 {
                 isAdmin &&
                     <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('OffDuty')} >
+                        <Icon name="glasses" size={30} />
                         <Text style={styles.buttonText}>İzinlilerim</Text>
+                        <Icon name="arrow-right" size={23} />
                     </TouchableOpacity>
                 }
                 <TouchableOpacity style={styles.button} onPress={handleApprovalClick} >
