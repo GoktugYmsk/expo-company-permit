@@ -3,40 +3,55 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useDispatch, useSelector } from 'react-redux';
-import { setReason, setStartDay, setEndDay } from '../configure';
+import { setReason, setStartDay, setEndDay, setWorkerPerReq } from '../configure';
 
 function PermissionRequest() {
-    const [selectedStartDate, setSelectedStartDate] = useState(null);
-    const [selectedEndDate, setSelectedEndDate] = useState(null);
     const [error, setError] = useState('')
+    const [switchDeneme, setSwitchDeneme] = useState(false)
+    const [selectedEndDate, setSelectedEndDate] = useState(null);
+    const [selectedStartDate, setSelectedStartDate] = useState(null);
 
+    const [sreason, setSreason] = useState('')
 
     const dispatch = useDispatch()
     const navigation = useNavigation()
 
     const manager = useSelector((state) => state.management.manager)
-    const reason = useSelector((state) => state.userReason.reason)
-    const startDay = useSelector((state) => state.offDays.startDay)
-    const endDay = useSelector((state) => state.offDays.endDay)
+    const worker = useSelector((state) => state.workerInfoTotal.worker);
+    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+    // const reason = useSelector((state) => state.userReason.reason)
+    // const startDay = useSelector((state) => state.offDays.startDay)
+    // const endDay = useSelector((state) => state.offDays.endDay)
 
     const handleStartDate = (e) => {
-        const updateStartDay = [...startDay, e]
-        dispatch(setStartDay(updateStartDay))
         setSelectedStartDate(e)
     }
     const handleEndDate = (e) => {
-        const updateEndDay = [...endDay, e]
-        dispatch(setEndDay(updateEndDay))
         setSelectedEndDate(e)
     }
 
-
     const handleReasonChange = (e) => {
-        dispatch(setReason(e))
+        setSreason(e)
     }
+    console.log("Manager:", manager);
+    console.log("Selected Start Date:", selectedStartDate);
+    console.log("Selected End Date:", selectedEndDate);
+    console.log("Reason:", sreason);
+
 
     const handleSendRequest = () => {
         if (manager && selectedStartDate && selectedEndDate) {
+
+            const newWorkerInfo = {
+                name: worker,
+                startDay: selectedStartDate,
+                endDay: selectedEndDate,
+                reason: sreason,
+                manager: manager,
+                accept: false,
+            };
+
+            dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
             navigation.navigate('MyRequest')
         }
         else if (!manager) {
@@ -47,6 +62,10 @@ function PermissionRequest() {
         }
     }
 
+    const handleswitch = () => {
+        setSwitchDeneme(true)
+    }
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <>
@@ -55,12 +74,16 @@ function PermissionRequest() {
                 }
                 <Text>İzin Nedeni</Text>
                 <TextInput style={styles.input} onChangeText={handleReasonChange} />
-                <Text>{reason}</Text>
                 <View style={styles.middleContent}>
                     <Text style={styles.inlineText}>Tek gün izin</Text>
                     <Text style={styles.inlineText}>/</Text>
-                    <Text style={styles.inlineText}>Çoklu gün izin</Text>
-                    <Text>Switch</Text>
+                    {
+                        switchDeneme &&
+                        <Text style={styles.inlineText}>Çoklu gün izin</Text>
+                    }
+                    <TouchableOpacity onPress={handleswitch} >
+                        <Text>Switch</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.altContent}>
                     <Text>İzin Tarihi Aralığı</Text>

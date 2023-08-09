@@ -2,6 +2,8 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View ,Modal} from 'react-native';
 import { Calendar, DotMarking } from 'react-native-calendars';
+import { useSelector } from 'react-redux';
+
 
 const users = [
     {
@@ -15,6 +17,8 @@ const users = [
 function Home() {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [requests, setRequests] = useState(users);
+
+    const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
 
     const formattedSelectedDate = selectedDate.toISOString().split('T')[0];
 
@@ -38,6 +42,21 @@ function Home() {
             ) : (
                 <Text>İzinli çalışan bulunamadı.</Text>
             )}
+
+            <View>
+                {workerInfo &&
+                    <View>
+                        {workerInfo?.map((worker) => (
+                            <View key={worker.name}>
+                                <Text>Adı: {worker.name}</Text>
+                                <Text>Başlangıç Tarihi: {worker.startDay}</Text>
+                                <Text>Bitiş Tarihi: {worker.endDay}</Text>
+                                <Text>Sebep: {worker.reason}</Text>
+                            </View>
+                        ))}
+                    </View>
+                }
+            </View>
         </View>
     );
 }

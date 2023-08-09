@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useState } from 'react';
 
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -7,12 +8,53 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 
 function Menu() {
-
-
-    const reason = useSelector((state) => state.userReason.reason)
-
-
     const navigation = useNavigation();
+
+    const manageName = useSelector((state) => state.management.manageName);
+    const manager = useSelector((state) => state.management.manager)
+    const worker = useSelector((state) => state.workerInfoTotal.worker);
+
+    const handleMainClick = () => {
+        if (manager) {
+            navigation.navigate('Home')
+        }
+        else {
+            alert('Yönetici Seçimi yapınız')
+            setTimeout(() => {
+                navigation.navigate('Profile')
+            }, 3000);
+        }
+    }
+
+    const handleRequestClick = () => {
+        if (manager) {
+            navigation.navigate('PerRequest')
+        }
+        else {
+            alert('Yönetici Seçimi yapınız')
+            setTimeout(() => {
+                navigation.navigate('Profile')
+            }, 3000);
+        }
+    }
+
+
+    const handleApprovalClick = () => {
+        if (manageName && worker) {
+            navigation.navigate('Approval')
+        }
+        else if (!manageName && worker && manager) {
+            navigation.navigate('MyRequest')
+        }
+        else if (!manageName && worker && !manager) {
+            alert('Yönetici Seçimi yapınız')
+            setTimeout(() => {
+                navigation.navigate('Profile')
+            }, 3000);
+        }
+    }
+
+    const isAdmin = manageName !== '';
 
     return (
         <View style={styles.container}  >
@@ -20,7 +62,7 @@ function Menu() {
                 Pinsoft İzinlerim
             </Text>
             <View style={styles.menu}>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')} >
+                <TouchableOpacity style={styles.button} onPress={handleMainClick} >
                     <Icon name="home" size={30} />
                     <Text style={styles.buttonText}>Anasayfa</Text>
                     <Icon name="arrow-right" size={23} />
@@ -30,22 +72,22 @@ function Menu() {
                     <Text style={styles.buttonText}>Profil</Text>
                     <Icon name="arrow-right" size={23} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('PerRequest')} >
+                <TouchableOpacity style={styles.button}  onPress={handleRequestClick} >
                     <Icon name="thumb-up" size={30} />
                     <Text style={styles.buttonText}>İzin talebi</Text>
                     <Icon name="arrow-right" size={23} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} >
-                    <Icon name="sunglasses" size={30} />
-                    <Text style={styles.buttonText}>İzinlerim</Text>
-                    <Icon name="arrow-right" size={23} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Approval')} >
+                {
+                isAdmin &&
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('OffDuty')} >
+                        <Text style={styles.buttonText}>İzinlilerim</Text>
+                    </TouchableOpacity>
+                }
+                <TouchableOpacity style={styles.button} onPress={handleApprovalClick} >
                     <Icon name="progress-clock" size={30} />
                     <Text style={styles.buttonText}>Onay Bekleyen İşlemler</Text>
                     <Icon name="arrow-right" size={23} />
                 </TouchableOpacity>
-                <Text>{reason}</Text>
             </View>
         </View >
     );

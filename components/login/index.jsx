@@ -2,29 +2,42 @@ import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View,  TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
-import { setManageName, setWorker } from '../configure';
+import { useDispatch, useSelector } from 'react-redux';
+import { setEndDay, setManageName, setManager, setReason, setStartDay, setWorker, setWorkerInfo, setWorkerPerReq } from '../configure';
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 import { TextInput, Button , IconButton} from "@react-native-material/core";
+import { useEffect } from 'react';
 
 function Login() {
     const navigation = useNavigation();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+
+
     const dispatch = useDispatch()
 
+    const validWorkers = ['Ahmet', 'Ayşe', 'Tuğkan', 'Tolga', 'Ayla', 'Cemal', 'Cemil', 'Hasan', 'Berk', 'Göktuğkan', 'İbrahim', 'Berkan'];
+    const validManagement = ['Bora', 'Gökhan', 'Aydın', 'Hakan']
+
     const handleClick = () => {
-        if (username === 'Pinsoft' && password === '1234') {
-            dispatch(setWorker(username))
+        const isValidWorker = validWorkers.includes(username);
+        const isValidManagement = validManagement.includes(username);
+
+        if (isValidWorker) {
+            if (password === '1234') {
+                dispatch(setWorker(username));
+                dispatch(setManageName(''))
+                dispatch(setManager(''))
+                navigation.navigate('Menu');
+            } else {
+                console.log("Hatalı şifre!");
+            }
+        } else if (isValidManagement && password === '123456') {
+            dispatch(setManageName(username));
             navigation.navigate('Menu');
-        }
-        else if (username === 'Hakan' && password === '1234') {
-            dispatch(setManageName(username))
-            navigation.navigate('Menu');
-        }
-        else {
+        } else {
             console.log("Hatalı giriş!");
         }
     };
@@ -32,6 +45,17 @@ function Login() {
     const handleClickSignup = () => {
         navigation.navigate('SignUp')
     }
+
+    // useEffect(() => {
+    //     dispatch(setReason(''))
+    //     dispatch(setStartDay(''))
+    //     dispatch(setEndDay(''))
+    //     dispatch(setManager(''))
+    //     dispatch(setManageName(''))
+    //     dispatch(setWorker(''))
+    //     dispatch(setWorkerInfo(''))
+    //     dispatch(setWorkerPerReq(''))
+    // }, [])
 
     return (
         <View style={styles.container} >
