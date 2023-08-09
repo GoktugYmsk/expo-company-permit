@@ -1,8 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Calendar } from 'react-native-calendars';
+import { StyleSheet, Text, TouchableOpacity, View ,Modal} from 'react-native';
+import { Calendar, DotMarking } from 'react-native-calendars';
 import { useSelector } from 'react-redux';
+
 
 const users = [
     {
@@ -26,10 +27,11 @@ function Home() {
     return (
         <View style={styles.container}>
             <Calendar
+                style={styles.calendar}
                 current={selectedDate}
                 onDayPress={(day) => setSelectedDate(new Date(day.dateString))}
                 monthFormat={'yyyy MMMM'}
-                markingType={'period'}
+                markingType={'multi-dot'}
                 hideExtraDays={true}
             />
             <Text>{formattedSelectedDate} tarihinde izinli olan çalışanlar:</Text>
@@ -64,11 +66,38 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flexStart',
         alignItems: 'center',
-        padding: 20,
+        width: '100%',
+    },
+    calendar:{
+        width: 410,
+        marginTop: 10,
     },
     title: {
         fontSize: 24,
         marginBottom: 20,
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius:20,
+        width: '90%',
+        padding: 15,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+
     },
 });
 

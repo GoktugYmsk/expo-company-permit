@@ -115,6 +115,7 @@ function PermissionRequest() {
                     <View style={styles.datePicker}>
                         <Text>Başlangıç</Text>
                         <Calendar
+                            style={styles.calendar}
                             onDayPress={(day) => handleStartDate(day.dateString)}
                             selected={selectedStartDate}
                         />
@@ -122,6 +123,7 @@ function PermissionRequest() {
                     <View style={styles.datePicker}>
                         <Text>Bitiş</Text>
                         <Calendar
+                            style={styles.calendar}
                             onDayPress={(day) => handleEndDate(day.dateString)}
                             selected={selectedEndDate}
                         />
@@ -158,6 +160,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 10,
         paddingHorizontal: 10,
+    },
+    calendar:{
+        width: 410,
+        marginTop: 10,
     },
     button: {
         backgroundColor: 'white',
