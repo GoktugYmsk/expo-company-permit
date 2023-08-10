@@ -29,19 +29,32 @@ function Approval() {
                     endDay: approvedWorker.endDay,
                     reason: approvedWorker.reason,
                     manager: approvedWorker.manager,
-                    accept: approvedWorker.accept === true,
+                    accept: true,
                 };
-                dispatch(setWorkerInfo([...workerInfo, newWorkerInfo]));
-                dispatch(setWorkerPerReq(workerPerReq.filter((_, i) => i !== index)));
-            }
 
+                dispatch(setWorkerInfo([...workerInfo, newWorkerInfo]));
+                dispatch(setWorkerPerReq(workerPerReq.map((worker, i) => i === index ? newWorkerInfo : worker)));
+            }
         }
     };
 
-
     const handleRejectClick = (index) => {
         if (isAdmin && index >= 0 && index < workerPerReq.length) {
-            dispatch(setWorkerPerReq(workerPerReq.filter((_, i) => i !== index)));
+            const approvedWorker = workerPerReq[index];
+
+            const isWorkerAlreadyExists = workerInfo?.includes(worker => worker.name === approvedWorker.name);
+
+            if (!isWorkerAlreadyExists) {
+                const newWorkerInfo = {
+                    name: approvedWorker.name,
+                    startDay: approvedWorker.startDay,
+                    endDay: approvedWorker.endDay,
+                    reason: approvedWorker.reason,
+                    manager: approvedWorker.manager,
+                    accept: false,
+                };
+                dispatch(setWorkerPerReq(workerPerReq.map((worker, i) => i === index ? newWorkerInfo : worker)));
+            }
         }
     };
 
@@ -51,18 +64,24 @@ function Approval() {
                 <View>
                     {workerPerReq &&
                         workerPerReq.map((item, index) => (
-                            <View key={index}>
-                                <Text> isim {item.name}</Text>
-                                <Text> başlangıç tarihi {item.startDay}</Text>
-                                <Text>  bitiş tarihi {item.endDay}</Text>
-                                <Text> sebep {item.reason}</Text>
-                                <Text> yönetici {item.manager}</Text>
-                                <TouchableOpacity onPress={() => handleApprovalClick(index)}>
-                                    <Text>Onayla</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleRejectClick(index)}>
-                                    <Text>Reddet</Text>
-                                </TouchableOpacity>
+                            <View >
+                                {item.accept === null ? (
+                                    <View key={index}>
+                                        <Text> isim {item.name}</Text>
+                                        <Text> başlangıç tarihi {item.startDay}</Text>
+                                        <Text>  bitiş tarihi {item.endDay}</Text>
+                                        <Text> sebep {item.reason}</Text>
+                                        <Text> yönetici {item.manager}</Text>
+                                        <TouchableOpacity onPress={() => handleApprovalClick(index)}>
+                                            <Text>Onayla</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => handleRejectClick(index)}>
+                                            <Text>Reddet</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                ) : (
+                                    <Text>Bekleyen istek bulunmamaktadır</Text>
+                                )}
                             </View>
                         ))
                     }
@@ -75,5 +94,7 @@ function Approval() {
         </View>
     );
 }
+
+
 
 export default Approval;

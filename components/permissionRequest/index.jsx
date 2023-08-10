@@ -55,8 +55,7 @@ function PermissionRequest() {
                         endDay: selectedEndDate,
                         reason: sreason,
                         manager: manager,
-                        accept: false,
-
+                        accept: null,
                     };
                     dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
                     navigation.navigate('MyRequest');
@@ -75,13 +74,12 @@ function PermissionRequest() {
                         endDay: selectedEndDate,
                         reason: sreason,
                         manager: manager,
-                        accept: false,
+                        accept: null,
 
                     };
                     dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
                     navigation.navigate('MyRequest');
                 }
-
             }
             else {
                 const newWorkerInfo = {
@@ -90,7 +88,7 @@ function PermissionRequest() {
                     endDay: selectedEndDate,
                     reason: sreason,
                     manager: manager,
-                    accept: false,
+                    accept: null,
 
                 };
 
