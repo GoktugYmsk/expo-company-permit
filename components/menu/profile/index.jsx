@@ -9,6 +9,7 @@ function Profile() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const manager = useSelector((state) => state.management.manager)
     const worker = useSelector((state) => state.workerInfoTotal.worker)
+    const manageName = useSelector((state) => state.management.manageName);
 
     const dispatch = useDispatch()
 
@@ -30,12 +31,20 @@ function Profile() {
     return (
         <View>
             <View>
-                <Text>Adı Soyadı</Text>
-                <Text>{worker}</Text>
+                {!manageName &&
+                    <View>
+                        <Text>Adı Soyadı</Text>
+                        <Text>{worker}</Text>
+
+                        <TouchableOpacity onPress={toggleMenu}>
+                            <Text>Yönetici Listesi</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
             </View>
-            <TouchableOpacity onPress={toggleMenu}>
-                <Text>Yönetici Listesi</Text>
-            </TouchableOpacity>
+            {manageName &&
+                <Text>Yönetici Adı: {manageName} </Text>
+            }
             {isMenuOpen && (
                 <View>
                     {managers.map((managerName, index) => (
@@ -45,7 +54,9 @@ function Profile() {
                     ))}
                 </View>
             )}
-            <Text>Seçilen Yönetici: {manager}</Text>
+            {!manageName &&
+                <Text>Seçilen Yönetici: {manager}</Text>
+            }
         </View>
     );
 }
