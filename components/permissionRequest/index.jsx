@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useDispatch, useSelector } from 'react-redux';
-import { setReason, setStartDay, setEndDay, setWorkerPerReq } from '../configure';
+import { setReason, setStartDay, setEndDay, setWorkerPerReq, setAllPermits } from '../configure';
 
 function PermissionRequest() {
     const [error, setError] = useState('')
@@ -23,6 +23,9 @@ function PermissionRequest() {
     // const startDay = useSelector((state) => state.offDays.startDay)
     // const endDay = useSelector((state) => state.offDays.endDay)
 
+    const allPermits = useSelector((state) => state.workerInfoTotal.allPermits)
+    console.log(workerPerReq);
+
     const handleStartDate = (e) => {
         setSelectedStartDate(e)
     }
@@ -33,10 +36,10 @@ function PermissionRequest() {
     const handleReasonChange = (e) => {
         setSreason(e)
     }
-    console.log("Manager:", manager);
-    console.log("Selected Start Date:", selectedStartDate);
-    console.log("Selected End Date:", selectedEndDate);
-    console.log("Reason:", sreason);
+    // console.log("Manager:", manager);
+    // console.log("Selected Start Date:", selectedStartDate);
+    // console.log("Selected End Date:", selectedEndDate);
+    // console.log("Reason:", sreason);
 
 
     const handleSendRequest = () => {
@@ -50,17 +53,8 @@ function PermissionRequest() {
                 manager: manager,
                 accept: false,
             };
-
             dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
             navigation.navigate('MyRequest')
-            const permit = {
-                name : workerName , 
-                selectedManager : manager , 
-                startDay:selectedStartDate,
-                endDay:selectedEndDate,
-                reason:reason
-            }
-            dispatch(setAllPermits('Hello'))
         }
         else if (!manager) {
             setError('Lütfen profile sayfasından yönetici seçiniz')

@@ -1,13 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    reason: '',
-    startDay: null,
-    endDay: null,
+    reason: [],
+    startDay: [],
+    endDay: [],
     manager: '',
     manageName: '',
-    worker: '',
+    worker: [],
     workerInfo: [],
+    workerPerReq: [],   //--> bütün gönderilen izinler burada gözüküyor.
+    allPermits : []
 
 }
 
@@ -36,7 +38,15 @@ export const configure = createSlice({
         setWorkerInfo: (state, action) => {
             state.workerInfo = action.payload;
         },
+        setWorkerPerReq: (state, action) => {
+            state.workerPerReq = action.payload;
+        },
+        setAllPermits : (state , action) => {
+            state.allPermits = action.payload
+        }
     }
 })
 
-export const { setPassengerAmount, setReason, setStartDay, setEndDay, setManager, setManageName, setWorker, setWorkerInfo } = configure.actions
+export const { setPassengerAmount, setReason, setStartDay, setEndDay, setManager, setManageName, setWorker, setWorkerInfo, setWorkerPerReq , setAllPermits } = configure.actions
+
+export default configure.reducer;
