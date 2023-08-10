@@ -43,29 +43,14 @@ function OffDuty() {
                         )}
                         {selectedWorker === worker && (
                             <View style={styles.workerDetails}>
-                                <ListItem
-                                    style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }}
-                                    title={worker.startDay}
-                                    secondaryText="Başlangıç Tarihi"
-                                />
-                                <ListItem
-                                    style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }}
-                                    title={worker.endDay}
-                                    secondaryText="Bitiş Tarihi"
-                                />
-                                <ListItem
-                                    style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }}
-                                    title={worker.reason}
-                                    secondaryText="Sebep"
-                                />
-
-                                <Button  
-                                    onPress={handleDelete} 
-                                    style={styles.workerButton} 
-                                    title="İZİNİ İPTAL ET" 
-                                    color="error"
-                                />
-                                
+                                <Text style={styles.detailText}>Başlangıç Tarihi: {worker.startDay}</Text>
+                                {worker.endDay &&
+                                    <Text style={styles.detailText}>Bitiş Tarihi: {worker.endDay}</Text>
+                                }
+                                <Text style={styles.detailText}>Sebep: {worker.reason}</Text>
+                                <TouchableOpacity onPress={handleDelete}>
+                                    <Text>Delete</Text>
+                                </TouchableOpacity>
                             </View>
                         )}
                     </View>
