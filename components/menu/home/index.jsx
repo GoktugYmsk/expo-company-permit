@@ -1,15 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-<<<<<<< HEAD
-import { StyleSheet, Text, TouchableOpacity, View ,Modal} from 'react-native';
-import { Calendar, DotMarking } from 'react-native-calendars';
-import { useSelector } from 'react-redux';
 
-=======
 import { StyleSheet, Text, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useSelector } from 'react-redux';
->>>>>>> 2efa53b36bc2d7e36b2a088d6d95890109ae6253
 
 const users = [
     {
@@ -17,8 +11,6 @@ const users = [
         date: '2023-08-16',
     },
 ];
-
-
 
 function Home() {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -74,7 +66,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
     },
-    calendar:{
+    calendar: {
         width: 410,
         marginTop: 10,
     },
