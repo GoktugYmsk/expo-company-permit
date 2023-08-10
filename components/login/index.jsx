@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { TextInput, Button, IconButton } from "@react-native-material/core";
 import { useDispatch, useSelector } from 'react-redux';
 import { setEndDay, setManageName, setManager, setReason, setStartDay, setWorker, setWorkerInfo, setWorkerPerReq } from '../configure';
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-
-import { TextInput, Button, IconButton } from "@react-native-material/core";
 
 function Login() {
     const navigation = useNavigation();
