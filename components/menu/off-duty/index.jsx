@@ -41,7 +41,9 @@ function OffDuty() {
                         {selectedWorker === worker && (
                             <View style={styles.workerDetails}>
                                 <Text style={styles.detailText}>Başlangıç Tarihi: {worker.startDay}</Text>
-                                <Text style={styles.detailText}>Bitiş Tarihi: {worker.endDay}</Text>
+                                {worker.endDay &&
+                                    <Text style={styles.detailText}>Bitiş Tarihi: {worker.endDay}</Text>
+                                }
                                 <Text style={styles.detailText}>Sebep: {worker.reason}</Text>
                                 <TouchableOpacity onPress={handleDelete}>
                                     <Text>Delete</Text>
