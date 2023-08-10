@@ -13,18 +13,34 @@ import { useSelector } from "react-redux";
 function MyRequest() {
   const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
 
-  return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.title}>İzinlerim</Text>
-      </View>
-      <Text>Beklenen</Text>
-      <Text>Aktif</Text>
-      <View style={styles.buttonContainer}>
-        <Button style={styles.button} title="Click Me" />
-      </View>
-    </View>
-  );
+    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+    const worker = useSelector((state) => state.workerInfoTotal.worker);
+    console.log('worker', worker)
+
+    return (
+        <View>
+            <View>
+                <Text style={styles.title} >İzinlerim</Text>
+            </View>
+            <Text>Beklenen</Text>
+            {workerPerReq &&
+                workerPerReq.map((item, index) => (
+                    <View key={index}>
+                        {item.name === worker && (
+                            <View>
+                                <Text> isim {item.name}</Text>
+                                <Text> başlangıç tarihi {item.startDay}</Text>
+                                <Text>  bitiş tarihi {item.endDay}</Text>
+                                <Text> sebep {item.reason}</Text>
+                                <Text> yönetici {item.manager}</Text>
+                            </View>
+                        )}
+                    </View>
+                ))
+            }
+            <Text>Aktif</Text>
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({

@@ -1,63 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { setWorkerInfo, setStartDay, setEndDay, setWorker } from '../../configure';
+import { setWorkerInfo, setStartDay, setEndDay, setWorker, setWorkerPerReq } from '../../configure';
 
 function Approval() {
-    const manageName = useSelector((state) => state.management.manageName);
-    const worker = useSelector((state) => state.workerInfoTotal.worker);
-    const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
-
     const dispatch = useDispatch();
 
-    const startDay = useSelector((state) => state.offDays.startDay);
-    const endDay = useSelector((state) => state.offDays.endDay);
-    const reason = useSelector((state) => state.userReason.reason);
+    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+    const manageName = useSelector((state) => state.management.manageName);
+    const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
 
     const isAdmin = manageName !== '';
 
-    const handleApprovalClick = () => {
-        const existingWorker = workerInfo?.find((existingWorker) => existingWorker.name === worker);
+    useEffect(() => {
+        console.log('denem', workerPerReq);
+    }, [workerPerReq]);
 
-        if (!existingWorker && worker) {
+    const handleApprovalClick = (index) => {
+        if (isAdmin && index >= 0 && index < workerPerReq.length) {
+            const approvedWorker = workerPerReq[index];
             const newWorkerInfo = {
-                name: worker,
-                startDay: startDay,
-                endDay: endDay,
-                reason: reason,
-                manager: manageName,
+                name: approvedWorker.name,
+                startDay: approvedWorker.startDay,
+                endDay: approvedWorker.endDay,
+                reason: approvedWorker.reason,
+                manager: approvedWorker.manager,
+                accept: approvedWorker.accept == true,
             };
             dispatch(setWorkerInfo([...workerInfo, newWorkerInfo]));
+            dispatch(setWorkerPerReq(workerPerReq.filter((_, i) => i !== index)));
         }
-
-        dispatch(setWorker(''))
-        dispatch(setStartDay(''))
-        dispatch(setEndDay(''))
     };
 
-    const handleRejectClick = () => {
-        dispatch(setWorker(''))
-        dispatch(setStartDay(''))
-        dispatch(setEndDay(''))
-    }
+    const handleRejectClick = (index) => {
+        if (isAdmin && index >= 0 && index < workerPerReq.length) {
+            dispatch(setWorkerPerReq(workerPerReq.filter((_, i) => i !== index)));
+        }
+    };
 
     return (
         <View>
             {isAdmin && (
                 <View>
-                    <Text>{worker}</Text>
-                    <Text>{startDay}</Text>
-                    <Text>{endDay}</Text>
-                    {worker &&
-                        <View>
-                            <TouchableOpacity onPress={handleApprovalClick}>
-                                <Text>Onayla</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={handleRejectClick}>
-                                <Text>Reddet</Text>
-                            </TouchableOpacity>
-                        </View>
+                    {workerPerReq &&
+                        workerPerReq.map((item, index) => (
+                            <View key={index}>
+                                <Text> isim {item.name}</Text>
+                                <Text> başlangıç tarihi {item.startDay}</Text>
+                                <Text>  bitiş tarihi {item.endDay}</Text>
+                                <Text> sebep {item.reason}</Text>
+                                <Text> yönetici {item.manager}</Text>
+                                <TouchableOpacity onPress={() => handleApprovalClick(index)}>
+                                    <Text>Onayla</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleRejectClick(index)}>
+                                    <Text>Reddet</Text>
+                                </TouchableOpacity>
+                            </View>
+                        ))
                     }
+
                 </View>
             )}
             {!isAdmin && (
