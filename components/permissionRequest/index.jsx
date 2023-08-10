@@ -4,14 +4,17 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 
 import { Calendar } from 'react-native-calendars';
 import { useDispatch, useSelector } from 'react-redux';
 import { setReason, setStartDay, setEndDay, setWorkerPerReq } from '../configure';
+import { Switch } from "@react-native-material/core";
 
 function PermissionRequest() {
     const [error, setError] = useState('')
-    const [switchDeneme, setSwitchDeneme] = useState(false)
     const [selectedEndDate, setSelectedEndDate] = useState(null);
     const [selectedStartDate, setSelectedStartDate] = useState(null);
+    const [checked, setChecked] = useState(false)
 
     const [sreason, setSreason] = useState('')
+
+    console.log('checked', checked)
 
     const dispatch = useDispatch()
     const navigation = useNavigation()
@@ -95,18 +98,70 @@ function PermissionRequest() {
                 dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
                 navigation.navigate('MyRequest');
             }
-        } else if (!manager) {
+        }
+        else if (manager && selectedStartDate) {
+            if (workerInfo) {
+                const isNameInWorkerInfo = workerInfo.find(workerInfoItem => workerInfoItem.name === worker);
+
+                if (isNameInWorkerInfo) {
+                    setError('Bu işçinin zaten bir izin isteği bulunmaktadır.');
+                }
+                else {
+                    const newWorkerInfo = {
+                        name: worker,
+                        startDay: selectedStartDate,
+                        endDay: selectedEndDate,
+                        reason: sreason,
+                        manager: manager,
+                        accept: null,
+                    };
+                    dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+                    navigation.navigate('MyRequest');
+                }
+            }
+            else if (workerPerReq) {
+                const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.name === worker);
+
+                if (isNameInWorkerPerReq) {
+                    setError('Bu işçinin zaten bir izin isteği bulunmaktadır.');
+                }
+                else {
+                    const newWorkerInfo = {
+                        name: worker,
+                        startDay: selectedStartDate,
+                        endDay: selectedEndDate,
+                        reason: sreason,
+                        manager: manager,
+                        accept: null,
+
+                    };
+                    dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+                    navigation.navigate('MyRequest');
+                }
+            }
+            else {
+                const newWorkerInfo = {
+                    name: worker,
+                    startDay: selectedStartDate,
+                    endDay: selectedEndDate,
+                    reason: sreason,
+                    manager: manager,
+                    accept: null,
+
+                };
+
+                dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+                navigation.navigate('MyRequest');
+            }
+        }
+        else if (!manager) {
             setError('Lütfen profil sayfasından yönetici seçiniz.');
-        } else {
+        }
+        else {
             console.log('Tarih bilgilerini kontrol ediniz.');
         }
     };
 
-
-
-    const handleswitch = () => {
-        setSwitchDeneme(true)
-    }
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -120,12 +175,10 @@ function PermissionRequest() {
                     <Text style={styles.inlineText}>Tek gün izin</Text>
                     <Text style={styles.inlineText}>/</Text>
                     {
-                        switchDeneme &&
+                        checked &&
                         <Text style={styles.inlineText}>Çoklu gün izin</Text>
                     }
-                    <TouchableOpacity onPress={handleswitch} >
-                        <Text>Switch</Text>
-                    </TouchableOpacity>
+                    <Switch value={checked} onValueChange={() => setChecked(!checked)} />
                 </View>
                 <View style={styles.altContent}>
                     <Text>İzin Tarihi Aralığı</Text>
@@ -137,20 +190,23 @@ function PermissionRequest() {
                             selected={selectedStartDate}
                         />
                     </View>
-                    <View style={styles.datePicker}>
-                        <Text>Bitiş</Text>
-                        <Calendar
-                            style={styles.calendar}
-                            onDayPress={(day) => handleEndDate(day.dateString)}
-                            selected={selectedEndDate}
-                        />
-                    </View>
+                    {checked &&
+
+                        <View style={styles.datePicker}>
+                            <Text>Bitiş</Text>
+                            <Calendar
+                                style={styles.calendar}
+                                onDayPress={(day) => handleEndDate(day.dateString)}
+                                selected={selectedEndDate}
+                            />
+                        </View>
+                    }
                 </View>
                 <TouchableOpacity onPress={handleSendRequest} style={styles.button}>
                     <Text>İzni Onaya gönder</Text>
                 </TouchableOpacity>
             </>
-        </ScrollView>
+        </ScrollView >
     );
 }
 

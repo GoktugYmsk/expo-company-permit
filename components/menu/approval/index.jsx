@@ -62,14 +62,14 @@ function Approval() {
         <View>
             {isAdmin && (
                 <View>
-                    {workerPerReq &&
+                    {workerPerReq && workerPerReq.some(item => item.accept === null) ? (
                         workerPerReq.map((item, index) => (
-                            <View >
+                            <View key={index}>
                                 {item.accept === null ? (
-                                    <View key={index}>
+                                    <View>
                                         <Text> isim {item.name}</Text>
                                         <Text> başlangıç tarihi {item.startDay}</Text>
-                                        <Text>  bitiş tarihi {item.endDay}</Text>
+                                        <Text> bitiş tarihi {item.endDay}</Text>
                                         <Text> sebep {item.reason}</Text>
                                         <Text> yönetici {item.manager}</Text>
                                         <TouchableOpacity onPress={() => handleApprovalClick(index)}>
@@ -79,13 +79,12 @@ function Approval() {
                                             <Text>Reddet</Text>
                                         </TouchableOpacity>
                                     </View>
-                                ) : (
-                                    <Text>Bekleyen istek bulunmamaktadır</Text>
-                                )}
+                                ) : null}
                             </View>
                         ))
-                    }
-
+                    ) : (
+                        <Text>Bekleyen istek bulunmamaktadır</Text>
+                    )}
                 </View>
             )}
             {!isAdmin && (
@@ -93,6 +92,7 @@ function Approval() {
             )}
         </View>
     );
+
 }
 
 

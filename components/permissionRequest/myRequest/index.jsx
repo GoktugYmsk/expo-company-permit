@@ -24,7 +24,11 @@ function MyRequest() {
                                         <Text style={styles.titleWait} >Beklenen İstek</Text>
                                         <Text> isim {item.name}</Text>
                                         <Text> başlangıç tarihi {item.startDay}</Text>
-                                        <Text>  bitiş tarihi {item.endDay}</Text>
+                                        <View>
+                                            {item.endDay &&
+                                                <Text>  bitiş tarihi </Text>
+                                            }
+                                        </View>
                                         <Text> sebep {item.reason}</Text>
                                         <Text> yönetici {item.manager}</Text>
                                     </View>
