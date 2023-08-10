@@ -77,17 +77,6 @@ function Menu() {
                     <Text style={styles.buttonText}>İzin talebi</Text>
                     <Icon name="arrow-right" size={23} />
                 </TouchableOpacity>
-<<<<<<< HEAD
-    {
-        isAdmin &&
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('OffDuty')} >
-                <Icon name="glasses" size={30} />
-                <Text style={styles.buttonText}>İzinlilerim</Text>
-                <Icon name="arrow-right" size={23} />
-            </TouchableOpacity>
-    }
-    <TouchableOpacity style={styles.button} onPress={ } >
-=======
 
                 {
             isAdmin &&
@@ -99,7 +88,6 @@ function Menu() {
         }
 
         <TouchableOpacity style={styles.button} onPress={handleApprovalClick} >
->>>>>>> 2efa53b36bc2d7e36b2a088d6d95890109ae6253
             <Icon name="progress-clock" size={30} />
             <Text style={styles.buttonText}>Onay Bekleyen İşlemler</Text>
             <Icon name="arrow-right" size={23} />
