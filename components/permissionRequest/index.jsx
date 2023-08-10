@@ -27,6 +27,9 @@ function PermissionRequest() {
     // const startDay = useSelector((state) => state.offDays.startDay)
     // const endDay = useSelector((state) => state.offDays.endDay)
 
+    const allPermits = useSelector((state) => state.workerInfoTotal.allPermits)
+    console.log(workerPerReq);
+
     const handleStartDate = (e) => {
         setSelectedStartDate(e)
     }
@@ -37,10 +40,10 @@ function PermissionRequest() {
     const handleReasonChange = (e) => {
         setSreason(e)
     }
-    console.log("Manager:", manager);
-    console.log("Selected Start Date:", selectedStartDate);
-    console.log("Selected End Date:", selectedEndDate);
-    console.log("Reason:", sreason);
+    // console.log("Manager:", manager);
+    // console.log("Selected Start Date:", selectedStartDate);
+    // console.log("Selected End Date:", selectedEndDate);
+    // console.log("Reason:", sreason);
 
 
     const handleSendRequest = () => {
