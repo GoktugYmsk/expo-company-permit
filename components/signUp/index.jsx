@@ -55,7 +55,7 @@ function SignUp() {
 
 
             <TouchableOpacity >
-                <Button onPress={handleSignUp} title="Kayıt Ol" uppercase={false} color="#ff6131" tintColor="white"/>
+                <Button onPress={handleSignUp} title="Kayıt Ol" uppercase={false} color="#8754ce" tintColor="white"/>
             </TouchableOpacity>
         </View>
     );

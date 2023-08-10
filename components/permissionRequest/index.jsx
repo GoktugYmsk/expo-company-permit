@@ -1,10 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View,  TouchableOpacity, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useDispatch, useSelector } from 'react-redux';
 import { setReason, setStartDay, setEndDay, setWorkerPerReq } from '../configure';
-import { Switch } from "@react-native-material/core";
+import { Switch ,TextInput, Button} from "@react-native-material/core";
 
 function PermissionRequest() {
     const [error, setError] = useState('')
@@ -167,26 +167,46 @@ function PermissionRequest() {
 
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView >
             <>
+            <View style={styles.container}>
+
+                <View style={styles.header}>
+                    <Text style={styles.headerText}>İZİN ALMA FORMU</Text>
+                </View>
                 {error &&
                     <Text>{error}</Text>
                 }
-                <Text>İzin Nedeni</Text>
-                <TextInput style={styles.input} onChangeText={handleReasonChange} />
+                <View style={styles.topContent}>
+                    <TextInput
+                        label="İzin Nedeni"
+                        variant="outlined"
+                        style={{ width: 265 }}
+                        onChangeText={handleReasonChange} 
+                    />
+                </View>
                 <View style={styles.middleContent}>
-                    <Text style={styles.inlineText}>Tek gün izin</Text>
-                    <Text style={styles.inlineText}>/</Text>
-                    {
-                        checked &&
-                        <Text style={styles.inlineText}>Çoklu gün izin</Text>
-                    }
-                    <Switch value={checked} onValueChange={() => setChecked(!checked)} />
+                    <View style={styles.middleContentText}>
+                        <Text style={styles.inlineText}>Tek gün izin</Text>
+                        {
+                            checked &&
+                            <Text style={styles.inlineText}>/ Çoklu gün izin</Text>
+                        }
+                    </View>
+                    <Switch style={{ marginTop: 5, }} trackColor="#8754ce" thumbColor="white" value={checked} onValueChange={() => setChecked(!checked)} />
                 </View>
                 <View style={styles.altContent}>
-                    <Text>İzin Tarihi Aralığı</Text>
+
+
                     <View style={styles.datePicker}>
-                        <Text>Başlangıç</Text>
+                        <Button 
+                            title="İZİN BAŞLANGIÇ TARİHİ SEÇİN" 
+                            variant="outlined" 
+                            disabled 
+                            color="#8754ce" 
+                            tintColor="white" 
+                            style={{ marginTop: 20, }}
+                        />
                         <Calendar
                             style={styles.calendar}
                             onDayPress={(day) => handleStartDate(day.dateString)}
@@ -196,7 +216,14 @@ function PermissionRequest() {
                     {checked &&
 
                         <View style={styles.datePicker}>
-                            <Text>Bitiş</Text>
+                            <Button 
+                                title="İZİN BİTİŞ TARİHİ SEÇİN" 
+                                variant="outlined" 
+                                disabled 
+                                color="#8754ce" 
+                                tintColor="white" 
+                                style={{ marginTop: 20, paddingHorizontal: 23,}}
+                            />
                             <Calendar
                                 style={styles.calendar}
                                 onDayPress={(day) => handleEndDate(day.dateString)}
@@ -205,9 +232,17 @@ function PermissionRequest() {
                         </View>
                     }
                 </View>
-                <TouchableOpacity onPress={handleSendRequest} style={styles.button}>
-                    <Text>İzni Onaya gönder</Text>
+                <TouchableOpacity style={styles.button}>
+
+                <Button  
+                    onPress={handleSendRequest} 
+                    title="İZİNİ ONAYA GÖNDER"
+                    uppercase={false} 
+                    color="#8754ce" 
+                    tintColor="white" 
+                />
                 </TouchableOpacity>
+            </View>
             </>
         </ScrollView >
     );
@@ -215,30 +250,52 @@ function PermissionRequest() {
 
 const styles = StyleSheet.create({
     container: {
-        flexGrow: 1,
         flexDirection: 'column',
-        justifyContent: 'space-around',
         alignItems: 'center',
-        backgroundColor: 'red',
-        paddingBottom: 20,
+        backgroundColor: 'white',
+        padding: 20,
+        height: '100%',
+    },
+    header: {
+        backgroundColor: '#8754ce',
+        width: '100%',
+        padding: 10,
+        borderRadius: 4,
+    },
+    headerText: {
+        fontSize: 20,
+        width: '100%',
+        textAlign: "center",
+        fontWeight: "bold",
+        color: 'white',
+    },
+    topContent:{
+        margin: 20,
     },
     middleContent: {
         flexDirection: 'row',
-        backgroundColor: 'green',
+        backgroundColor: '#f1f1f1',
         justifyContent: 'space-around',
-        width: '100%',
+        width: '95%',
+        borderRadius: 5,
     },
-    input: {
-        width: '80%',
-        height: 40,
-        backgroundColor: 'white',
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginBottom: 10,
-        paddingHorizontal: 10,
+    middleContentText: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '70%',
+        borderRadius: 5,
+        paddingTop: 3,
+    },
+    inlineText:{
+        color: "#8754ce",
+        fontSize: 18,
+        padding: 10,
     },
     calendar: {
-        width: 410,
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: "#cecece",
+        width: 350,
         marginTop: 10,
     },
     button: {

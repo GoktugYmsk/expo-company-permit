@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setWorkerInfo } from '../../configure';
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { Button, ListItem,} from "@react-native-material/core";
 
 function OffDuty() {
     const [selectedWorker, setSelectedWorker] = useState(null);
@@ -30,22 +32,40 @@ function OffDuty() {
         <ScrollView>
             {workerInfo &&
                 workerInfo.map((worker) => (
-                    <View >
+                    <View style={styles.box}>
                         {(manageName === worker.manager) && (
                             <View key={worker.name} style={styles.container} >
-                                <TouchableOpacity onPress={() => handleWorkerClick(worker)}>
-                                    <Text style={styles.workerName}>Adı: {worker.name}</Text>
+                                <TouchableOpacity style={styles.containerOpa} onPress={() => handleWorkerClick(worker)}>
+                                    <Text style={styles.workerName}>{worker.name}</Text>
+                                    <Icon style={styles.workerIcon} name="check-circle" size={28} color="green"/>
                                 </TouchableOpacity>
                             </View>
                         )}
                         {selectedWorker === worker && (
                             <View style={styles.workerDetails}>
-                                <Text style={styles.detailText}>Başlangıç Tarihi: {worker.startDay}</Text>
-                                <Text style={styles.detailText}>Bitiş Tarihi: {worker.endDay}</Text>
-                                <Text style={styles.detailText}>Sebep: {worker.reason}</Text>
-                                <TouchableOpacity onPress={handleDelete}>
-                                    <Text>Delete</Text>
-                                </TouchableOpacity>
+                                <ListItem
+                                    style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }}
+                                    title={worker.startDay}
+                                    secondaryText="Başlangıç Tarihi"
+                                />
+                                <ListItem
+                                    style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }}
+                                    title={worker.endDay}
+                                    secondaryText="Bitiş Tarihi"
+                                />
+                                <ListItem
+                                    style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }}
+                                    title={worker.reason}
+                                    secondaryText="Sebep"
+                                />
+
+                                <Button  
+                                    onPress={handleDelete} 
+                                    style={styles.workerButton} 
+                                    title="İZİNİ İPTAL ET" 
+                                    color="error"
+                                />
+                                
                             </View>
                         )}
                     </View>
@@ -55,22 +75,43 @@ function OffDuty() {
 }
 
 const styles = StyleSheet.create({
+    box: {
+        backgroundColor: "white",
+    },
     container: {
         padding: 10,
+        backgroundColor: "white",
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        flexDirection: 'row',
+    },
+    containerOpa: {
+        padding: 10,
+        backgroundColor: "white",
+        flexDirection: 'row',
+        width: '100%',
+    },
+    workerName: {
+        fontSize: 19,
+        fontWeight: 'bold',
+        width: '90%',
+    },
+    workerIcon:{
+        alignItems: "right",
+    },
+    workerDetails: {
+        flexDirection: 'column',
+        marginTop: 10,
+        marginBottom: 10,
+        backgroundColor: "white",
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
-    workerName: {
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    workerDetails: {
-        marginTop: 10,
-        marginLeft: 20,
-    },
-    detailText: {
-        fontSize: 14,
-        marginBottom: 5,
+    workerButton: {
+        marginRight: 40,
+        marginLeft: 40,
+        marginBottom: 20,
+        marginTop: 20,
     },
 });
 

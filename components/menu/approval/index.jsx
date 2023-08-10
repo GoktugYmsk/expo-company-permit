@@ -8,7 +8,9 @@ import {
   setWorker,
   setWorkerPerReq,
 } from "../../configure";
-import { Button } from "@react-native-material/core";
+import { Button,ListItem } from "@react-native-material/core";
+
+
 
 function Approval() {
   const dispatch = useDispatch();
@@ -55,54 +57,69 @@ function Approval() {
   };
 
   return (
-    <View>
-      {isAdmin && (
-        <View style={styles.mainContainer}>
-          <Text style={styles.title}>Onay Bekleyen İzinler</Text>
-          {workerPerReq &&
-            workerPerReq.map((item, index) => (
-              <View style={styles.container} key={index}>
-                <View style={styles.permitTextContainer}>
-                  <Text style={styles.permitTitle}>isim</Text>
-                  <Text style={styles.permitText}>{item.name}</Text>
-                </View>
-                <View style={styles.permitTextContainer}>
-                  <Text style={styles.permitTitle}>başlangıç tarihi</Text>
-                  <Text style={styles.permitText}>{item.startDay}</Text>
-                </View>
-                <View style={styles.permitTextContainer}>
-                  <Text style={styles.permitTitle}>bitiş tarihi</Text>
-                  <Text style={styles.permitText}> {item.endDay}</Text>
-                </View>
-                <View style={styles.permitTextContainer}>
-                  <Text style={styles.permitTitle}>sebep</Text>
-                  <Text style={styles.permitText}>{item.reason}</Text>
-                </View>
-                <View style={styles.permitTextContainer}>
-                  <Text style={styles.permitTitle}>yönetici</Text>
-                  <Text style={styles.permitText}> {item.manager}</Text>
-                </View>
-                <View style={styles.buttonContainer}>
-                  <Button
-                    title="Onayla"
-                    onPress={() => handleApprovalClick(index)}
-                    color="green"
-                    style={styles.buttonApprove}
-                  />
-                  <Button
-                    title="Reddet"
-                    onPress={() => handleRejectClick(index)}
-                    color="error"
-                    style={styles.buttonReject}
-                  />
-                </View>
+    <ScrollView>
+      <View>
+        {isAdmin && (
+          <View style={styles.mainContainer}>
+              <View style={styles.header}>
+                  <Text style={styles.headerText}>Onay Bekleyen İzinler</Text>
               </View>
-              
-            ))}
-        </View>
-      )}
-      {!isAdmin && <Text>İzin taleplerini onaylama yetkiniz yok.</Text>}
-    </View>
+            {workerPerReq &&
+              workerPerReq.map((item, index) => (
+                <View style={styles.container} key={index}>
+                  <View style={styles.permitTextContainer}>
+                    <ListItem
+                      title={item.name}
+                      secondaryText="İsim"
+                    />
+                  </View>
+                  <View style={styles.permitTextContainer}>
+                    <ListItem
+                      title={item.startDay}
+                      secondaryText="Başlangıç Tarihi"
+                    />
+                  </View>
+                  <View style={styles.permitTextContainer}>
+                    <ListItem
+                      title={item.endDay}
+                      secondaryText="Bitiş Tarihi"
+                    />
+                  </View>
+                  <View style={styles.permitTextContainer}>
+                    <ListItem
+                      title={item.reason}
+                      secondaryText="Sebep"
+                    />
+                  </View>
+                  <View style={styles.permitTextContainer}>
+                    <ListItem
+                      title={item.manager}
+                      secondaryText="Yönetici"
+                    />
+                  </View>
+                  <View style={styles.buttonContainer}>
+                    <Button
+                      title="Onayla"
+                      onPress={() => handleApprovalClick(index)}
+                      color="#8754ce"
+                      style={styles.buttonApprove}
+                    />
+                    <Button
+                      title="Reddet"
+                      onPress={() => handleRejectClick(index)}
+                      color="#8754ce"
+                      variant="outlined"
+                      style={styles.buttonReject}
+                    />
+                  </View>
+                </View>
+                
+              ))}
+          </View>
+        )}
+        {!isAdmin && <Text>İzin taleplerini onaylama yetkiniz yok.</Text>}
+      </View>
+    </ScrollView>
   );
 }
 
@@ -111,45 +128,38 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   container: {
-    padding: 12,
-    paddingVertical: 6,
-    borderBottomWidth: 4,
-    borderBottomColor: "#ff6131",
+    padding: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#a767ff",
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-    backgroundColor: "#ff6131",
-    paddingHorizontal: 12,
-    paddingVertical: 5,
+  header: {
+    backgroundColor: '#8754ce',
+    width: '100%',
+    padding: 10,
     borderRadius: 4,
-    textAlign: "center",
-    marginBottom: 8,
+  },
+  headerText: {
+      fontSize: 20,
+      width: '100%',
+      textAlign: "center",
+      fontWeight: "bold",
+      color: 'white',
   },
   permitTextContainer: {
-    flexDirection: "row",
     backgroundColor: "#a95e13",
     color: "white",
     borderRadius: 4,
-    marginBottom: 4,
-    alignItems: "center",
-  },
-  permitTitle: {
-    width: 150,
-    fontWeight: "bold",
-    color: "white",
-    paddingLeft: 8,
-    paddingVertical: 5,
   },
   permitText: {
     color: "white",
     textAlign: "center",
   },
   buttonContainer: {
+    backgroundColor: "white",
     flexDirection:'row',
     justifyContent:'center',
-    marginTop:5
+    padding: 15,
   },
   buttonApprove:{
     marginRight:10

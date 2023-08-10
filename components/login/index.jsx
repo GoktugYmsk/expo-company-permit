@@ -75,13 +75,13 @@ function Login() {
                 />
             </View>
             <TouchableOpacity  >
-                <Button title="Giriş Yap" onPress={handleClick} uppercase={false} color="#ff6131" tintColor="white" />
+                <Button title="Giriş Yap" onPress={handleClick} uppercase={false} color="#8754ce" tintColor="white" />
             </TouchableOpacity>
 
             <Text style={styles.titleDown}>Hesabınız mı yok mu ?</Text>
 
             <TouchableOpacity  >
-                <Button title="Kayıt Ol" variant="outlined" onPress={handleClickSignup} uppercase={false} color="#ff6131" tintColor="white" />
+                <Button title="Kayıt Ol" variant="outlined" onPress={handleClickSignup} uppercase={false} color="#8754ce" tintColor="white" />
             </TouchableOpacity>
 
             <StatusBar style="auto" />
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 24,
-        marginBottom: 10,
+        marginBottom: 25,
     },
     titleDown: {
         fontSize: 14,
@@ -109,11 +109,11 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         padding: 10,
         borderWidth: 1,
-        borderColor: "#ff6131",
+        borderColor: "#8754ce",
         borderRadius: 5,
     },
     buttonTextDown: {
-        color: "#ff6131",
+        color: "#8754ce",
     },
 });
 
