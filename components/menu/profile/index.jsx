@@ -21,6 +21,7 @@ function Profile() {
     const [visible, setVisible] = useState(false);
     const manager = useSelector((state) => state.management.manager)
     const worker = useSelector((state) => state.workerInfoTotal.worker)
+    const manageName = useSelector((state) => state.management.manageName);
 
     const navigation = useNavigation();
     const handleRequestClick = () => {
@@ -99,10 +100,13 @@ function Profile() {
                     </DialogActions>
                 </Dialog>
 
-                <View style={styles.selectedManager}>
-                    <Text style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }} variant="h6">Seçilen Yönetici :</Text>
-                    <Button style={{ marginLeft: 36,marginRight: 36,}} variant="outlined" title={`${manager}`} />
-                </View>
+                {!manageName &&
+                     
+                    <View style={styles.selectedManager}>
+                        <Text style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }} variant="h6">Seçilen Yönetici :</Text>
+                        <Button style={{ marginLeft: 36,marginRight: 36,}} variant="outlined" title={`${manager}`} />
+                    </View>
+                }   
                 <Button 
                     style={{ marginLeft: 36,marginRight: 36,}} 
                     color="#8754ce" 

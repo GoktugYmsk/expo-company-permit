@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setWorkerInfo,
-  setStartDay,
-  setEndDay,
-  setWorker,
-  setWorkerPerReq,
-} from "../../configure";
+import { setWorkerInfo, setStartDay, setEndDay, setWorker, setWorkerPerReq } from '../../configure';
 import { Button,ListItem } from "@react-native-material/core";
 
 
@@ -15,25 +9,21 @@ import { Button,ListItem } from "@react-native-material/core";
 function Approval() {
   const dispatch = useDispatch();
 
-  const workerPerReq = useSelector(
-    (state) => state.workerInfoTotal.workerPerReq
-  );
+  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
   const manageName = useSelector((state) => state.management.manageName);
   const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
 
-  const isAdmin = manageName !== "";
+  const isAdmin = manageName !== '';
 
   useEffect(() => {
-    console.log("denem", workerPerReq);
+    console.log('denem', workerPerReq);
   }, [workerPerReq]);
 
   const handleApprovalClick = (index) => {
     if (isAdmin && index >= 0 && index < workerPerReq.length) {
       const approvedWorker = workerPerReq[index];
 
-      const isWorkerAlreadyExists = workerInfo?.includes(
-        (worker) => worker.name === approvedWorker.name
-      );
+      const isWorkerAlreadyExists = workerInfo?.includes(worker => worker.name === approvedWorker.name);
 
       if (!isWorkerAlreadyExists) {
         const newWorkerInfo = {
@@ -42,17 +32,32 @@ function Approval() {
           endDay: approvedWorker.endDay,
           reason: approvedWorker.reason,
           manager: approvedWorker.manager,
-          accept: approvedWorker.accept === true,
+          accept: true,
         };
+
         dispatch(setWorkerInfo([...workerInfo, newWorkerInfo]));
-        dispatch(setWorkerPerReq(workerPerReq.filter((_, i) => i !== index)));
+        dispatch(setWorkerPerReq(workerPerReq.map((worker, i) => i === index ? newWorkerInfo : worker)));
       }
     }
   };
 
   const handleRejectClick = (index) => {
     if (isAdmin && index >= 0 && index < workerPerReq.length) {
-      dispatch(setWorkerPerReq(workerPerReq.filter((_, i) => i !== index)));
+      const approvedWorker = workerPerReq[index];
+
+      const isWorkerAlreadyExists = workerInfo?.includes(worker => worker.name === approvedWorker.name);
+
+      if (!isWorkerAlreadyExists) {
+        const newWorkerInfo = {
+          name: approvedWorker.name,
+          startDay: approvedWorker.startDay,
+          endDay: approvedWorker.endDay,
+          reason: approvedWorker.reason,
+          manager: approvedWorker.manager,
+          accept: false,
+        };
+        dispatch(setWorkerPerReq(workerPerReq.map((worker, i) => i === index ? newWorkerInfo : worker)));
+      }
     }
   };
 
@@ -64,9 +69,11 @@ function Approval() {
               <View style={styles.header}>
                   <Text style={styles.headerText}>Onay Bekleyen İzinler</Text>
               </View>
-            {workerPerReq &&
-              workerPerReq.map((item, index) => (
-                <View style={styles.container} key={index}>
+              {workerPerReq && workerPerReq.some(item => item.accept === null) ? (
+                workerPerReq.map((item, index) => (
+                <View key={index}>
+                {item.accept === null ? (
+                  <View style={styles.container} key={index}>
                   <View style={styles.permitTextContainer}>
                     <ListItem
                       title={item.name}
@@ -113,14 +120,22 @@ function Approval() {
                     />
                   </View>
                 </View>
+                ) : null}
                 
-              ))}
+              </View>
+              ))
+            ) : (
+              <Text>Bekleyen istek bulunmamaktadır</Text>
+            )}
           </View>
         )}
-        {!isAdmin && <Text>İzin taleplerini onaylama yetkiniz yok.</Text>}
+        {!isAdmin && (
+          <Text>İzin taleplerini onaylama yetkiniz yok.</Text>
+        )}
       </View>
     </ScrollView>
   );
+
 }
 
 const styles = StyleSheet.create({

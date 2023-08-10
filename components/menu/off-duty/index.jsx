@@ -48,11 +48,13 @@ function OffDuty() {
                                     title={worker.startDay}
                                     secondaryText="Başlangıç Tarihi"
                                 />
-                                <ListItem
-                                    style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }}
-                                    title={worker.endDay}
-                                    secondaryText="Bitiş Tarihi"
-                                />
+                                {worker.endDay &&
+                                    <ListItem
+                                        style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }}
+                                        title={worker.endDay}
+                                        secondaryText="Bitiş Tarihi"
+                                    />
+                                }
                                 <ListItem
                                     style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }}
                                     title={worker.reason}
