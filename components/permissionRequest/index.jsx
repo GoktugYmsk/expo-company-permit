@@ -44,7 +44,6 @@ function PermissionRequest() {
         if (manager && selectedStartDate && selectedEndDate) {
             if (workerInfo) {
                 const isNameInWorkerInfo = workerInfo.find(workerInfoItem => workerInfoItem.name === worker);
-                // const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.name === worker.name);
 
                 if (isNameInWorkerInfo) {
                     setError('Bu işçinin zaten bir izin isteği bulunmaktadır.');
@@ -62,6 +61,27 @@ function PermissionRequest() {
                     dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
                     navigation.navigate('MyRequest');
                 }
+            }
+            else if (workerPerReq) {
+                const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.name === worker);
+
+                if (isNameInWorkerPerReq) {
+                    setError('Bu işçinin zaten bir izin isteği bulunmaktadır.');
+                }
+                else {
+                    const newWorkerInfo = {
+                        name: worker,
+                        startDay: selectedStartDate,
+                        endDay: selectedEndDate,
+                        reason: sreason,
+                        manager: manager,
+                        accept: false,
+
+                    };
+                    dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+                    navigation.navigate('MyRequest');
+                }
+
             }
             else {
                 const newWorkerInfo = {
@@ -96,7 +116,6 @@ function PermissionRequest() {
                 {error &&
                     <Text>{error}</Text>
                 }
-                <Text>{worker}</Text>
                 <Text>İzin Nedeni</Text>
                 <TextInput style={styles.input} onChangeText={handleReasonChange} />
                 <View style={styles.middleContent}>
@@ -161,7 +180,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingHorizontal: 10,
     },
-    calendar:{
+    calendar: {
         width: 410,
         marginTop: 10,
     },
