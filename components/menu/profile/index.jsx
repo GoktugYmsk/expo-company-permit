@@ -100,15 +100,14 @@ function Profile() {
                     </DialogActions>
                 </Dialog>
 
-                {!manageName &&
                      
-                    <View style={styles.selectedManager}>
-                        <Text style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }} variant="h6">Seçilen Yönetici :</Text>
-                        <Button style={{ marginLeft: 36,marginRight: 36,}} variant="outlined" title={`${manager}`} />
-                    </View>
-                }   
+                <View style={styles.selectedManager}>
+                    <Text style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }} variant="h6">Seçilen Yönetici :</Text>
+                    <Button style={{ marginLeft: 36,marginRight: 36,}} variant="outlined" title={`${manager}`} />
+                </View>
+
                 <Button 
-                    style={{ marginLeft: 36,marginRight: 36,}} 
+                    style={{ marginLeft: 36,marginRight: 36,marginTop: 20,}} 
                     color="#8754ce" 
                     tintColor="white" 
                     title="İZİN TALEBİ OLUŞTUR"

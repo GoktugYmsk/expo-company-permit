@@ -179,7 +179,7 @@ function PermissionRequest() {
                 }
                 <View style={styles.topContent}>
                     <TextInput
-                        label="İzin Nedeni"
+                        placeholder="İzin Nedeni"
                         variant="outlined"
                         style={{ width: 265 }}
                         onChangeText={handleReasonChange} 
