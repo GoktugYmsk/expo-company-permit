@@ -19,10 +19,10 @@ function Menu() {
             navigation.navigate('Home')
         }
         else {
-            alert('Yönetici Seçimi yapınız')
-            setTimeout(() => {
-                navigation.navigate('Profile')
-            }, 3000);
+            alert('Profile sayfasından yönetici Seçimi yapınız')
+            // setTimeout(() => {
+            //     navigation.navigate('Profile')
+            // }, 3000);
         }
     }
 
@@ -31,13 +31,12 @@ function Menu() {
             navigation.navigate('PerRequest')
         }
         else {
-            alert('Yönetici Seçimi yapınız')
-            setTimeout(() => {
-                navigation.navigate('Profile')
-            }, 3000);
+            alert('Profile sayfasından yönetici Seçimi yapınız')
+            // setTimeout(() => {
+            //     navigation.navigate('Profile')
+            // }, 3000);
         }
     }
-
 
     const handleApprovalClick = () => {
         if (manageName && worker) {
@@ -47,10 +46,10 @@ function Menu() {
             navigation.navigate('MyRequest')
         }
         else if (!manageName && worker && !manager) {
-            alert('Yönetici Seçimi yapınız')
-            setTimeout(() => {
-                navigation.navigate('Profile')
-            }, 3000);
+            alert('Profile sayfasından yönetici Seçimi yapınız')
+            // setTimeout(() => {
+            //     navigation.navigate('Profile')
+            // }, 3000);
         }
     }
 
@@ -77,22 +76,20 @@ function Menu() {
                     <Text style={styles.buttonText}>İzin talebi</Text>
                     <Icon name="arrow-right" size={23} />
                 </TouchableOpacity>
-
                 {
-            isAdmin &&
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('OffDuty')}>
-                <Icon name="sunglasses" size={30} />
-                <Text style={styles.buttonText}>İzinlerim</Text>
-                <Icon name="arrow-right" size={23} />
-            </TouchableOpacity>
-        }
-
-        <TouchableOpacity style={styles.button} onPress={handleApprovalClick} >
-            <Icon name="progress-clock" size={30} />
-            <Text style={styles.buttonText}>Onay Bekleyen İşlemler</Text>
-            <Icon name="arrow-right" size={23} />
-        </TouchableOpacity>
-    </View>
+                    isAdmin &&
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('OffDuty')}>
+                        <Icon name="sunglasses" size={30} />
+                        <Text style={styles.buttonText}>İzinlilerim</Text>
+                        <Icon name="arrow-right" size={23} />
+                    </TouchableOpacity>
+                }
+                <TouchableOpacity style={styles.button} onPress={handleApprovalClick} >
+                    <Icon name="progress-clock" size={30} />
+                    <Text style={styles.buttonText}>Onay Bekleyen İşlemler</Text>
+                    <Icon name="arrow-right" size={23} />
+                </TouchableOpacity>
+            </View>
         </View >
     );
 }

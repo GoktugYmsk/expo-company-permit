@@ -7,7 +7,6 @@ import { TextInput, Button, IconButton } from "@react-native-material/core";
 import { useDispatch, useSelector } from 'react-redux';
 import { setEndDay, setManageName, setManager, setReason, setStartDay, setWorker, setWorkerInfo, setWorkerPerReq } from '../configure';
 
-
 function Login() {
     const navigation = useNavigation();
     const [username, setUsername] = useState('');

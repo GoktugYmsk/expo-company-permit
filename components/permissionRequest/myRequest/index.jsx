@@ -15,24 +15,53 @@ function MyRequest() {
 
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
     const worker = useSelector((state) => state.workerInfoTotal.worker);
-    console.log('worker', worker)
+    console.log('workerPerReq', workerPerReq)
 
     return (
         <View>
             <View>
                 <Text style={styles.title} >İzinlerim</Text>
             </View>
-            <Text>Beklenen</Text>
             {workerPerReq &&
                 workerPerReq.map((item, index) => (
                     <View key={index}>
                         {item.name === worker && (
                             <View>
-                                <Text> isim {item.name}</Text>
-                                <Text> başlangıç tarihi {item.startDay}</Text>
-                                <Text>  bitiş tarihi {item.endDay}</Text>
-                                <Text> sebep {item.reason}</Text>
-                                <Text> yönetici {item.manager}</Text>
+                                {item.accept === null && (
+                                    <View>
+                                        <Text style={styles.titleWait} >Beklenen İstek</Text>
+                                        <Text> isim {item.name}</Text>
+                                        <Text> başlangıç tarihi {item.startDay}</Text>
+                                        <View>
+                                            {item.endDay &&
+                                                <Text>  bitiş tarihi </Text>
+                                            }
+                                        </View>
+                                        <Text> sebep {item.reason}</Text>
+                                        <Text> yönetici {item.manager}</Text>
+                                    </View>
+                                )}
+                                {item.accept === true && (
+
+                                    <View>
+                                        <Text style={styles.titleAccept} >Onaylanan İstek</Text>
+                                        <Text> isim {item.name}</Text>
+                                        <Text> başlangıç tarihi {item.startDay}</Text>
+                                        <Text>  bitiş tarihi {item.endDay}</Text>
+                                        <Text> sebep {item.reason}</Text>
+                                        <Text> yönetici {item.manager}</Text>
+                                    </View>
+                                )}
+                                {item.accept === false && (
+                                    <View>
+                                        <Text style={styles.titleAccept} >Reddedilen İstek</Text>
+                                        <Text> isim {item.name}</Text>
+                                        <Text> başlangıç tarihi {item.startDay}</Text>
+                                        <Text>  bitiş tarihi {item.endDay}</Text>
+                                        <Text> sebep {item.reason}</Text>
+                                        <Text> yönetici {item.manager}</Text>
+                                    </View>
+                                )}
                             </View>
                         )}
                     </View>
