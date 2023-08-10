@@ -1,8 +1,15 @@
-import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Calendar } from "react-native-calendars";
-import { useSelector } from "react-redux";
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+<<<<<<< HEAD
+import { StyleSheet, Text, TouchableOpacity, View ,Modal} from 'react-native';
+import { Calendar, DotMarking } from 'react-native-calendars';
+import { useSelector } from 'react-redux';
+
+=======
+import { StyleSheet, Text, View } from 'react-native';
+import { Calendar } from 'react-native-calendars';
+import { useSelector } from 'react-redux';
+>>>>>>> 2efa53b36bc2d7e36b2a088d6d95890109ae6253
 
 const users = [
   {
@@ -38,21 +45,24 @@ function Home() {
   const to = new Date(d2[2], parseInt(d2[1]) - 1, d2[0]);
   const check = new Date(c[2], parseInt(c[1]) - 1, c[0]);
 
-  return (
-    <View style={styles.container}>
-      <Calendar
-        current={selectedDate}
-        onDayPress={(day) => setSelectedDate(new Date(day.dateString))}
-        monthFormat={"yyyy MMMM"}
-        markingType={"period"}
-        hideExtraDays={true}
-      />
-      <Text>{formattedSelectedDate} tarihinde izinli olan çalışanlar:</Text>
-      {filteredUsers.length > 0 ? (
-        filteredUsers.map((user, index) => <Text key={index}>{user.name}</Text>)
-      ) : (
-        <Text>İzinli çalışan bulunamadı.</Text>
-      )}
+    return (
+        <View style={styles.container}>
+            <Calendar
+                style={styles.calendar}
+                current={selectedDate}
+                onDayPress={(day) => setSelectedDate(new Date(day.dateString))}
+                monthFormat={'yyyy MMMM'}
+                markingType={'multi-dot'}
+                hideExtraDays={true}
+            />
+            <Text>{formattedSelectedDate} tarihinde izinli olan çalışanlar:</Text>
+            {filteredUsers.length > 0 ? (
+                filteredUsers.map((user, index) => (
+                    <Text key={index}>{user.name}</Text>
+                ))
+            ) : (
+                <Text>İzinli çalışan bulunamadı.</Text>
+            )}
 
       <View>
         {workerInfo && (
@@ -73,16 +83,20 @@ function Home() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "flexStart",
-    alignItems: "center",
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
+    container: {
+        flex: 1,
+        justifyContent: 'flexStart',
+        alignItems: 'center',
+        width: '100%',
+    },
+    calendar:{
+        width: 410,
+        marginTop: 10,
+    },
+    title: {
+        fontSize: 24,
+        marginBottom: 20,
+    },
 });
 
 export default Home;
