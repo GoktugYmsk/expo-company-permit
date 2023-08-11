@@ -14,7 +14,7 @@ function Login() {
 
     const dispatch = useDispatch()
 
-    const validWorkers = ['Ahmet', 'Ayşe', 'Tuğkan', 'Tolga', 'Ayla', 'Cemal', 'Cemil', 'Hasan', 'Berk', 'Göktuğkan', 'İbrahim', 'Berkan', 'User'];
+    const validWorkers = ['Ahmet', 'Ayşe', 'Tuğkan', 'Tolga', 'Ayla', 'Cemal', 'Cemil', 'Hasan', 'Berk', 'Göktuğkan', 'İbrahim', 'Berkan', 'User', 'Worker'];
     const validManagement = ['Bora', 'Gökhan', 'Aydın', 'Hakan']
 
     const handleClick = () => {
