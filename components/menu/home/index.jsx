@@ -4,6 +4,8 @@ import { Calendar } from "react-native-calendars";
 import { useSelector } from "react-redux";
 import Accordion from "../../UI/Accordion";
 
+import CustomHamburger from "../../customHamburger";
+
 function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [permitsOnCalendar, setPermitsOnCalendar] = useState([]);
@@ -39,6 +41,7 @@ function Home() {
 
   return (
     <View style={styles.container}>
+      <CustomHamburger />
       <Calendar
         style={styles.calendar}
         current={selectedDate}

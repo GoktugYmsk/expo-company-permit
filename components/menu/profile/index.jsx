@@ -4,6 +4,8 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-nativ
 import { useDispatch, useSelector } from 'react-redux';
 import { setManager } from '../../configure';
 
+import CustomHamburger from '../../customHamburger';
+
 
 function Profile() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,6 +39,7 @@ function Profile() {
 
     return (
         <View>
+            <CustomHamburger />
             <View>
                 {!manageName &&
                     <View>
