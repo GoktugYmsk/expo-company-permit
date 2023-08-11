@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setReason, setStartDay, setEndDay, setWorkerPerReq } from '../configure';
 import { Switch ,TextInput, Button} from "@react-native-material/core";
 
+import CustomHamburger from '../customHamburger';
+
 function PermissionRequest() {
     const [error, setError] = useState('')
     const [selectedEndDate, setSelectedEndDate] = useState(null);
@@ -167,7 +169,8 @@ function PermissionRequest() {
 
 
     return (
-        <ScrollView >
+        <ScrollView>
+            <CustomHamburger />
             <>
             <View style={styles.container}>
 

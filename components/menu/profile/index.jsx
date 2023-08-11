@@ -15,13 +15,23 @@ import {
     ListItem,
   } from "@react-native-material/core";
 
-    
+import CustomHamburger from '../../customHamburger';
+import { ScrollView } from 'react-native-gesture-handler';
+
+
 function Profile() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [visible, setVisible] = useState(false);
+
     const manager = useSelector((state) => state.management.manager)
     const worker = useSelector((state) => state.workerInfoTotal.worker)
     const manageName = useSelector((state) => state.management.manageName);
+    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+    const isWorkerPermit = useSelector((state) => state.isWorker.isWorkerPermit);
+
+    console.log('isWorkerPermit', isWorkerPermit)
+
+
+    const [visible, setVisible] = useState(false);
 
     const navigation = useNavigation();
     const handleRequestClick = () => {
@@ -36,86 +46,99 @@ function Profile() {
 
     const handleSelectManager = (managerName) => {
         dispatch(setManager(managerName))
-        toggleMenu();
+        // toggleMenu();
+        // if (worker && workerPerReq) {
+        //     const savedUser = workerPerReq.filter((item) => item.name === worker);
+        //     console.log('savedUser', savedUser)
+        //     setReqUser(savedUser)
+        // }
     }
 
     const managers = ['Bora', 'Gökhan', 'Aydın', 'Hakan']
 
+
     return (
-        <Provider>
+        <ScrollView>
+        <View>
+            <CustomHamburger />
             <View style={styles.container}>
-                <View style={styles.profile}>
-                    <View style={styles.profileIcon}>
-                        <Icon name="account" size={24} color="white"/>
-                    </View>
-                    
-                    <View style={styles.profileText}>
-                        <Text style={{ fontSize: 25 }} variant="h6">Adı Soyadı</Text>
-                        <Text>{worker}</Text>
-                    </View>
-
-                </View>
-
-                <Text style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }} variant="h6">Yönetici Seç :</Text>
-                <Button
-                    title="YÖNETİCİ LİSTESİ"
-                    style={{marginLeft: 36,marginRight: 36,}}
-                    color="#8754ce"
-                    leading={<Icon style={{ marginRight: 5 }} name="format-list-bulleted" color="white" size={20} />}
-                    onPress={() => {
-                        toggleMenu();
-                        setVisible(true);
-                    }}
-                />
-
-                <Dialog  visible={visible} onDismiss={() => setVisible(false)}>
-                    <DialogHeader  title="Yöneticiler" />
-                    <DialogContent>
-                        <View>
-                            {managers.map((managerName, index) => (
-                                    
-                                <ListItem 
-                                key={index} onPress={() => handleSelectManager(managerName)} title={`${managerName}`
-                            
-                            }/>
-                                
-                            ))}
+                {!manageName &&
+                    <View>
+                        <View style={styles.profileIcon}>
+                            <Icon name="account" size={24} color="white"/>
                         </View>
-                    </DialogContent>
+                        
+                        <View style={styles.profileText}>
+                            <Text style={{ fontSize: 25 }} variant="h6">Adı Soyadı</Text>
+                            <Text>{worker}</Text>
+                        </View>
+                    </View>
+                }
+
+                    <Text style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }} variant="h6">Yönetici Seç :</Text>
+                    <Button
+                        title="YÖNETİCİ LİSTESİ"
+                        style={{marginLeft: 36,marginRight: 36,}}
+                        color="#8754ce"
+                        leading={<Icon style={{ marginRight: 5 }} name="format-list-bulleted" color="white" size={20} />}
+                        onPress={() => {
+                            toggleMenu();
+                            setVisible(true);
+                        }}
+                    />
+                <Provider>
+                    <Dialog  visible={visible} onDismiss={() => setVisible(false)}>
+                        <DialogHeader  title="Yöneticiler" />
+                        <DialogContent>
+                            <View>
+                                {managers.map((managerName, index) => (
+                                        
+                                    <ListItem 
+                                    key={index} onPress={() => handleSelectManager(managerName)} title={`${managerName}`
+                                
+                                }/>
+                                    
+                                ))}
+                            </View>
+                        </DialogContent>
 
 
-                    <DialogActions>
-                        <Button
-                            title="Çık"
-                            compact
-                            variant="outlined"
-                            onPress={() => setVisible(false)}
-                        />
-                        <Button
-                            title="Tamam"
-                            compact
-                            variant="outlined"
-                            onPress={() => setVisible(false)}
-                        />
-                    </DialogActions>
-                </Dialog>
-
-                     
-                <View style={styles.selectedManager}>
-                    <Text style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }} variant="h6">Seçilen Yönetici :</Text>
-                    <Button style={{ marginLeft: 36,marginRight: 36,}} variant="outlined" title={`${manager}`} />
-                </View>
-
-                <Button 
-                    style={{ marginLeft: 36,marginRight: 36,marginTop: 20,}} 
-                    color="#8754ce" 
-                    tintColor="white" 
-                    title="İZİN TALEBİ OLUŞTUR"
-                    onPress={handleRequestClick}
+                        <DialogActions>
+                            <Button
+                                title="Çık"
+                                compact
+                                variant="outlined"
+                                onPress={() => setVisible(false)}
+                            />
+                            <Button
+                                title="Tamam"
+                                compact
+                                variant="outlined"
+                                onPress={() => setVisible(false)}
+                            />
+                        </DialogActions>
+                    </Dialog>
+                </Provider>
+                        
+                    <View style={styles.selectedManager}>
+                        <Text style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }} variant="h6">Seçilen Yönetici :</Text>
+                        <Button style={{ marginLeft: 36,marginRight: 36,}} variant="outlined" title={`${manager}`} />
+                    </View>
                 
-                />
+                {!isWorkerPermit && 
+                    <Button 
+                        style={{ marginLeft: 36,marginRight: 36,marginTop: 20,}} 
+                        color="#8754ce" 
+                        tintColor="white" 
+                        title="İZİN TALEBİ OLUŞTUR"
+                        onPress={handleRequestClick}
+                    
+                    />
+                }
+                
             </View>
-        </Provider>
+        </View>
+    </ScrollView>
     );
 }
 
