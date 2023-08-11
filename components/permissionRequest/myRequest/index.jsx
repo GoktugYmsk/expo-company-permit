@@ -1,6 +1,7 @@
 import React from "react";
 import { Button ,ListItem} from "@react-native-material/core";
 import { ScrollView } from 'react-native';
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 import {
   StyleSheet,
@@ -32,54 +33,66 @@ function MyRequest() {
                             <View>
                                 {item.accept === null && (
                                     <View>
-                                        <ListItem
-                                            title={styles.titleWait}
-                                            secondaryText="Beklenen İstek"
-                                        />
-                                        <ListItem
-                                            title={item.name}
-                                            secondaryText="İsim"
-                                        />
-                                        <ListItem
-                                            title={item.startDay}
-                                            secondaryText="başlangıç tarihi"
-                                        />
-                                        {item.endDay &&
-                                            <ListItem
-                                                title={item.endDay}
-                                                secondaryText="bitiş tarihi"
+                                        <View style={styles.circleTick}>
+                                            <Button 
+                                                title="Beklenen İstek" 
+                                                variant="outlined" 
+                                                disabled 
+                                                color="#8754ce" 
+                                                tintColor="white" 
+                                                style={{ marginTop: 20, paddingHorizontal: 23,}}
                                             />
+                                            <Icon style={styles.workerIcon} name="clock-outline" size={28} color="orange"/>
+                                        </View>
+                                        <ListItem title={item.name} secondaryText="İsim" />
+                                        <ListItem title={item.startDay} secondaryText="başlangıç tarihi" />
+                                        {item.endDay &&
+                                            <ListItem title={item.endDay} secondaryText="bitiş tarihi" />
                                         }
                                         
-                                        <ListItem
-                                            title={item.reason}
-                                            secondaryText="sebep"
-                                        />
-                                        <ListItem
-                                            title={item.manager}
-                                            secondaryText="yönetici"
-                                        />
+                                        <ListItem title={item.reason} secondaryText="sebep" />
+                                        <ListItem title={item.manager} secondaryText="yönetici" />
                                     </View>
                                 )}
                                 {item.accept === true && (
 
                                     <View>
-                                        <Text style={styles.titleAccept} >Onaylanan İstek</Text>
-                                        <Text> isim {item.name}</Text>
-                                        <Text> başlangıç tarihi {item.startDay}</Text>
-                                        <Text>  bitiş tarihi {item.endDay}</Text>
-                                        <Text> sebep {item.reason}</Text>
-                                        <Text> yönetici {item.manager}</Text>
+                                        <View style={styles.circleTick}>
+                                            <Button 
+                                                title="Onaylanan İstek" 
+                                                variant="outlined" 
+                                                disabled 
+                                                color="#8754ce" 
+                                                tintColor="white" 
+                                                style={{ marginTop: 20, paddingHorizontal: 23,}}
+                                            />
+                                            <Icon style={styles.workerIcon} name="check-circle" size={28} color="green"/>
+                                        </View>
+                                        <ListItem title={item.name} secondaryText="isim" />
+                                        <ListItem title={item.startDay} secondaryText="başlangıç tarihi" />
+                                        <ListItem title={item.endDay} secondaryText="bitiş tarihi" />
+                                        <ListItem title={item.reason} secondaryText="sebep" />
+                                        <ListItem title={item.manager} secondaryText="yönetici" />
                                     </View>
                                 )}
                                 {item.accept === false && (
                                     <View>
-                                        <Text style={styles.titleAccept} >Reddedilen İstek</Text>
-                                        <Text> isim {item.name}</Text>
-                                        <Text> başlangıç tarihi {item.startDay}</Text>
-                                        <Text>  bitiş tarihi {item.endDay}</Text>
-                                        <Text> sebep {item.reason}</Text>
-                                        <Text> yönetici {item.manager}</Text>
+                                        <View style={styles.circleTick}>
+                                            <Button 
+                                                title="Reddedilen İstek" 
+                                                variant="outlined" 
+                                                disabled 
+                                                color="#8754ce" 
+                                                tintColor="white" 
+                                                style={{ marginTop: 20, paddingHorizontal: 23,}}
+                                            />
+                                            <Icon style={styles.workerIcon} name="close-circle" size={28} color="red"/>
+                                        </View>
+                                        <ListItem title={item.name} secondaryText="isim" />
+                                        <ListItem title={item.startDay} secondaryText="başlangıç tarihi" />
+                                        <ListItem title={item.endDay} secondaryText="bitiş tarihi" />
+                                        <ListItem title={item.reason} secondaryText="sebep" />
+                                        <ListItem title={item.manager} secondaryText="yönetici" />
                                     </View>
                                 )}
                             </View>
@@ -122,6 +135,15 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 150,
+  },
+  circleTick: {
+    flexDirection: 'row',
+    backgroundColor: "white",
+    padding: 10,
+    justifyContent: 'space-around',
+  },
+  workerIcon: {
+    paddingTop: 20,
   },
 });
 

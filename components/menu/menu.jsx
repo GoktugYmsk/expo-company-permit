@@ -67,8 +67,8 @@ function Menu() {
                     <Text style={styles.buttonText}>Anasayfa</Text>
                     <Icon name="arrow-right" size={23} color="#6d6e70" />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Profile')} >
-                    <Icon name="account" size={30} color="#8754ce" />
+                <TouchableOpacity style={styles.button} onPress={handleProfileClick} >
+                    <Icon name="account" size={30}  color="#8754ce" />
                     <Text style={styles.buttonText}>Profil</Text>
                     <Icon name="arrow-right" size={23} color="#6d6e70"/>
                 </TouchableOpacity>

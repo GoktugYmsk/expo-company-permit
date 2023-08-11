@@ -3,6 +3,8 @@ import { StyleSheet, Text, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { useSelector } from "react-redux";
 import Accordion from "../../UI/Accordion";
+import { Button } from "@react-native-material/core";
+import CustomHamburger from "../../customHamburger";
 
 function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -39,6 +41,7 @@ function Home() {
 
   return (
     <View style={styles.container}>
+      {/* <CustomHamburger /> */}
       <Calendar
         style={styles.calendar}
         current={selectedDate}
@@ -66,7 +69,14 @@ function Home() {
           />
         ))
       ) : (
-        <Text>Seçili tarihte izinli çalışan bulunamadı.</Text>
+        <Button 
+          title="SeçİLİ tarİhte İzİnlİ çalışan bulunamadı." 
+          variant="outlined" 
+          disabled 
+          color="#8754ce" 
+          tintColor="white" 
+          style={{ marginTop: 20, }}
+        />
       )}
     </View>
   );
@@ -78,10 +88,14 @@ const styles = StyleSheet.create({
     justifyContent: "flexStart",
     alignItems: "center",
     width: "100%",
+    backgroundColor: 'white',
   },
   calendar: {
-    width: 410,
+    width: 350,
     marginTop: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: "#cecece",
   },
   permitTitle: {
     fontSize: 18,
