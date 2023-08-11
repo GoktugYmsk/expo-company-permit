@@ -125,12 +125,26 @@ function Approval() {
               </View>
               ))
             ) : (
-              <Text>Bekleyen istek bulunmamaktadır</Text>
+              <Button 
+                title="Bekleyen İstek bulunmamaktadır." 
+                variant="outlined" 
+                disabled 
+                color="#8754ce" 
+                tintColor="white" 
+                style={{ marginTop: 20,marginHorizontal: 20, }}
+              />
             )}
           </View>
         )}
         {!isAdmin && (
-          <Text>İzin taleplerini onaylama yetkiniz yok.</Text>
+            <Button 
+                title="İzİnlerİ onaylama yetkİnİz yok." 
+                variant="outlined" 
+                disabled 
+                color="#8754ce" 
+                tintColor="white" 
+                style={{ marginTop: 20,marginHorizontal: 20, }}
+            />
         )}
       </View>
     </ScrollView>

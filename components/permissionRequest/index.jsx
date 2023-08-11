@@ -170,7 +170,7 @@ function PermissionRequest() {
 
     return (
         <ScrollView>
-            <CustomHamburger />
+            {/* <CustomHamburger /> */}
             <>
             <View style={styles.container}>
 

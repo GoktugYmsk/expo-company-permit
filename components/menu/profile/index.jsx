@@ -60,10 +60,9 @@ function Profile() {
     return (
         <ScrollView>
         <View>
-            <CustomHamburger />
+            {/* <CustomHamburger /> */}
             <View style={styles.container}>
-                {!manageName &&
-                    <View>
+                    <View style={styles.profile}>
                         <View style={styles.profileIcon}>
                             <Icon name="account" size={24} color="white"/>
                         </View>
@@ -73,7 +72,6 @@ function Profile() {
                             <Text>{worker}</Text>
                         </View>
                     </View>
-                }
 
                     <Text style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }} variant="h6">Yönetici Seç :</Text>
                     <Button
@@ -118,13 +116,13 @@ function Profile() {
                             />
                         </DialogActions>
                     </Dialog>
-                </Provider>
+                
                         
                     <View style={styles.selectedManager}>
                         <Text style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }} variant="h6">Seçilen Yönetici :</Text>
                         <Button style={{ marginLeft: 36,marginRight: 36,}} variant="outlined" title={`${manager}`} />
                     </View>
-                
+                </Provider>
                 {!isWorkerPermit && 
                     <Button 
                         style={{ marginLeft: 36,marginRight: 36,marginTop: 20,}} 
