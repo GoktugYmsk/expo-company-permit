@@ -2,16 +2,16 @@ import React from "react";
 import { Button } from "@react-native-material/core";
 
 import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
+    StyleSheet,
+    Text,
+    View,
+    TextInput,
+    TouchableOpacity,
 } from "react-native";
 import { useSelector } from "react-redux";
 
 function MyRequest() {
-  const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
+    const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
 
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
     const worker = useSelector((state) => state.workerInfoTotal.worker);
@@ -34,7 +34,7 @@ function MyRequest() {
                                         <Text> başlangıç tarihi {item.startDay}</Text>
                                         <View>
                                             {item.endDay &&
-                                                <Text>  bitiş tarihi </Text>
+                                                <Text>  bitiş tarihi {item.endDay} </Text>
                                             }
                                         </View>
                                         <Text> sebep {item.reason}</Text>
@@ -73,21 +73,21 @@ function MyRequest() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-  },
-  title: {
-    fontSize: 30,
-    color: "red",
-  },
-  buttonContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  button: {
-    width: 150,
-  },
+    container: {
+        flex: 1,
+        padding: 24,
+    },
+    title: {
+        fontSize: 30,
+        color: "red",
+    },
+    buttonContainer: {
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    button: {
+        width: 150,
+    },
 });
 
 export default MyRequest;

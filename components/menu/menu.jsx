@@ -3,16 +3,22 @@ import React, { useEffect } from 'react'
 import { useState } from 'react';
 
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsWorkerPermit } from '../configure';
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 
 function Menu() {
     const navigation = useNavigation();
 
+
+    const dispatch = useDispatch()
+
     const manageName = useSelector((state) => state.management.manageName);
     const manager = useSelector((state) => state.management.manager)
     const worker = useSelector((state) => state.workerInfoTotal.worker);
+    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+    const isWorkerPermit = useSelector((state) => state.isWorker.isWorkerPermit);
 
     const handleMainClick = () => {
         if (manager) {
@@ -53,6 +59,21 @@ function Menu() {
         }
     }
 
+    const handleProfileClick = () => {
+        if (worker && workerPerReq) {
+            const savedUser = workerPerReq.filter((item) => item.name === worker);
+            console.log('savedUser', savedUser);
+
+            // Eğer savedUser boş değilse (eşleşme varsa), true döndür
+            const isUserSaved = savedUser.length > 0;
+            console.log('isUserSaved', isUserSaved);
+
+            dispatch(setIsWorkerPermit(isUserSaved));
+        }
+        navigation.navigate('Profile');
+    }
+
+
     const isAdmin = manageName !== '';
 
     return (
@@ -66,7 +87,7 @@ function Menu() {
                     <Text style={styles.buttonText}>Anasayfa</Text>
                     <Icon name="arrow-right" size={23} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Profile')} >
+                <TouchableOpacity style={styles.button} onPress={handleProfileClick} >
                     <Icon name="account" size={30} />
                     <Text style={styles.buttonText}>Profil</Text>
                     <Icon name="arrow-right" size={23} />

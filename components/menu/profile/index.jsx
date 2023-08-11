@@ -7,9 +7,14 @@ import { setManager } from '../../configure';
 
 function Profile() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     const manager = useSelector((state) => state.management.manager)
     const worker = useSelector((state) => state.workerInfoTotal.worker)
     const manageName = useSelector((state) => state.management.manageName);
+    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+    const isWorkerPermit = useSelector((state) => state.isWorker.isWorkerPermit);
+
+    console.log('isWorkerPermit', isWorkerPermit)
 
     const dispatch = useDispatch()
 
@@ -19,14 +24,16 @@ function Profile() {
 
     const handleSelectManager = (managerName) => {
         dispatch(setManager(managerName))
-        toggleMenu();
+        // toggleMenu();
+        // if (worker && workerPerReq) {
+        //     const savedUser = workerPerReq.filter((item) => item.name === worker);
+        //     console.log('savedUser', savedUser)
+        //     setReqUser(savedUser)
+        // }
     }
 
     const managers = ['Bora', 'Gökhan', 'Aydın', 'Hakan']
 
-    // useEffect(() => {
-    //     dispatch(setManager(''))
-    // }, [])
 
     return (
         <View>
@@ -57,6 +64,7 @@ function Profile() {
             {!manageName &&
                 <Text>Seçilen Yönetici: {manager}</Text>
             }
+            {!isWorkerPermit && <Text>buton</Text>}
         </View>
     );
 }
