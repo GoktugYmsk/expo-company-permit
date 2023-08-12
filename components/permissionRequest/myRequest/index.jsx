@@ -18,7 +18,7 @@ function MyRequest() {
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
     const worker = useSelector((state) => state.workerInfoTotal.worker);
     const idControl = useSelector((state) => state.management.idControl);
-    console.log('workerPerReq', workerPerReq)
+    // console.log('workerPerReq', workerPerReq)
 
     return (
         <ScrollView>

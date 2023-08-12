@@ -32,7 +32,7 @@ function Profile() {
     const idControl = useSelector((state) => state.management.idControl);
 
 
-    console.log('isWorkerPermit', isWorkerPermit)
+    // console.log('isWorkerPermit', isWorkerPermit)
 
 
     const [visible, setVisible] = useState(false);
@@ -44,7 +44,7 @@ function Profile() {
 
     const dispatch = useDispatch()
 
-    console.log('DENEME', regUser, 'DENEME12', idControl)
+    // console.log('DENEME', regUser, 'DENEME12', idControl)
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);

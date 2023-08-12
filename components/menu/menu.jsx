@@ -62,11 +62,11 @@ function Menu() {
     const handleProfileClick = () => {
         if (worker && workerPerReq) {
             const savedUser = workerPerReq.filter((item) => item.name === worker);
-            console.log('savedUser', savedUser);
+            // console.log('savedUser', savedUser);
 
             // Eğer savedUser boş değilse (eşleşme varsa), true döndür
             const isUserSaved = savedUser.length > 0;
-            console.log('isUserSaved', isUserSaved);
+            // console.log('isUserSaved', isUserSaved);
 
             dispatch(setIsWorkerPermit(isUserSaved));
         }
@@ -89,31 +89,31 @@ function Menu() {
                     <Icon name="arrow-right" size={23} color="#6d6e70" />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={handleProfileClick} >
-                    <Icon name="account" size={30}  color="#8754ce" />
+                    <Icon name="account" size={30} color="#8754ce" />
                     <Text style={styles.buttonText}>Profil</Text>
-                    <Icon name="arrow-right" size={23} color="#6d6e70"/>
+                    <Icon name="arrow-right" size={23} color="#6d6e70" />
                 </TouchableOpacity>
 
-                {!manageName && 
+                {!manageName &&
                     <TouchableOpacity style={styles.button} onPress={handleRequestClick} >
                         <Icon name="thumb-up" size={30} color="#8754ce" />
                         <Text style={styles.buttonText}>İzin talebi</Text>
-                        <Icon name="arrow-right" size={23} color="#6d6e70"/>
+                        <Icon name="arrow-right" size={23} color="#6d6e70" />
                     </TouchableOpacity>
                 }
-                
+
                 {
                     isAdmin &&
                     <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('OffDuty')}>
                         <Icon name="sunglasses" size={30} color="#8754ce" />
                         <Text style={styles.buttonText}>İzinlilerim</Text>
-                        <Icon name="arrow-right" size={23} color="#6d6e70"/>
+                        <Icon name="arrow-right" size={23} color="#6d6e70" />
                     </TouchableOpacity>
                 }
                 <TouchableOpacity style={styles.button} onPress={handleApprovalClick} >
                     <Icon name="progress-clock" size={30} color="#8754ce" />
                     <Text style={styles.buttonText}>Onay Bekleyen İşlemler</Text>
-                    <Icon name="arrow-right" size={23} color="#6d6e70"/>
+                    <Icon name="arrow-right" size={23} color="#6d6e70" />
                 </TouchableOpacity>
             </View>
         </View >

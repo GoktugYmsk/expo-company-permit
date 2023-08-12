@@ -17,7 +17,7 @@ function Approval() {
   const isAdmin = manageName !== '';
 
   useEffect(() => {
-    console.log('denem', workerPerReq);
+    // console.log('denem', workerPerReq);
   }, [workerPerReq]);
 
   const handleApprovalClick = (index) => {

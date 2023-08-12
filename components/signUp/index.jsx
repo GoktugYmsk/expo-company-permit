@@ -14,7 +14,8 @@ function SignUp() {
     const [passwordWorker, setPasswordWorker] = useState('');
     const [nameWorker, setNameWorker] = useState('')
 
-    const regUser = useSelector((state) => state.saveRegUser.regUser)
+    const regUser = useSelector((state) => state.saveRegUser.regUser) || [];
+
 
     const navigation = useNavigation()
 
@@ -41,8 +42,6 @@ function SignUp() {
         }
         navigation.navigate('Login');
     };
-
-
 
     return (
         <View style={styles.container}>

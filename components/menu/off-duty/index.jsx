@@ -3,13 +3,14 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { useDispatch, useSelector } from 'react-redux';
 import { setWorkerInfo } from '../../configure';
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { Button, ListItem,} from "@react-native-material/core";
+import { Button, ListItem, } from "@react-native-material/core";
 
 function OffDuty() {
     const [selectedWorker, setSelectedWorker] = useState(null);
 
     const manageName = useSelector((state) => state.management.manageName);
     const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
+    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
 
     const dispatch = useDispatch()
 
@@ -23,51 +24,51 @@ function OffDuty() {
 
     const handleDelete = () => {
         if (selectedWorker) {
-            const updatedWorkerInfo = workerInfo.filter(worker => worker !== selectedWorker);
+            const updatedWorkerInfo = workerPerReq.filter(worker => worker !== selectedWorker);
             dispatch(setWorkerInfo(updatedWorkerInfo))
         }
     }
 
     return (
         <ScrollView>
-            {workerInfo &&
-                workerInfo.map((worker) => (
+            {workerPerReq &&
+                workerPerReq.map((worker) => (
                     <View style={styles.box}>
                         {(manageName === worker.manager) && (
                             <View key={worker.name} style={styles.container} >
                                 <TouchableOpacity style={styles.containerOpa} onPress={() => handleWorkerClick(worker)}>
                                     <Text style={styles.workerName}>{worker.name}</Text>
-                                    <Icon style={styles.workerIcon} name="check-circle" size={28} color="green"/>
+                                    <Icon style={styles.workerIcon} name="check-circle" size={28} color="green" />
                                 </TouchableOpacity>
                             </View>
                         )}
                         {selectedWorker === worker && (
                             <View style={styles.workerDetails}>
                                 <ListItem
-                                    style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }}
+                                    style={{ marginTop: 30, fontSize: 23, padding: 10, paddingLeft: 36, }}
                                     title={worker.startDay}
                                     secondaryText="Başlangıç Tarihi"
                                 />
                                 {worker.endDay &&
                                     <ListItem
-                                        style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }}
+                                        style={{ marginTop: 30, fontSize: 23, padding: 10, paddingLeft: 36, }}
                                         title={worker.endDay}
                                         secondaryText="Bitiş Tarihi"
                                     />
                                 }
                                 <ListItem
-                                    style={{ marginTop: 30,fontSize: 23, padding: 10,paddingLeft: 36, }}
+                                    style={{ marginTop: 30, fontSize: 23, padding: 10, paddingLeft: 36, }}
                                     title={worker.reason}
                                     secondaryText="Sebep"
                                 />
 
-                                <Button  
-                                    onPress={handleDelete} 
-                                    style={styles.workerButton} 
-                                    title="İZİNİ İPTAL ET" 
+                                <Button
+                                    onPress={handleDelete}
+                                    style={styles.workerButton}
+                                    title="İZİNİ İPTAL ET"
                                     color="error"
                                 />
-                                
+
                             </View>
                         )}
                     </View>
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         width: '90%',
     },
-    workerIcon:{
+    workerIcon: {
         alignItems: "right",
     },
     workerDetails: {

@@ -16,7 +16,7 @@ function PermissionRequest() {
 
     const [sreason, setSreason] = useState('')
 
-    console.log('checked', checked)
+    // console.log('checked', checked)
 
     const dispatch = useDispatch()
     const navigation = useNavigation()
@@ -33,7 +33,7 @@ function PermissionRequest() {
     // const endDay = useSelector((state) => state.offDays.endDay)
 
     const allPermits = useSelector((state) => state.workerInfoTotal.allPermits)
-    console.log(workerPerReq);
+    // console.log(workerPerReq);
 
     const handleStartDate = (e) => {
         setSelectedStartDate(e)

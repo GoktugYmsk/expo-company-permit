@@ -15,7 +15,7 @@ function Login() {
 
     const regUser = useSelector((state) => state.saveRegUser.regUser)
 
-    console.log('regUser', regUser)
+    // console.log('regUser', regUser)
 
     const dispatch = useDispatch()
 
@@ -28,9 +28,13 @@ function Login() {
     ];
 
     const handleClick = () => {
+        // console.log('isValidWorker', isValidWorker)
+
+
         const isValidWorker = regUser.find(worker => worker.name === username);
-        console.log('isValidWorker', isValidWorker)
         const isValidManagement = validManagement.find(manager => manager.name === username);
+
+        // if(regUser)
 
         if (isValidWorker) {
             const matchedUser = regUser.find(worker => worker.name === username && worker.email === email);
