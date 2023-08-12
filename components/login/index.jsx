@@ -5,36 +5,50 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button, IconButton } from "@react-native-material/core";
 import { useDispatch, useSelector } from 'react-redux';
-import { setEndDay, setManageName, setManager, setReason, setStartDay, setWorker, setWorkerInfo, setWorkerPerReq } from '../configure';
+import { setEndDay, setManageName, setManager, setReason, setStartDay, setWorker, setWorkerInfo, setWorkerPerReq, setIdControl } from '../configure';
 
 function Login() {
     const navigation = useNavigation();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('')
+
+    const regUser = useSelector((state) => state.saveRegUser.regUser)
+
+    console.log('regUser', regUser)
 
     const dispatch = useDispatch()
 
-    const validWorkers = ['Ahmet', 'Ayşe', 'Tuğkan', 'Tolga', 'Ayla', 'Cemal', 'Cemil', 'Hasan', 'Berk', 'Göktuğkan', 'İbrahim', 'Berkan', 'User', 'Worker'];
-    const validManagement = ['Bora', 'Gökhan', 'Aydın', 'Hakan']
+
+    const validManagement = [
+        { name: 'Bora', email: 'bora@example.com', password: '123456' },
+        { name: 'Gökhan', email: 'gokhan@example.com', password: '123456' },
+        { name: 'Aydın', email: 'aydin@example.com', password: '123456' },
+        { name: 'Hakan', email: 'hakan@example.com', password: '123456' }
+    ];
 
     const handleClick = () => {
-        const isValidWorker = validWorkers.includes(username);
-        const isValidManagement = validManagement.includes(username);
+        const isValidWorker = regUser.find(worker => worker.name === username);
+        console.log('isValidWorker', isValidWorker)
+        const isValidManagement = validManagement.find(manager => manager.name === username);
 
         if (isValidWorker) {
-            if (password === '1234') {
+            const matchedUser = regUser.find(worker => worker.name === username && worker.email === email);
+
+            if (matchedUser && matchedUser.password === password) {
                 dispatch(setWorker(username));
-                dispatch(setManageName(''))
-                dispatch(setManager(''))
+                dispatch(setManageName(''));
+                dispatch(setManager(''));
+                dispatch(setIdControl(isValidWorker.id))
                 navigation.navigate('Menu');
             } else {
-                console.log("Hatalı şifre!");
+                console.log("Kullanıcı adı veya şifre hatalı!");
             }
-        } else if (isValidManagement && password === '123456') {
+        } else if (isValidManagement && isValidManagement.password === password) {
             dispatch(setManageName(username));
             navigation.navigate('Menu');
         } else {
-            console.log("Hatalı giriş!");
+            console.log("Çalışan bulunamadı");
         }
     };
 
@@ -63,6 +77,15 @@ function Login() {
                     value={username}
                     onChangeText={setUsername}
                     variant="outlined" label="Kullanıcı Adı" style={{ width: 200, flex: 1, marginLeft: 5 }}
+                />
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, padding: 0, width: 240, }}>
+                <Icon name="lock" size={25} color="gray" />
+                <TextInput
+                    value={email}
+                    autoCapitalize="none"
+                    onChangeText={setEmail}
+                    variant="outlined" label="email" style={{ width: 200, flex: 1, marginLeft: 5 }}
                 />
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, padding: 0, width: 240, }}>

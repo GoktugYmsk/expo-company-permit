@@ -40,6 +40,11 @@ function Profile() {
 
     const dispatch = useDispatch()
 
+    const regUser = useSelector((state) => state.saveRegUser.regUser)
+    const idControl = useSelector((state) => state.management.idControl);
+
+    console.log('DENEME', regUser, 'DENEME12', idControl)
+
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -72,6 +77,15 @@ function Profile() {
                             <Text>{worker}</Text>
                         </View>
                     </View>
+                    {regUser.map((item, key) => (
+                        <View key={key}>
+                            {item.id === idControl && (
+                                <View>
+                                    <Text>İşe Başlama Tarihi {item.startDate}</Text>
+                                </View>
+                            )}
+                        </View>
+                    ))}
 
                     <Text style={{ marginTop: 30, fontSize: 23, padding: 10, paddingLeft: 36, }} variant="h6">Yönetici Seç :</Text>
                     <Button

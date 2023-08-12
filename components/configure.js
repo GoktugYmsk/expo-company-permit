@@ -12,6 +12,8 @@ const initialState = {
     allPermits: [],
     isWorkerPermit: false,
     hamburgerActive: false,
+    regUser: [],
+    idControl: null,
 
 }
 
@@ -52,9 +54,15 @@ export const configure = createSlice({
         setHamburgerActive: (state, action) => {
             state.hamburgerActive = action.payload
         },
+        setRegUser: (state, action) => {
+            state.regUser = action.payload
+        },
+        setIdControl: (state, action) => {
+            state.idControl = action.payload
+        },
     }
 })
 
-export const { setPassengerAmount, setReason, setStartDay, setEndDay, setManager, setManageName, setWorker, setWorkerInfo, setWorkerPerReq, setAllPermits, setIsWorkerPermit, setHamburgerActive } = configure.actions
+export const { setPassengerAmount, setReason, setStartDay, setEndDay, setManager, setManageName, setWorker, setWorkerInfo, setWorkerPerReq, setAllPermits, setIsWorkerPermit, setHamburgerActive, setRegUser, setIdControl } = configure.actions
 
 export default configure.reducer;

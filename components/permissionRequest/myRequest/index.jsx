@@ -14,9 +14,10 @@ import { useSelector } from "react-redux";
 
 function MyRequest() {
     const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
-
+    const regUser = useSelector((state) => state.saveRegUser.regUser)
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
     const worker = useSelector((state) => state.workerInfoTotal.worker);
+    const idControl = useSelector((state) => state.management.idControl);
     console.log('workerPerReq', workerPerReq)
 
     return (
@@ -26,6 +27,8 @@ function MyRequest() {
                 <View style={styles.header}>
                     <Text style={styles.headerText}>İzinlerim</Text>
                 </View>
+
+
                 {workerPerReq &&
                     workerPerReq.map((item, index) => (
                         <View key={index}>
@@ -100,6 +103,7 @@ function MyRequest() {
                         </View>
                     ))
                 }
+
             </View>
         </ScrollView>
     )

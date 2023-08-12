@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { setWorkerInfo, setStartDay, setEndDay, setWorker, setWorkerPerReq } from '../../configure';
-import { Button,ListItem } from "@react-native-material/core";
+import { Button, ListItem } from "@react-native-material/core";
 
 
 
@@ -22,8 +22,11 @@ function Approval() {
   const handleApprovalClick = (index) => {
     if (isAdmin && index >= 0 && index < workerPerReq.length) {
       const approvedWorker = workerPerReq[index];
+      // 26. satırda hata olabilir
+      if (workerInfo) {
+        const isWorkerAlreadyExists = workerInfo?.find(worker => worker.id === approvedWorker.id);
+      }
 
-      const isWorkerAlreadyExists = workerInfo?.includes(worker => worker.name === approvedWorker.name);
 
       if (!isWorkerAlreadyExists) {
         const newWorkerInfo = {
@@ -34,7 +37,6 @@ function Approval() {
           manager: approvedWorker.manager,
           accept: true,
         };
-
         dispatch(setWorkerInfo([...workerInfo, newWorkerInfo]));
         dispatch(setWorkerPerReq(workerPerReq.map((worker, i) => i === index ? newWorkerInfo : worker)));
       }
@@ -66,85 +68,85 @@ function Approval() {
       <View>
         {isAdmin && (
           <View style={styles.mainContainer}>
-              <View style={styles.header}>
-                  <Text style={styles.headerText}>Onay Bekleyen İzinler</Text>
-              </View>
-              {workerPerReq && workerPerReq.some(item => item.accept === null) ? (
-                workerPerReq.map((item, index) => (
+            <View style={styles.header}>
+              <Text style={styles.headerText}>Onay Bekleyen İzinler</Text>
+            </View>
+            {workerPerReq && workerPerReq.some(item => item.accept === null) ? (
+              workerPerReq.map((item, index) => (
                 <View key={index}>
-                {item.accept === null ? (
-                  <View style={styles.container} key={index}>
-                  <View style={styles.permitTextContainer}>
-                    <ListItem
-                      title={item.name}
-                      secondaryText="İsim"
-                    />
-                  </View>
-                  <View style={styles.permitTextContainer}>
-                    <ListItem
-                      title={item.startDay}
-                      secondaryText="Başlangıç Tarihi"
-                    />
-                  </View>
-                  <View style={styles.permitTextContainer}>
-                    <ListItem
-                      title={item.endDay}
-                      secondaryText="Bitiş Tarihi"
-                    />
-                  </View>
-                  <View style={styles.permitTextContainer}>
-                    <ListItem
-                      title={item.reason}
-                      secondaryText="Sebep"
-                    />
-                  </View>
-                  <View style={styles.permitTextContainer}>
-                    <ListItem
-                      title={item.manager}
-                      secondaryText="Yönetici"
-                    />
-                  </View>
-                  <View style={styles.buttonContainer}>
-                    <Button
-                      title="Onayla"
-                      onPress={() => handleApprovalClick(index)}
-                      color="#8754ce"
-                      style={styles.buttonApprove}
-                    />
-                    <Button
-                      title="Reddet"
-                      onPress={() => handleRejectClick(index)}
-                      color="#8754ce"
-                      variant="outlined"
-                      style={styles.buttonReject}
-                    />
-                  </View>
+                  {item.accept === null ? (
+                    <View style={styles.container} key={index}>
+                      <View style={styles.permitTextContainer}>
+                        <ListItem
+                          title={item.name}
+                          secondaryText="İsim"
+                        />
+                      </View>
+                      <View style={styles.permitTextContainer}>
+                        <ListItem
+                          title={item.startDay}
+                          secondaryText="Başlangıç Tarihi"
+                        />
+                      </View>
+                      <View style={styles.permitTextContainer}>
+                        <ListItem
+                          title={item.endDay}
+                          secondaryText="Bitiş Tarihi"
+                        />
+                      </View>
+                      <View style={styles.permitTextContainer}>
+                        <ListItem
+                          title={item.reason}
+                          secondaryText="Sebep"
+                        />
+                      </View>
+                      <View style={styles.permitTextContainer}>
+                        <ListItem
+                          title={item.manager}
+                          secondaryText="Yönetici"
+                        />
+                      </View>
+                      <View style={styles.buttonContainer}>
+                        <Button
+                          title="Onayla"
+                          onPress={() => handleApprovalClick(index)}
+                          color="#8754ce"
+                          style={styles.buttonApprove}
+                        />
+                        <Button
+                          title="Reddet"
+                          onPress={() => handleRejectClick(index)}
+                          color="#8754ce"
+                          variant="outlined"
+                          style={styles.buttonReject}
+                        />
+                      </View>
+                    </View>
+                  ) : null}
+
                 </View>
-                ) : null}
-                
-              </View>
               ))
             ) : (
-              <Button 
-                title="Bekleyen İstek bulunmamaktadır." 
-                variant="outlined" 
-                disabled 
-                color="#8754ce" 
-                tintColor="white" 
-                style={{ marginTop: 20,marginHorizontal: 20, }}
+              <Button
+                title="Bekleyen İstek bulunmamaktadır."
+                variant="outlined"
+                disabled
+                color="#8754ce"
+                tintColor="white"
+                style={{ marginTop: 20, marginHorizontal: 20, }}
               />
             )}
           </View>
         )}
         {!isAdmin && (
-            <Button 
-                title="İzİnlerİ onaylama yetkİnİz yok." 
-                variant="outlined" 
-                disabled 
-                color="#8754ce" 
-                tintColor="white" 
-                style={{ marginTop: 20,marginHorizontal: 20, }}
-            />
+          <Button
+            title="İzİnlerİ onaylama yetkİnİz yok."
+            variant="outlined"
+            disabled
+            color="#8754ce"
+            tintColor="white"
+            style={{ marginTop: 20, marginHorizontal: 20, }}
+          />
         )}
       </View>
     </ScrollView>
@@ -169,11 +171,11 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   headerText: {
-      fontSize: 20,
-      width: '100%',
-      textAlign: "center",
-      fontWeight: "bold",
-      color: 'white',
+    fontSize: 20,
+    width: '100%',
+    textAlign: "center",
+    fontWeight: "bold",
+    color: 'white',
   },
   permitTextContainer: {
     backgroundColor: "#a95e13",
@@ -186,15 +188,15 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     backgroundColor: "white",
-    flexDirection:'row',
-    justifyContent:'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
     padding: 15,
   },
-  buttonApprove:{
-    marginRight:10
+  buttonApprove: {
+    marginRight: 10
   },
   buttonReject: {
-    marginLeft:10
+    marginLeft: 10
   }
 });
 
