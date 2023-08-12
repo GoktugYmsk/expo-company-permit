@@ -32,7 +32,7 @@ function MyRequest() {
                 {workerPerReq &&
                     workerPerReq.map((item, index) => (
                         <View key={index}>
-                            {item.name === worker && (
+                            {item.id === idControl && (
                                 <View>
                                     {item.accept === null && (
                                         <View>

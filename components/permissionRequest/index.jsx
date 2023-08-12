@@ -26,8 +26,8 @@ function PermissionRequest() {
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
     const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
     const regUser = useSelector((state) => state.saveRegUser.regUser)
+    const idControl = useSelector((state) => state.management.idControl);
 
-    const wrokerId = regUser.find()
     // const reason = useSelector((state) => state.userReason.reason)
     // const startDay = useSelector((state) => state.offDays.startDay)
     // const endDay = useSelector((state) => state.offDays.endDay)
@@ -67,13 +67,14 @@ function PermissionRequest() {
                         reason: sreason,
                         manager: manager,
                         accept: null,
+                        id: idControl,
                     };
                     dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
                     navigation.navigate('MyRequest');
                 }
             }
             else if (workerPerReq) {
-                const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.name === worker);
+                const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.id === idControl);
 
                 if (isNameInWorkerPerReq) {
                     setError('Bu işçinin zaten bir izin isteği bulunmaktadır.');
@@ -86,6 +87,7 @@ function PermissionRequest() {
                         reason: sreason,
                         manager: manager,
                         accept: null,
+                        id: idControl,
 
                     };
                     dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
@@ -100,6 +102,7 @@ function PermissionRequest() {
                     reason: sreason,
                     manager: manager,
                     accept: null,
+                    id: idControl,
 
                 };
 
@@ -122,6 +125,7 @@ function PermissionRequest() {
                         reason: sreason,
                         manager: manager,
                         accept: null,
+                        id: idControl,
                     };
                     dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
                     navigation.navigate('MyRequest');
@@ -141,6 +145,7 @@ function PermissionRequest() {
                         reason: sreason,
                         manager: manager,
                         accept: null,
+                        id: idControl,
 
                     };
                     dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
@@ -155,6 +160,7 @@ function PermissionRequest() {
                     reason: sreason,
                     manager: manager,
                     accept: null,
+                    id: idControl,
 
                 };
 

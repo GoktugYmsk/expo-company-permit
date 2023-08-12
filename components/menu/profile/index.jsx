@@ -28,6 +28,10 @@ function Profile() {
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
     const isWorkerPermit = useSelector((state) => state.isWorker.isWorkerPermit);
 
+    const regUser = useSelector((state) => state.saveRegUser.regUser)
+    const idControl = useSelector((state) => state.management.idControl);
+
+
     console.log('isWorkerPermit', isWorkerPermit)
 
 
@@ -39,9 +43,6 @@ function Profile() {
     }
 
     const dispatch = useDispatch()
-
-    const regUser = useSelector((state) => state.saveRegUser.regUser)
-    const idControl = useSelector((state) => state.management.idControl);
 
     console.log('DENEME', regUser, 'DENEME12', idControl)
 

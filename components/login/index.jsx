@@ -40,15 +40,20 @@ function Login() {
                 dispatch(setManageName(''));
                 dispatch(setManager(''));
                 dispatch(setIdControl(isValidWorker.id))
+                setEmail('')
+                setPassword('')
+                setUsername('')
                 navigation.navigate('Menu');
-            } else {
-                console.log("Kullanıcı adı veya şifre hatalı!");
             }
+            else {
+                alert("Kullanıcı adı veya şifre hatalı!");
+            }
+
         } else if (isValidManagement && isValidManagement.password === password) {
             dispatch(setManageName(username));
             navigation.navigate('Menu');
         } else {
-            console.log("Çalışan bulunamadı");
+            alert("Çalışan bulunamadı");
         }
     };
 

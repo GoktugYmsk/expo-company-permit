@@ -9,9 +9,10 @@ import { Button, ListItem } from "@react-native-material/core";
 function Approval() {
   const dispatch = useDispatch();
 
-  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+  const idControl = useSelector((state) => state.management.idControl);
   const manageName = useSelector((state) => state.management.manageName);
   const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
+  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
 
   const isAdmin = manageName !== '';
 
@@ -23,9 +24,8 @@ function Approval() {
     if (isAdmin && index >= 0 && index < workerPerReq.length) {
       const approvedWorker = workerPerReq[index];
       // 26. satırda hata olabilir
-      if (workerInfo) {
-        const isWorkerAlreadyExists = workerInfo?.find(worker => worker.id === approvedWorker.id);
-      }
+
+      const isWorkerAlreadyExists = workerInfo?.includes(worker => worker.id === approvedWorker.id);
 
 
       if (!isWorkerAlreadyExists) {
@@ -35,6 +35,7 @@ function Approval() {
           endDay: approvedWorker.endDay,
           reason: approvedWorker.reason,
           manager: approvedWorker.manager,
+          id: idControl,
           accept: true,
         };
         dispatch(setWorkerInfo([...workerInfo, newWorkerInfo]));
