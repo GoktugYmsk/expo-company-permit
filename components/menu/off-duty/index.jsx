@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { setWorkerInfo } from '../../configure';
+import { setWorkerInfo, setWorkerPerReq } from '../../configure';
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Button, ListItem, } from "@react-native-material/core";
 
@@ -9,7 +9,6 @@ function OffDuty() {
     const [selectedWorker, setSelectedWorker] = useState(null);
 
     const manageName = useSelector((state) => state.management.manageName);
-    const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
 
     const dispatch = useDispatch()
@@ -26,6 +25,7 @@ function OffDuty() {
         if (selectedWorker) {
             const updatedWorkerInfo = workerPerReq.filter(worker => worker !== selectedWorker);
             dispatch(setWorkerInfo(updatedWorkerInfo))
+            dispatch(setWorkerPerReq(updatedWorkerInfo))
         }
     }
 
@@ -34,14 +34,18 @@ function OffDuty() {
             {workerPerReq &&
                 workerPerReq.map((worker) => (
                     <View style={styles.box}>
-                        {(manageName === worker.manager) && (
-                            <View key={worker.name} style={styles.container} >
-                                <TouchableOpacity style={styles.containerOpa} onPress={() => handleWorkerClick(worker)}>
-                                    <Text style={styles.workerName}>{worker.name}</Text>
-                                    <Icon style={styles.workerIcon} name="check-circle" size={28} color="green" />
-                                </TouchableOpacity>
+                        {worker.accept === true &&
+                            <View>
+                                {(manageName === worker.manager) && (
+                                    <View key={worker.name} style={styles.container} >
+                                        <TouchableOpacity style={styles.containerOpa} onPress={() => handleWorkerClick(worker)}>
+                                            <Text style={styles.workerName}>{worker.name}</Text>
+                                            <Icon style={styles.workerIcon} name="check-circle" size={28} color="green" />
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
                             </View>
-                        )}
+                        }
                         {selectedWorker === worker && (
                             <View style={styles.workerDetails}>
                                 <ListItem

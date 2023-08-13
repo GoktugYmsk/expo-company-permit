@@ -70,6 +70,9 @@ function Menu() {
 
             dispatch(setIsWorkerPermit(isUserSaved));
         }
+        else {
+            dispatch(setIsWorkerPermit(false));
+        }
         navigation.navigate('Profile');
     }
 

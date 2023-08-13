@@ -31,6 +31,7 @@ function SignUp() {
                     name: nameWorker,
                     email: emailWorker,
                     password: passwordWorker,
+                    perDateTotal: 30,
                     startDate: new Date().toISOString().split('T')[0],
                 };
                 dispatch(setRegUser([...regUser, newWorker]));

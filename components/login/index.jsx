@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button, IconButton } from "@react-native-material/core";
 import { useDispatch, useSelector } from 'react-redux';
-import { setEndDay, setManageName, setManager, setReason, setStartDay, setWorker, setWorkerInfo, setWorkerPerReq, setIdControl } from '../configure';
+import { setEndDay, setManageName, setManager, setReason, setStartDay, setWorker, setWorkerInfo, setWorkerPerReq, setIdControl, setRegUser } from '../configure';
 
 function Login() {
     const navigation = useNavigation();
@@ -14,8 +14,11 @@ function Login() {
     const [email, setEmail] = useState('')
 
     const regUser = useSelector((state) => state.saveRegUser.regUser)
+    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
 
-    // console.log('regUser', regUser)
+    console.log('workerPerReq', workerPerReq)
+
+    console.log('regUser', regUser)
 
     const dispatch = useDispatch()
 
@@ -50,7 +53,7 @@ function Login() {
                 navigation.navigate('Menu');
             }
             else {
-                alert("Kullanıcı adı veya şifre hatalı!");
+                alert("Giriş Bilgileri Hatalı");
             }
 
         } else if (isValidManagement && isValidManagement.password === password) {
@@ -74,6 +77,8 @@ function Login() {
     //     dispatch(setWorker(''))
     //     dispatch(setWorkerInfo(''))
     //     dispatch(setWorkerPerReq(''))
+    //     dispatch(setIdControl(''))
+    //     dispatch(setRegUser(''))
     // }, [])
 
     return (

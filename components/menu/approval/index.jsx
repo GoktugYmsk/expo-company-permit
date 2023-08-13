@@ -75,56 +75,60 @@ function Approval() {
             {workerPerReq && workerPerReq.some(item => item.accept === null) ? (
               workerPerReq.map((item, index) => (
                 <View key={index}>
-                  {item.accept === null ? (
-                    <View style={styles.container} key={index}>
-                      <View style={styles.permitTextContainer}>
-                        <ListItem
-                          title={item.name}
-                          secondaryText="İsim"
-                        />
-                      </View>
-                      <View style={styles.permitTextContainer}>
-                        <ListItem
-                          title={item.startDay}
-                          secondaryText="Başlangıç Tarihi"
-                        />
-                      </View>
-                      <View style={styles.permitTextContainer}>
-                        <ListItem
-                          title={item.endDay}
-                          secondaryText="Bitiş Tarihi"
-                        />
-                      </View>
-                      <View style={styles.permitTextContainer}>
-                        <ListItem
-                          title={item.reason}
-                          secondaryText="Sebep"
-                        />
-                      </View>
-                      <View style={styles.permitTextContainer}>
-                        <ListItem
-                          title={item.manager}
-                          secondaryText="Yönetici"
-                        />
-                      </View>
-                      <View style={styles.buttonContainer}>
-                        <Button
-                          title="Onayla"
-                          onPress={() => handleApprovalClick(index)}
-                          color="#8754ce"
-                          style={styles.buttonApprove}
-                        />
-                        <Button
-                          title="Reddet"
-                          onPress={() => handleRejectClick(index)}
-                          color="#8754ce"
-                          variant="outlined"
-                          style={styles.buttonReject}
-                        />
-                      </View>
+                  {item.manager === manageName &&
+                    <View>
+                      {item.accept === null ? (
+                        <View style={styles.container} key={index}>
+                          <View style={styles.permitTextContainer}>
+                            <ListItem
+                              title={item.name}
+                              secondaryText="İsim"
+                            />
+                          </View>
+                          <View style={styles.permitTextContainer}>
+                            <ListItem
+                              title={item.startDay}
+                              secondaryText="Başlangıç Tarihi"
+                            />
+                          </View>
+                          <View style={styles.permitTextContainer}>
+                            <ListItem
+                              title={item.endDay}
+                              secondaryText="Bitiş Tarihi"
+                            />
+                          </View>
+                          <View style={styles.permitTextContainer}>
+                            <ListItem
+                              title={item.reason}
+                              secondaryText="Sebep"
+                            />
+                          </View>
+                          <View style={styles.permitTextContainer}>
+                            <ListItem
+                              title={item.manager}
+                              secondaryText="Yönetici"
+                            />
+                          </View>
+                          <View style={styles.buttonContainer}>
+                            <Button
+                              title="Onayla"
+                              onPress={() => handleApprovalClick(index)}
+                              color="#8754ce"
+                              style={styles.buttonApprove}
+                            />
+                            <Button
+                              title="Reddet"
+                              onPress={() => handleRejectClick(index)}
+                              color="#8754ce"
+                              variant="outlined"
+                              style={styles.buttonReject}
+                            />
+                          </View>
+                        </View>
+                      ) : null
+                      }
                     </View>
-                  ) : null}
-
+                  }
                 </View>
               ))
             ) : (
@@ -141,7 +145,7 @@ function Approval() {
         )}
         {!isAdmin && (
           <Button
-            title="İzİnlerİ onaylama yetkİnİz yok."
+            title="İzinleri onaylama yetkiniz yok."
             variant="outlined"
             disabled
             color="#8754ce"

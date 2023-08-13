@@ -28,6 +28,8 @@ function PermissionRequest() {
     const regUser = useSelector((state) => state.saveRegUser.regUser)
     const idControl = useSelector((state) => state.management.idControl);
 
+    console.log('REGUSER', regUser)
+
     // const reason = useSelector((state) => state.userReason.reason)
     // const startDay = useSelector((state) => state.offDays.startDay)
     // const endDay = useSelector((state) => state.offDays.endDay)
@@ -49,8 +51,6 @@ function PermissionRequest() {
     // console.log("Selected Start Date:", selectedStartDate);
     // console.log("Selected End Date:", selectedEndDate);
     // console.log("Reason:", sreason);
-
-
 
     const handleSendRequest = () => {
         if (manager && selectedStartDate && selectedEndDate) {

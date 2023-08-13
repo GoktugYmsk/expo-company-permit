@@ -31,6 +31,8 @@ function Profile() {
     const regUser = useSelector((state) => state.saveRegUser.regUser)
     const idControl = useSelector((state) => state.management.idControl);
 
+    console.log('isWorkerPermit', isWorkerPermit)
+
 
     // console.log('isWorkerPermit', isWorkerPermit)
 
@@ -62,6 +64,8 @@ function Profile() {
 
     const managers = ['Bora', 'Gökhan', 'Aydın', 'Hakan']
 
+    const isAdmin = manageName !== '';
+
 
     return (
         <View>
@@ -75,14 +79,20 @@ function Profile() {
 
                         <View style={styles.profileText}>
                             <Text style={{ fontSize: 25 }} variant="h6">Adı Soyadı</Text>
-                            <Text>{worker}</Text>
+                            {manageName ? (
+                                <Text>{manageName}</Text>
+                            ) : (
+                                <Text>{worker}</Text>
+                            )}
                         </View>
                     </View>
                     {regUser.map((item, key) => (
                         <View key={key}>
                             {item.id === idControl && (
                                 <View>
-                                    <Text>İşe Başlama Tarihi {item.startDate}</Text>
+                                    {!manageName &&
+                                        <Text>İşe Başlama Tarihi {item.startDate}</Text>
+                                    }
                                 </View>
                             )}
                         </View>
@@ -136,16 +146,19 @@ function Profile() {
                             <Button style={{ marginLeft: 36, marginRight: 36, }} variant="outlined" title={`${manager}`} />
                         </View>
                     </Provider>
-                    {!isWorkerPermit &&
-                        <Button
-                            style={{ marginLeft: 36, marginRight: 36, position: 'relative', bottom: 120, }}
-                            color="#8754ce"
-                            tintColor="white"
-                            title="İZİN TALEBİ OLUŞTUR"
-                            onPress={handleRequestClick}
+                    {!isAdmin && <>
+                        {!isWorkerPermit &&
+                            <Button
+                                style={{ marginLeft: 36, marginRight: 36, position: 'relative', bottom: 120, }}
+                                color="#8754ce"
+                                tintColor="white"
+                                title="İZİN TALEBİ OLUŞTUR"
+                                onPress={handleRequestClick}
 
-                        />
-                    }
+                            />
+                        }
+
+                    </>}
 
                 </View>
             </View>
