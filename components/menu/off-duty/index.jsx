@@ -11,6 +11,8 @@ function OffDuty() {
     const manageName = useSelector((state) => state.management.manageName);
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
 
+    console.log('GÖKTUĞ', workerPerReq)
+
     const dispatch = useDispatch()
 
     const handleWorkerClick = (worker) => {
@@ -44,6 +46,7 @@ function OffDuty() {
                                         </TouchableOpacity>
                                     </View>
                                 )}
+                                <Text style={styles.workerName}>{worker.totalPerDay}</Text>
                             </View>
                         }
                         {selectedWorker === worker && (

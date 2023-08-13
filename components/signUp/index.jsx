@@ -16,7 +16,6 @@ function SignUp() {
 
     const regUser = useSelector((state) => state.saveRegUser.regUser) || [];
 
-
     const navigation = useNavigation()
 
     const dispatch = useDispatch()

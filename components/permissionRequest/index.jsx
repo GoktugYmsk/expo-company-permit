@@ -52,10 +52,17 @@ function PermissionRequest() {
     // console.log("Selected End Date:", selectedEndDate);
     // console.log("Reason:", sreason);
 
+
+    const startDate = new Date(selectedStartDate);
+    const endDate = checked ? new Date(selectedEndDate) : startDate;
+    const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+
     const handleSendRequest = () => {
         if (manager && selectedStartDate && selectedEndDate) {
             if (workerInfo) {
                 const isNameInWorkerInfo = workerInfo.find(workerInfoItem => workerInfoItem.name === worker);
+
                 if (isNameInWorkerInfo) {
                     setError('30dan fazla gün izin kullanamazsınız');
                 }
@@ -68,13 +75,17 @@ function PermissionRequest() {
                         manager: manager,
                         accept: null,
                         id: idControl,
+                        totalPerDay: daysDifference,
                     };
                     dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
                     navigation.navigate('MyRequest');
                 }
             }
             else if (workerPerReq) {
+
+
                 const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.id === idControl);
+
 
                 if (isNameInWorkerPerReq) {
                     setError('Bu işçinin zaten bir izin isteği bulunmaktadır.');
@@ -88,6 +99,7 @@ function PermissionRequest() {
                         manager: manager,
                         accept: null,
                         id: idControl,
+                        totalPerDay: daysDifference,
 
                     };
                     dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
@@ -103,6 +115,8 @@ function PermissionRequest() {
                     manager: manager,
                     accept: null,
                     id: idControl,
+                    totalPerDay: daysDifference,
+
 
                 };
 
@@ -126,6 +140,7 @@ function PermissionRequest() {
                         manager: manager,
                         accept: null,
                         id: idControl,
+                        totalPerDay: daysDifference,
                     };
                     dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
                     navigation.navigate('MyRequest');
@@ -146,6 +161,7 @@ function PermissionRequest() {
                         manager: manager,
                         accept: null,
                         id: idControl,
+                        totalPerDay: daysDifference,
 
                     };
                     dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
@@ -161,6 +177,7 @@ function PermissionRequest() {
                     manager: manager,
                     accept: null,
                     id: idControl,
+                    totalPerDay: daysDifference,
 
                 };
 
@@ -327,3 +344,46 @@ const styles = StyleSheet.create({
 });
 
 export default PermissionRequest;
+
+
+
+
+const handleSendRequest = () => {
+    if (!manager) {
+        setError('Lütfen profil sayfasından yönetici seçiniz.');
+        return;
+    }
+
+    if (!selectedStartDate || (!selectedEndDate && checked)) {
+        setError('Tarih bilgilerini kontrol ediniz.');
+        return;
+    }
+
+    const startDate = new Date(selectedStartDate);
+    const endDate = checked ? new Date(selectedEndDate) : startDate;
+
+    const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+
+    if (daysDifference <= 0) {
+        setError('Geçersiz tarih aralığı.');
+        return;
+    }
+
+    if (daysDifference > regUser.perDateTotal) {
+        setError('30 günden fazla izin kullanamazsınız.');
+        return;
+    }
+
+    const newWorkerInfo = {
+        name: worker,
+        startDay: selectedStartDate,
+        endDay: selectedEndDate,
+        reason: sreason,
+        manager: manager,
+        accept: null,
+        id: idControl,
+    };
+
+    dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+    navigation.navigate('MyRequest');
+};

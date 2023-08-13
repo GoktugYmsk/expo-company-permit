@@ -19,6 +19,7 @@ function Menu() {
     const worker = useSelector((state) => state.workerInfoTotal.worker);
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
     const isWorkerPermit = useSelector((state) => state.isWorker.isWorkerPermit);
+    console.log('WORKERPERREQ', workerPerReq)
 
     const handleMainClick = () => {
         if (manager) {
