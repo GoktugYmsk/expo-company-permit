@@ -69,7 +69,7 @@ function PermissionRequest() {
 
             if (workerPerReq) {
 
-                const isNameInWorkerPerReq = workerPerReq.some(workerInfo => workerInfo.totalPerDay);
+                const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.totalPerDay);
 
                 console.log(isNameInWorkerPerReq)
 
