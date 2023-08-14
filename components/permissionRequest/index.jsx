@@ -69,9 +69,12 @@ function PermissionRequest() {
 
             if (workerPerReq) {
 
-                const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.totalPerDay);
+                const isNameInWorkerPerReq = workerPerReq.some(workerInfo => workerInfo.totalPerDay);
+
+                console.log(isNameInWorkerPerReq)
 
                 const leavePer = 30 - isNameInWorkerPerReq.totalPerDay
+
 
                 if (isNameInWorkerPerReq.totalPerDay >= 30) {
                     setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı ${leavePer}`);

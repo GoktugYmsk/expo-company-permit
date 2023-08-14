@@ -35,6 +35,7 @@ function SignUp() {
                 };
                 dispatch(setRegUser([...regUser, newWorker]));
             }
+
             else {
                 alert('Kullanıcı zaten kayıtlı ')
                 navigation.navigate('Login');
