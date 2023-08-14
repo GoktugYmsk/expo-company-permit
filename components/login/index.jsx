@@ -13,7 +13,7 @@ function Login() {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('')
 
-    const regUser = useSelector((state) => state.saveRegUser.regUser)
+    const regUser = useSelector((state) => state.saveRegUser.regUser) || [];
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
 
     const dispatch = useDispatch()
