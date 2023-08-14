@@ -9,7 +9,11 @@ const initialState = {
     worker: [],
     workerInfo: [],
     workerPerReq: [],   //--> bütün gönderilen izinler burada gözüküyor.
-    allPermits : []
+    allPermits: [],
+    isWorkerPermit: false,
+    hamburgerActive: false,
+    regUser: [],
+    idControl: null,
 
 }
 
@@ -43,10 +47,22 @@ export const configure = createSlice({
         },
         setAllPermits : (state , action) => {
             state.allPermits = action.payload
-        }
+        },
+        setIsWorkerPermit: (state, action) => {
+            state.isWorkerPermit = action.payload
+        },
+        setHamburgerActive: (state, action) => {
+            state.hamburgerActive = action.payload
+        },
+        setRegUser: (state, action) => {
+            state.regUser = action.payload
+        },
+        setIdControl: (state, action) => {
+            state.idControl = action.payload
+        },
     }
 })
 
-export const { setPassengerAmount, setReason, setStartDay, setEndDay, setManager, setManageName, setWorker, setWorkerInfo, setWorkerPerReq , setAllPermits } = configure.actions
+export const { setPassengerAmount, setReason, setStartDay, setEndDay, setManager, setManageName, setWorker, setWorkerInfo, setWorkerPerReq, setAllPermits, setIsWorkerPermit, setHamburgerActive, setRegUser, setIdControl } = configure.actions
 
 export default configure.reducer;
