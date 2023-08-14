@@ -7,6 +7,7 @@ import { setReason, setStartDay, setEndDay, setWorkerPerReq } from '../configure
 import { Switch, TextInput, Button } from "@react-native-material/core";
 
 import CustomHamburger from '../customHamburger';
+import { useEffect } from 'react';
 
 function PermissionRequest() {
     const [error, setError] = useState('')
@@ -56,118 +57,115 @@ function PermissionRequest() {
     const startDate = new Date(selectedStartDate);
     const endDate = checked ? new Date(selectedEndDate) : startDate;
     const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+    const oneDay = Math.ceil((startDate) / (1000 * 60 * 60 * 24));
+
+    useEffect(() => {
+        console.log('DAYSDİFFERENCE ', daysDifference)
+    }, [daysDifference])
 
 
     const handleSendRequest = () => {
         if (manager && selectedStartDate && selectedEndDate) {
-            if (workerInfo) {
-                const isNameInWorkerInfo = workerInfo.find(workerInfoItem => workerInfoItem.name === worker);
 
-                if (isNameInWorkerInfo) {
-                    setError('30dan fazla gün izin kullanamazsınız');
+            if (workerPerReq) {
+
+                const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.totalPerDay);
+
+                const leavePer = 30 - isNameInWorkerPerReq.totalPerDay
+
+                if (isNameInWorkerPerReq.totalPerDay >= 30) {
+                    setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı ${leavePer}`);
                 }
                 else {
-                    const newWorkerInfo = {
-                        name: worker,
-                        startDay: selectedStartDate,
-                        endDay: selectedEndDate,
-                        reason: sreason,
-                        manager: manager,
-                        accept: null,
-                        id: idControl,
-                        totalPerDay: daysDifference,
-                    };
-                    dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
-                    navigation.navigate('MyRequest');
-                }
-            }
-            else if (workerPerReq) {
 
+                    const newPerDate = daysDifference + isNameInWorkerPerReq.totalPerDay
 
-                const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.id === idControl);
+                    if (newPerDate >= 30) {
 
+                        const leavePer = 30 - isNameInWorkerPerReq.totalPerDay
+                        console.log('leavePer', leavePer)
 
-                if (isNameInWorkerPerReq) {
-                    setError('Bu işçinin zaten bir izin isteği bulunmaktadır.');
-                }
-                else {
-                    const newWorkerInfo = {
-                        name: worker,
-                        startDay: selectedStartDate,
-                        endDay: selectedEndDate,
-                        reason: sreason,
-                        manager: manager,
-                        accept: null,
-                        id: idControl,
-                        totalPerDay: daysDifference,
+                        setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı ${leavePer}`);
 
-                    };
-                    dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
-                    navigation.navigate('MyRequest');
+                    }
+                    else {
+                        const newWorkerInfo = {
+                            name: worker,
+                            startDay: selectedStartDate,
+                            endDay: selectedEndDate,
+                            reason: sreason,
+                            manager: manager,
+                            accept: null,
+                            id: idControl,
+                            totalPerDay: newPerDate,
+
+                        };
+                        dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+                        navigation.navigate('MyRequest');
+                    }
                 }
             }
             else {
-                const newWorkerInfo = {
-                    name: worker,
-                    startDay: selectedStartDate,
-                    endDay: selectedEndDate,
-                    reason: sreason,
-                    manager: manager,
-                    accept: null,
-                    id: idControl,
-                    totalPerDay: daysDifference,
 
+                const newPerDate = daysDifference
 
-                };
+                if (newPerDate >= 30) {
+                    setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı 30`);
+                }
+                else {
+                    const newWorkerInfo = {
+                        name: worker,
+                        startDay: selectedStartDate,
+                        endDay: selectedEndDate,
+                        reason: sreason,
+                        manager: manager,
+                        accept: null,
+                        id: idControl,
+                        totalPerDay: newPerDate,
 
-                dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
-                navigation.navigate('MyRequest');
+                    };
+                    dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+                    navigation.navigate('MyRequest');
+                }
             }
         }
+
         else if (manager && selectedStartDate) {
-            if (workerInfo) {
-                const isNameInWorkerInfo = workerInfo.find(workerInfoItem => workerInfoItem.name === worker);
+            if (workerPerReq) {
 
-                if (isNameInWorkerInfo) {
-                    setError('Bu işçinin zaten bir izin isteği bulunmaktadır.');
+                const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.totalPerDay);
+
+                const leavePer = 30 - isNameInWorkerPerReq.totalPerDay
+
+                if (isNameInWorkerPerReq.totalPerDay >= 30) {
+                    setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı ${leavePer}`);
                 }
                 else {
-                    const newWorkerInfo = {
-                        name: worker,
-                        startDay: selectedStartDate,
-                        endDay: selectedEndDate,
-                        reason: sreason,
-                        manager: manager,
-                        accept: null,
-                        id: idControl,
-                        totalPerDay: daysDifference,
-                    };
-                    dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
-                    navigation.navigate('MyRequest');
+
+                    const newPerDate = oneDay + isNameInWorkerPerReq.totalPerDay
+
+
+                    if (newPerDate >= 30) {
+                        setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı 30`);
+                    }
+                    else {
+                        const newWorkerInfo = {
+                            name: worker,
+                            startDay: selectedStartDate,
+                            endDay: selectedEndDate,
+                            reason: sreason,
+                            manager: manager,
+                            accept: null,
+                            id: idControl,
+                            totalPerDay: newPerDate,
+
+                        };
+                        dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+                        navigation.navigate('MyRequest');
+                    }
                 }
             }
-            else if (workerPerReq) {
-                const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.name === worker);
 
-                if (isNameInWorkerPerReq) {
-                    setError('Bu işçinin zaten bir izin isteği bulunmaktadır.');
-                }
-                else {
-                    const newWorkerInfo = {
-                        name: worker,
-                        startDay: selectedStartDate,
-                        endDay: selectedEndDate,
-                        reason: sreason,
-                        manager: manager,
-                        accept: null,
-                        id: idControl,
-                        totalPerDay: daysDifference,
-
-                    };
-                    dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
-                    navigation.navigate('MyRequest');
-                }
-            }
             else {
                 const newWorkerInfo = {
                     name: worker,
@@ -177,10 +175,9 @@ function PermissionRequest() {
                     manager: manager,
                     accept: null,
                     id: idControl,
-                    totalPerDay: daysDifference,
+                    totalPerDay: newPerDate,
 
                 };
-
                 dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
                 navigation.navigate('MyRequest');
             }
