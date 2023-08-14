@@ -13,12 +13,6 @@ function Menu() {
     const manageName = useSelector((state) => state.management.manageName);
     const manager = useSelector((state) => state.management.manager)
     const worker = useSelector((state) => state.workerInfoTotal.worker);
-<<<<<<< HEAD
-=======
-    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
-    const isWorkerPermit = useSelector((state) => state.isWorker.isWorkerPermit);
-    console.log('WORKERPERREQ', workerPerReq)
->>>>>>> Göktuğ
 
     const handleMainClick = () => {
         if (manager) {
@@ -59,27 +53,6 @@ function Menu() {
         }
     }
 
-<<<<<<< HEAD
-=======
-    const handleProfileClick = () => {
-        if (worker && workerPerReq) {
-            const savedUser = workerPerReq.filter((item) => item.name === worker);
-            // console.log('savedUser', savedUser);
-
-            // Eğer savedUser boş değilse (eşleşme varsa), true döndür
-            const isUserSaved = savedUser.length > 0;
-            // console.log('isUserSaved', isUserSaved);
-
-            dispatch(setIsWorkerPermit(isUserSaved));
-        }
-        else {
-            dispatch(setIsWorkerPermit(false));
-        }
-        navigation.navigate('Profile');
-    }
-
-
->>>>>>> Göktuğ
     const isAdmin = manageName !== '';
 
     return (
