@@ -25,6 +25,16 @@ function Profile() {
     const manager = useSelector((state) => state.management.manager)
     const worker = useSelector((state) => state.workerInfoTotal.worker)
     const manageName = useSelector((state) => state.management.manageName);
+    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+    const isWorkerPermit = useSelector((state) => state.isWorker.isWorkerPermit);
+
+    const regUser = useSelector((state) => state.saveRegUser.regUser)
+    const idControl = useSelector((state) => state.management.idControl);
+
+    console.log('isWorkerPermit', isWorkerPermit)
+
+
+    // console.log('isWorkerPermit', isWorkerPermit)
 
 
     const [visible, setVisible] = useState(false);
@@ -36,20 +46,29 @@ function Profile() {
 
     const dispatch = useDispatch()
 
+    // console.log('DENEME', regUser, 'DENEME12', idControl)
+
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
     const handleSelectManager = (managerName) => {
         dispatch(setManager(managerName))
-        toggleMenu();
+        // toggleMenu();
+        // if (worker && workerPerReq) {
+        //     const savedUser = workerPerReq.filter((item) => item.name === worker);
+        //     console.log('savedUser', savedUser)
+        //     setReqUser(savedUser)
+        // }
     }
 
     const managers = ['Bora', 'Gökhan', 'Aydın', 'Hakan']
 
+    const isAdmin = manageName !== '';
+
 
     return (
-        <ScrollView>
+        <View>
             <View>
                 {/* <CustomHamburger /> */}
                 <View style={styles.container}>
@@ -60,9 +79,24 @@ function Profile() {
 
                         <View style={styles.profileText}>
                             <Text style={{ fontSize: 25 }} variant="h6">Adı Soyadı</Text>
-                            <Text>{worker}</Text>
+                            {manageName ? (
+                                <Text>{manageName}</Text>
+                            ) : (
+                                <Text>{worker}</Text>
+                            )}
                         </View>
                     </View>
+                    {regUser.map((item, key) => (
+                        <View key={key}>
+                            {item.id === idControl && (
+                                <View>
+                                    {!manageName &&
+                                        <Text>İşe Başlama Tarihi {item.startDate}</Text>
+                                    }
+                                </View>
+                            )}
+                        </View>
+                    ))}
 
                     <Text style={{ marginTop: 30, fontSize: 23, padding: 10, paddingLeft: 36, }} variant="h6">Yönetici Seç :</Text>
                     <Button
@@ -91,7 +125,6 @@ function Profile() {
                                 </View>
                             </DialogContent>
 
-
                             <DialogActions>
                                 <Button
                                     title="Çık"
@@ -108,26 +141,28 @@ function Profile() {
                             </DialogActions>
                         </Dialog>
 
-
                         <View style={styles.selectedManager}>
                             <Text style={{ marginTop: 30, fontSize: 23, padding: 10, paddingLeft: 36, }} variant="h6">Seçilen Yönetici :</Text>
                             <Button style={{ marginLeft: 36, marginRight: 36, }} variant="outlined" title={`${manager}`} />
                         </View>
                     </Provider>
-                    {!isWorkerPermit &&
-                        <Button
-                            style={{ marginLeft: 36, marginRight: 36, marginTop: 20, }}
-                            color="#8754ce"
-                            tintColor="white"
-                            title="İZİN TALEBİ OLUŞTUR"
-                            onPress={handleRequestClick}
+                    {!isAdmin && <>
+                        {!isWorkerPermit &&
+                            <Button
+                                style={{ marginLeft: 36, marginRight: 36, position: 'relative', bottom: 120, }}
+                                color="#8754ce"
+                                tintColor="white"
+                                title="İZİN TALEBİ OLUŞTUR"
+                                onPress={handleRequestClick}
 
-                        />
-                    }
+                            />
+                        }
+
+                    </>}
 
                 </View>
             </View>
-        </ScrollView>
+        </View>
     );
 }
 
