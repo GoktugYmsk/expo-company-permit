@@ -3,16 +3,22 @@ import React, { useEffect } from 'react'
 import { useState } from 'react';
 
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsWorkerPermit } from '../configure';
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 
 function Menu() {
     const navigation = useNavigation();
 
+
+    const dispatch = useDispatch()
+
     const manageName = useSelector((state) => state.management.manageName);
     const manager = useSelector((state) => state.management.manager)
     const worker = useSelector((state) => state.workerInfoTotal.worker);
+    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+    const isWorkerPermit = useSelector((state) => state.isWorker.isWorkerPermit);
 
     const handleMainClick = () => {
         if (manager) {
@@ -52,6 +58,24 @@ function Menu() {
             // }, 3000);
         }
     }
+
+    const handleProfileClick = () => {
+        if (worker && workerPerReq) {
+            const savedUser = workerPerReq.filter((item) => item.name === worker);
+            // console.log('savedUser', savedUser);
+
+            // Eğer savedUser boş değilse (eşleşme varsa), true döndür
+            const isUserSaved = savedUser.length > 0;
+            // console.log('isUserSaved', isUserSaved);
+
+            dispatch(setIsWorkerPermit(isUserSaved));
+        }
+        else {
+            dispatch(setIsWorkerPermit(false));
+        }
+        navigation.navigate('Profile');
+    }
+
 
     const isAdmin = manageName !== '';
 
