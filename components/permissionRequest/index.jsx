@@ -31,6 +31,8 @@ function PermissionRequest() {
 
     console.log('REGUSER', regUser)
 
+    console.log('workerPerReq', workerPerReq)
+
     // const reason = useSelector((state) => state.userReason.reason)
     // const startDay = useSelector((state) => state.offDays.startDay)
     // const endDay = useSelector((state) => state.offDays.endDay)
@@ -59,6 +61,9 @@ function PermissionRequest() {
     const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
     const oneDay = Math.ceil((startDate) / (1000 * 60 * 60 * 24));
 
+    console.log('oneDay', oneDay)
+    console.log('daysDifference', oneDay)
+
     useEffect(() => {
         console.log('DAYSDİFFERENCE ', daysDifference)
     }, [daysDifference])
@@ -67,29 +72,67 @@ function PermissionRequest() {
     const handleSendRequest = () => {
         if (manager && selectedStartDate && selectedEndDate) {
 
+
+
+
+
             if (workerPerReq) {
 
-                const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.totalPerDay);
+                const isWorkerId = workerPerReq.find(workerInfo => workerInfo.id);
 
-                console.log(isNameInWorkerPerReq)
+                if (idControl === isWorkerId) {
 
-                const leavePer = 30 - isNameInWorkerPerReq.totalPerDay
+                    const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.totalPerDay);
 
 
-                if (isNameInWorkerPerReq.totalPerDay >= 30) {
-                    setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı ${leavePer}`);
+
+                    console.log('isNameInWorkerPerReq', isNameInWorkerPerReq)
+
+                    const leavePer = 30 - isNameInWorkerPerReq.totalPerDay
+
+                    if (isNameInWorkerPerReq.totalPerDay >= 30) {
+                        setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı ${leavePer}`);
+                    }
+                    else {
+
+                        const newPerDate = daysDifference + isNameInWorkerPerReq.totalPerDay
+
+                        if (newPerDate >= 30) {
+
+                            const leavePer = 30 - isNameInWorkerPerReq.totalPerDay
+                            console.log('leavePer', leavePer)
+
+                            setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı ${leavePer}`);
+
+                        }
+                        else {
+                            const newWorkerInfo = {
+                                name: worker,
+                                startDay: selectedStartDate,
+                                endDay: selectedEndDate,
+                                reason: sreason,
+                                manager: manager,
+                                accept: null,
+                                id: idControl,
+                                totalPerDay: newPerDate,
+
+                            };
+                            dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+                            navigation.navigate('MyRequest');
+                        }
+                    }
+
+
+
                 }
                 else {
 
-                    const newPerDate = daysDifference + isNameInWorkerPerReq.totalPerDay
+                    const newPerDate = daysDifference
+
+                    console.log('newPerDate', newPerDate)
 
                     if (newPerDate >= 30) {
-
-                        const leavePer = 30 - isNameInWorkerPerReq.totalPerDay
-                        console.log('leavePer', leavePer)
-
-                        setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı ${leavePer}`);
-
+                        setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı 30`);
                     }
                     else {
                         const newWorkerInfo = {
@@ -111,6 +154,8 @@ function PermissionRequest() {
             else {
 
                 const newPerDate = daysDifference
+
+                console.log('newPerDate', newPerDate)
 
                 if (newPerDate >= 30) {
                     setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı 30`);
@@ -138,6 +183,8 @@ function PermissionRequest() {
 
                 const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.totalPerDay);
 
+                console.log('isNameInWorkerPerReq', isNameInWorkerPerReq)
+
                 const leavePer = 30 - isNameInWorkerPerReq.totalPerDay
 
                 if (isNameInWorkerPerReq.totalPerDay >= 30) {
@@ -146,6 +193,8 @@ function PermissionRequest() {
                 else {
 
                     const newPerDate = oneDay + isNameInWorkerPerReq.totalPerDay
+
+                    console.log('newPerDate', newPerDate)
 
 
                     if (newPerDate >= 30) {
