@@ -16,12 +16,6 @@ function Login() {
     const regUser = useSelector((state) => state.saveRegUser.regUser)
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
 
-
-
-    // console.log('GÖKTUĞREQ', workerPerReq)
-
-    // console.log('regUser', regUser)
-
     const dispatch = useDispatch()
 
 

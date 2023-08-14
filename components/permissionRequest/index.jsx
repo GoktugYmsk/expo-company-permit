@@ -6,6 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setReason, setStartDay, setEndDay, setWorkerPerReq } from '../configure';
 import { Switch, TextInput, Button } from "@react-native-material/core";
 
+import CustomHamburger from '../customHamburger';
+import { useEffect } from 'react';
+
 function PermissionRequest() {
     const [error, setError] = useState('')
     const [selectedEndDate, setSelectedEndDate] = useState(null);
@@ -23,6 +26,12 @@ function PermissionRequest() {
     const worker = useSelector((state) => state.workerInfoTotal.worker);
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
     const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
+    const regUser = useSelector((state) => state.saveRegUser.regUser)
+    const idControl = useSelector((state) => state.management.idControl);
+
+    console.log('workerPerReq', workerPerReq)
+
+
     // const reason = useSelector((state) => state.userReason.reason)
     // const startDay = useSelector((state) => state.offDays.startDay)
     // const endDay = useSelector((state) => state.offDays.endDay)
@@ -46,15 +55,90 @@ function PermissionRequest() {
     // console.log("Reason:", sreason);
 
 
+    const startDate = new Date(selectedStartDate);
+    const endDate = checked ? new Date(selectedEndDate) : startDate;
+    const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+    const oneDay = Math.ceil((startDate) / (1000 * 60 * 60 * 24));
+
+
     const handleSendRequest = () => {
-        if (manager && selectedStartDate && selectedEndDate) {
-            if (workerInfo) {
-                const isNameInWorkerInfo = workerInfo.find(workerInfoItem => workerInfoItem.name === worker);
+        if (manager && selectedStartDate && selectedEndDate) { // Yönetici ve tarihler seçilmiş mi kontrolü
+            if (workerPerReq) { // Çalışan izin talepleri var mı kontrolü
+                const isWorkerId = workerPerReq.find(workerInfo => workerInfo.id === idControl);
 
-                if (isNameInWorkerInfo) {
-                    setError('Bu işçinin zaten bir izin isteği bulunmaktadır.');
+                console.log('isWorkerId', isWorkerId)
+
+                console.log('MANİSA')
+                if (isWorkerId) {
+
+                    console.log('ANKARA')
+                    console.log('isWorkerInfo', isWorkerId.totalPerDay)
+
+                    if (isWorkerId) {
+                        const leavePer = 30 - isWorkerId.totalPerDay;
+
+                        if (isWorkerId.totalPerDay >= 30) {
+                            console.log('DENİZLİ')
+                            setError(`Bu çalışan yıllık toplam 30 günden fazla izin talebinde bulunamaz. Kalan izin hakkı: ${leavePer}`);
+                        } else {
+                            const newPerDate = daysDifference + isWorkerId.totalPerDay;
+
+                            console.log('ISTANBUL')
+
+                            if (newPerDate > 30) {
+                                setError(`Bu çalışan yıllık toplam 30 günden fazla izin talebinde bulunamaz. Kalan izin hakkı: ${leavePer}`);
+                            } else {
+
+                                const newWorkerInfo = {
+                                    name: worker,
+                                    startDay: selectedStartDate,
+                                    endDay: selectedEndDate,
+                                    reason: sreason,
+                                    manager: manager,
+                                    accept: null,
+                                    id: idControl,
+                                    totalPerDay: newPerDate
+                                };
+
+                                const deneme = [...workerPerReq, newWorkerInfo]
+
+                                dispatch(setWorkerPerReq(deneme));
+
+
+                                navigation.navigate('MyRequest');
+                            }
+                            console.log('Deneme', workerPerReq)
+                        }
+                    }
                 }
                 else {
+                    const newPerDate = daysDifference; // Yeni izin tarih aralığı hesaplanıyor
+
+                    if (newPerDate >= 30) { // İzin sınırını aşarsa hata mesajı oluşturuluyor
+                        setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı 2`);
+                    } else {
+                        // Yeni çalışan bilgileri oluşturuluyor ve depoya ekleniyor
+                        const newWorkerInfo = {
+                            name: worker,
+                            startDay: selectedStartDate,
+                            endDay: selectedEndDate,
+                            reason: sreason,
+                            manager: manager,
+                            accept: null,
+                            id: idControl,
+                            totalPerDay: newPerDate,
+                        };
+                        dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+                        navigation.navigate('MyRequest'); // İstek sayfasına yönlendiriliyor
+                    }
+                }
+            } else {
+                const newPerDate = daysDifference; // Yeni izin tarih aralığı hesaplanıyor
+
+                if (newPerDate >= 30) { // İzin sınırını aşarsa hata mesajı oluşturuluyor
+                    setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı 30`);
+                } else {
+                    // Yeni çalışan bilgileri oluşturuluyor ve depoya ekleniyor
                     const newWorkerInfo = {
                         name: worker,
                         startDay: selectedStartDate,
@@ -62,18 +146,84 @@ function PermissionRequest() {
                         reason: sreason,
                         manager: manager,
                         accept: null,
+                        id: idControl,
+                        totalPerDay: newPerDate,
                     };
                     dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
-                    navigation.navigate('MyRequest');
+                    navigation.navigate('MyRequest'); // İstek sayfasına yönlendiriliyor
                 }
             }
-            else if (workerPerReq) {
-                const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.name === worker);
+        } else if (manager && selectedStartDate) {
+            if (workerPerReq) { // Çalışan izin talepleri var mı kontrolü
+                const isWorkerId = workerPerReq.find(workerInfo => workerInfo.id); // Aynı id'ye sahip çalışan var mı kontrolü
 
-                if (isNameInWorkerPerReq) {
-                    setError('Bu işçinin zaten bir izin isteği bulunmaktadır.');
+                if (idControl === isWorkerId) {
+                    const isWorkerInfo = workerPerReq.find(workerInfo => workerInfo.id === idControl);
+
+                    if (isWorkerInfo) {
+                        const leavePer = 30 - isWorkerInfo.totalPerDay;
+
+                        if (isWorkerInfo.totalPerDay >= 30) {
+                            setError(`Bu çalışan yıllık toplam 30 günden fazla izin talebinde bulunamaz. Kalan izin hakkı: ${leavePer}`);
+                        } else {
+                            const newPerDate = daysDifference + isWorkerInfo.totalPerDay;
+
+                            if (newPerDate >= 30) {
+                                setError(`Bu çalışan yıllık toplam 30 günden fazla izin talebinde bulunamaz. Kalan izin hakkı: ${leavePer}`);
+                            } else {
+                                // Yeni totalPerDay değerini hesapla
+                                const updatedPerDay = newPerDate;
+
+
+
+                                const newWorkerInfo = {
+                                    name: worker,
+                                    startDay: selectedStartDate,
+                                    endDay: selectedEndDate,
+                                    reason: sreason,
+                                    manager: manager,
+                                    accept: null,
+                                    totalPerDay: daysDifference
+
+                                };
+                                const updatedWorkerPerReq = workerPerReq.map(workerInfo =>
+                                    workerInfo.id === idControl ? newWorkerInfo : workerInfo
+                                );
+
+                                dispatch(setWorkerPerReq(updatedWorkerPerReq));
+                                navigation.navigate('MyRequest');
+                            }
+                        }
+                    }
                 }
                 else {
+                    const newPerDate = daysDifference; // Yeni izin tarih aralığı hesaplanıyor
+
+                    if (newPerDate >= 30) { // İzin sınırını aşarsa hata mesajı oluşturuluyor
+                        setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı 2`);
+                    } else {
+                        // Yeni çalışan bilgileri oluşturuluyor ve depoya ekleniyor
+                        const newWorkerInfo = {
+                            name: worker,
+                            startDay: selectedStartDate,
+                            endDay: selectedEndDate,
+                            reason: sreason,
+                            manager: manager,
+                            accept: null,
+                            id: idControl,
+                            totalPerDay: newPerDate,
+                        };
+                        dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+                        navigation.navigate('MyRequest'); // İstek sayfasına yönlendiriliyor
+                    }
+                }
+            } else {
+                const newPerDate = daysDifference; // Yeni izin tarih aralığı hesaplanıyor
+
+                if (newPerDate >= 30) { // İzin sınırını aşarsa hata mesajı oluşturuluyor
+                    setError(`Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı 30`);
+                } else {
+                    // Yeni çalışan bilgileri oluşturuluyor ve depoya ekleniyor
                     const newWorkerInfo = {
                         name: worker,
                         startDay: selectedStartDate,
@@ -81,89 +231,20 @@ function PermissionRequest() {
                         reason: sreason,
                         manager: manager,
                         accept: null,
-
+                        id: idControl,
+                        totalPerDay: newPerDate,
                     };
                     dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
-                    navigation.navigate('MyRequest');
+                    navigation.navigate('MyRequest'); // İstek sayfasına yönlendiriliyor
                 }
             }
-            else {
-                const newWorkerInfo = {
-                    name: worker,
-                    startDay: selectedStartDate,
-                    endDay: selectedEndDate,
-                    reason: sreason,
-                    manager: manager,
-                    accept: null,
-
-                };
-
-                dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
-                navigation.navigate('MyRequest');
-            }
-        }
-        else if (manager && selectedStartDate) {
-            if (workerInfo) {
-                const isNameInWorkerInfo = workerInfo.find(workerInfoItem => workerInfoItem.name === worker);
-
-                if (isNameInWorkerInfo) {
-                    setError('Bu işçinin zaten bir izin isteği bulunmaktadır.');
-                }
-                else {
-                    const newWorkerInfo = {
-                        name: worker,
-                        startDay: selectedStartDate,
-                        endDay: selectedEndDate,
-                        reason: sreason,
-                        manager: manager,
-                        accept: null,
-                    };
-                    dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
-                    navigation.navigate('MyRequest');
-                }
-            }
-            else if (workerPerReq) {
-                const isNameInWorkerPerReq = workerPerReq.find(workerInfo => workerInfo.name === worker);
-
-                if (isNameInWorkerPerReq) {
-                    setError('Bu işçinin zaten bir izin isteği bulunmaktadır.');
-                }
-                else {
-                    const newWorkerInfo = {
-                        name: worker,
-                        startDay: selectedStartDate,
-                        endDay: selectedEndDate,
-                        reason: sreason,
-                        manager: manager,
-                        accept: null,
-
-                    };
-                    dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
-                    navigation.navigate('MyRequest');
-                }
-            }
-            else {
-                const newWorkerInfo = {
-                    name: worker,
-                    startDay: selectedStartDate,
-                    endDay: selectedEndDate,
-                    reason: sreason,
-                    manager: manager,
-                    accept: null,
-
-                };
-
-                dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
-                navigation.navigate('MyRequest');
-            }
-        }
-        else if (!manager) {
+        } else if (!manager) {
             setError('Lütfen profil sayfasından yönetici seçiniz.');
-        }
-        else {
+        } else {
             console.log('Tarih bilgilerini kontrol ediniz.');
         }
     };
+
 
 
     return (
@@ -316,3 +397,5 @@ const styles = StyleSheet.create({
 });
 
 export default PermissionRequest;
+
+

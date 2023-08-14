@@ -16,6 +16,7 @@ function MyRequest() {
     const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
 
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+    console.log('ABD', workerPerReq)
     const worker = useSelector((state) => state.workerInfoTotal.worker);
     console.log('workerPerReq', workerPerReq)
 
