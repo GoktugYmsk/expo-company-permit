@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { setWorkerInfo, setStartDay, setEndDay, setWorker, setWorkerPerReq } from '../../configure';
+import { setWorkerInfo, setStartDay, setEndDay, setWorker, setWorkerPerReq, setRegUser } from '../../configure';
 import { Button, ListItem } from "@react-native-material/core";
 
 function Approval() {
@@ -11,8 +11,8 @@ function Approval() {
   const manageName = useSelector((state) => state.management.manageName);
   const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
   const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+  const regUser = useSelector((state) => state.saveRegUser.regUser)
 
-  console.log('WORKERPERREQ', workerPerReq)
 
   const isAdmin = manageName !== '';
 
@@ -25,7 +25,11 @@ function Approval() {
       const approvedWorker = workerPerReq[index];
       // 26. satırda hata olabilir
 
-      const isWorkerAlreadyExists = workerInfo?.includes(worker => worker.id === approvedWorker.id);
+
+      const isWorkerAlreadyExists = workerPerReq.includes(worker => worker.id === approvedWorker.id);
+
+      console.log('Gökay', isWorkerAlreadyExists)
+
 
       if (!isWorkerAlreadyExists) {
         const newWorkerInfo = {
@@ -36,9 +40,9 @@ function Approval() {
           manager: approvedWorker.manager,
           id: idControl,
           accept: true,
-          totalPerDay: approvedWorker.totalPerDay,
         };
-        dispatch(setWorkerInfo([...workerInfo, newWorkerInfo]));
+
+        console.log('ANTALYA')
         dispatch(setWorkerPerReq(workerPerReq.map((worker, i) => i === index ? newWorkerInfo : worker)));
       }
     }
@@ -48,22 +52,71 @@ function Approval() {
     if (isAdmin && index >= 0 && index < workerPerReq.length) {
       const approvedWorker = workerPerReq[index];
 
-      const isWorkerAlreadyExists = workerInfo?.includes(worker => worker.name === approvedWorker.name);
+
+      const starttDay = approvedWorker.startDay
+      const enddDay = approvedWorker.endDay
+
+      console.log('START', starttDay)
+      console.log('START', enddDay)
+
+      const isWorkerAlreadyExists = workerPerReq.includes(worker => worker.id === approvedWorker.id);
+
+      console.log('KEŞAN', isWorkerAlreadyExists)
 
       if (!isWorkerAlreadyExists) {
+
         const newWorkerInfo = {
           name: approvedWorker.name,
           startDay: approvedWorker.startDay,
           endDay: approvedWorker.endDay,
           reason: approvedWorker.reason,
           manager: approvedWorker.manager,
-          totalPerDay: approvedWorker.totalPerDay,
           accept: false,
         };
-        dispatch(setWorkerPerReq(workerPerReq.map((worker, i) => i === index ? newWorkerInfo : worker)));
+
+        const startDate = new Date(newWorkerInfo.startDay);
+        const endDate = new Date(newWorkerInfo.endDay);
+
+
+
+        if (starttDay && enddDay) {
+
+          const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+          console.log('TURKEY', daysDifference);
+
+          const updatedRegUser = regUser.map(user => {
+            if (user.id === idControl) {
+              const calculate = user.perDateTotal + daysDifference;
+              return { ...user, perDateTotal: calculate };
+            }
+            return user;
+          });
+
+          dispatch(setWorkerPerReq(workerPerReq.map((worker, i) => i === index ? newWorkerInfo : worker)));
+          dispatch(setRegUser(updatedRegUser));
+        }
+        else if (starttDay) {
+
+          console.log('İZMİR')
+
+          const updatedRegUser = regUser.map(user => {
+            if (user.id === idControl) {
+              const calculate = user.perDateTotal + 1;
+              return { ...user, perDateTotal: calculate };
+            }
+            return user;
+          });
+
+          dispatch(setWorkerPerReq(workerPerReq.map((worker, i) => i === index ? newWorkerInfo : worker)));
+          dispatch(setRegUser(updatedRegUser));
+        }
+
+
       }
     }
   };
+
 
   return (
     <ScrollView>

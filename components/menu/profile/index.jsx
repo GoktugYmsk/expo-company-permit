@@ -99,7 +99,20 @@ function Profile() {
                             ))}
                         </View>
                     </View>
-                    
+                    {regUser.map((item, key) => (
+                        <View key={key}>
+                            {item.id === idControl && (
+                                <View>
+                                    {!manageName &&
+                                        <View>
+                                            <Text>İşe Başlama Tarihi {item.startDate}</Text>
+                                            <Text>Kalan izin hakkı {item.perDateTotal}</Text>
+                                        </View>
+                                    }
+                                </View>
+                            )}
+                        </View>
+                    ))}
 
                     <Text style={{ marginTop: 30, fontSize: 23, padding: 10, paddingLeft: 36, }} variant="h6">Yönetici Seç :</Text>
                     <Button
