@@ -91,7 +91,10 @@ function Profile() {
                             {item.id === idControl && (
                                 <View>
                                     {!manageName &&
-                                        <Text>İşe Başlama Tarihi {item.startDate}</Text>
+                                        <View>
+                                            <Text>İşe Başlama Tarihi {item.startDate}</Text>
+                                            <Text>Kalan izin hakkı {item.perDateTotal}</Text>
+                                        </View>
                                     }
                                 </View>
                             )}
