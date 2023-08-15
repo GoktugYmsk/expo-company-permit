@@ -21,7 +21,7 @@ function Login() {
 
     const validManagement = [
         { name: 'Bora', email: 'bora@example.com', password: '123456' },
-        { name: 'Gökhan', email: 'gokhan@example.com', password: '123456' },
+        { name: 'Gökhan', email: 'Gökhan', password: '1' },
         { name: 'Aydın', email: 'aydin@example.com', password: '123456' },
         { name: 'Hakan', email: 'hakan@example.com', password: '123456' },
         { name: '1', email: '1', password: '1' },
@@ -96,7 +96,7 @@ function Login() {
                     value={email}
                     autoCapitalize="none"
                     onChangeText={setEmail}
-                    variant="outlined" label="email" style={{ width: 200, flex: 1, marginLeft: 5 }}
+                    variant="outlined" label="E-Mail" style={{ width: 200, flex: 1, marginLeft: 5 }}
                 />
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, padding: 0, width: 240, }}>

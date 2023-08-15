@@ -87,11 +87,22 @@ function Profile() {
                                 )}
                             </View>
                             {regUser.map((item, key) => (
-                                <View style={styles.profileContent} key={key}>
+                                <View key={key}>
                                     {item.id === idControl && (
-                                        <View>
+                                        <View style={styles.profileContent}>
                                             {!manageName &&
-                                                <Text>İşe Başlama Tarihi {item.startDate}</Text>
+                                                <View>
+                                                    <Text style={{ color: 'gray',fontSize: 14, }}>
+                                                        İşe Başlama Tarihi : 
+                                                        <Text 
+                                                        style={{ color: 'gray', fontSize: 17, fontWeight: 'bold', }}> {item.startDate}</Text>
+                                                    </Text>
+                                                    <Text style={{ color: 'gray',fontSize: 14, }}>
+                                                        Kalan izin hakkı : 
+                                                        <Text 
+                                                        style={{ color: 'gray', fontSize: 17, fontWeight: 'bold', }}> {item.perDateTotal}</Text>
+                                                    </Text>
+                                                </View>
                                             }
                                         </View>
                                     )}
@@ -99,20 +110,7 @@ function Profile() {
                             ))}
                         </View>
                     </View>
-                    {regUser.map((item, key) => (
-                        <View key={key}>
-                            {item.id === idControl && (
-                                <View>
-                                    {!manageName &&
-                                        <View>
-                                            <Text>İşe Başlama Tarihi {item.startDate}</Text>
-                                            <Text>Kalan izin hakkı {item.perDateTotal}</Text>
-                                        </View>
-                                    }
-                                </View>
-                            )}
-                        </View>
-                    ))}
+                    
 
                     <Text style={{ marginTop: 30, fontSize: 23, padding: 10, paddingLeft: 36, }} variant="h6">Yönetici Seç :</Text>
                     <Button
@@ -219,7 +217,7 @@ const styles = StyleSheet.create({
     },
     selectedManager: {
         flexDirection: 'column',
-        marginBottom: 320,
+        marginBottom: 280,
     },
 
 });
