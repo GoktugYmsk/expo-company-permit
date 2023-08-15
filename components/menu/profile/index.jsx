@@ -77,29 +77,40 @@ function Profile() {
                             <Icon name="account" size={24} color="white" />
                         </View>
 
-                        <View style={styles.profileText}>
-                            <Text style={{ fontSize: 25 }} variant="h6">Adı Soyadı</Text>
-                            {manageName ? (
-                                <Text>{manageName}</Text>
-                            ) : (
-                                <Text>{worker}</Text>
-                            )}
+                        <View style={styles.profileContent}>
+                            <View style={styles.profileText}>
+                                <Text style={{ fontSize: 25 }} variant="h6">Adı Soyadı</Text>
+                                {manageName ? (
+                                    <Text>{manageName}</Text>
+                                ) : (
+                                    <Text>{worker}</Text>
+                                )}
+                            </View>
+                            {regUser.map((item, key) => (
+                                <View key={key}>
+                                    {item.id === idControl && (
+                                        <View style={styles.profileContent}>
+                                            {!manageName &&
+                                                <View>
+                                                    <Text style={{ color: 'gray', fontSize: 14, }}>
+                                                        İşe Başlama Tarihi :
+                                                        <Text
+                                                            style={{ color: 'gray', fontSize: 17, fontWeight: 'bold', }}> {item.startDate}</Text>
+                                                    </Text>
+                                                    <Text style={{ color: 'gray', fontSize: 14, }}>
+                                                        Kalan izin hakkı :
+                                                        <Text
+                                                            style={{ color: 'gray', fontSize: 17, fontWeight: 'bold', }}> {item.perDateTotal}</Text>
+                                                    </Text>
+                                                </View>
+                                            }
+                                        </View>
+                                    )}
+                                </View>
+                            ))}
                         </View>
                     </View>
-                    {regUser.map((item, key) => (
-                        <View key={key}>
-                            {item.id === idControl && (
-                                <View>
-                                    {!manageName &&
-                                        <View>
-                                            <Text>İşe Başlama Tarihi {item.startDate}</Text>
-                                            <Text>Kalan izin hakkı {item.perDateTotal}</Text>
-                                        </View>
-                                    }
-                                </View>
-                            )}
-                        </View>
-                    ))}
+
 
                     <Text style={{ marginTop: 30, fontSize: 23, padding: 10, paddingLeft: 36, }} variant="h6">Yönetici Seç :</Text>
                     <Button
@@ -183,6 +194,8 @@ const styles = StyleSheet.create({
         borderColor: '#d2d2d2',
     },
     profileIcon: {
+        width: 60,
+        height: 60,
         marginRight: 20,
         backgroundColor: 'gray',
         padding: 18,
@@ -193,13 +206,18 @@ const styles = StyleSheet.create({
         marginRight: 20,
         padding: 5,
     },
+    profileContent: {
+        flexDirection: 'column',
+        marginRight: 20,
+        padding: 5,
+    },
     listItem: {
         borderWidth: 1,
         fontSize: 20,
     },
     selectedManager: {
         flexDirection: 'column',
-        marginBottom: 320,
+        marginBottom: 280,
     },
 
 });

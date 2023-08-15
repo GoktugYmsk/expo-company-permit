@@ -10,7 +10,7 @@ function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [permitsOnCalendar, setPermitsOnCalendar] = useState([]);
 
-  const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
+  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
   const formattedSelectedDate = selectedDate.toISOString().split("T")[0];
 
   const updatePermitsOnCalendar = (selectedDay) => {
@@ -19,8 +19,8 @@ function Home() {
     if (newSelectedDate.getTime() !== selectedDate.getTime()) {
       setSelectedDate(newSelectedDate);
 
-      if (workerInfo) {
-        const permitsOnSelectedDate = workerInfo.filter((user) => {
+      if (workerPerReq) {
+        const permitsOnSelectedDate = workerPerReq.filter((user) => {
           const startDate = new Date(user.startDay);
 
           if (user.endDay) {
@@ -62,19 +62,22 @@ function Home() {
               <View>
                 <Text style={styles.contentText}>İzin Sebebi : {user.reason}</Text>
                 <Text style={styles.contentText}>Başlangıç Tarihi : {user.startDay}</Text>
-                <Text style={styles.contentText}>Bitiş Tarihi : {user.endDay || "Belirtilmemiş"}</Text>
+                {
+                  user.endDay &&
+                  <Text style={styles.contentText}>Bitiş Tarihi : {user.endDay || "Belirtilmemiş"}</Text>
+                }
                 <Text style={styles.contentText}>Yönetici : {user.manager}</Text>
               </View>
             }
           />
         ))
       ) : (
-        <Button 
-          title="SeçİLİ tarİhte İzİnlİ çalışan bulunamadı." 
-          variant="outlined" 
-          disabled 
-          color="#8754ce" 
-          tintColor="white" 
+        <Button
+          title="SeçİLİ tarİhte İzİnlİ çalışan bulunamadı."
+          variant="outlined"
+          disabled
+          color="#8754ce"
+          tintColor="white"
           style={{ marginTop: 20, }}
         />
       )}
