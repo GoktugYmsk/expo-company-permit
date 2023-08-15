@@ -46,7 +46,6 @@ function OffDuty() {
                                         </TouchableOpacity>
                                     </View>
                                 )}
-                                <Text style={styles.workerName}>{worker.totalPerDay}</Text>
                             </View>
                         }
                         {worker.accept === false &&
@@ -59,7 +58,6 @@ function OffDuty() {
                                         </TouchableOpacity>
                                     </View>
                                 )}
-                                <Text style={styles.workerName}>{worker.totalPerDay}</Text>
                             </View>
                         }
                         {selectedWorker === worker && (
