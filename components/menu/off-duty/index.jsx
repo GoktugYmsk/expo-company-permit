@@ -49,10 +49,23 @@ function OffDuty() {
                                 <Text style={styles.workerName}>{worker.totalPerDay}</Text>
                             </View>
                         }
+                        {worker.accept === false &&
+                            <View>
+                                {(manageName === worker.manager) && (
+                                    <View key={worker.name} style={styles.container} >
+                                        <TouchableOpacity style={styles.containerOpa} onPress={() => handleWorkerClick(worker)}>
+                                            <Text style={styles.workerName}>{worker.name}</Text>
+                                            <Icon style={styles.workerIcon} name="close-circle" size={28} color="red" />
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                                <Text style={styles.workerName}>{worker.totalPerDay}</Text>
+                            </View>
+                        }
                         {selectedWorker === worker && (
                             <View style={styles.workerDetails}>
                                 <ListItem
-                                    style={{ marginTop: 30, fontSize: 23, padding: 10, paddingLeft: 36, }}
+                                    style={{ marginTop: 10, fontSize: 23, padding: 10, paddingLeft: 36, }}
                                     title={worker.startDay}
                                     secondaryText="Başlangıç Tarihi"
                                 />
@@ -108,8 +121,8 @@ const styles = StyleSheet.create({
     },
     workerDetails: {
         flexDirection: 'column',
-        marginTop: 10,
-        marginBottom: 10,
+        marginTop: 0,
+        marginBottom: 0,
         backgroundColor: "white",
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',

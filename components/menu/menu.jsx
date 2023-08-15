@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
         display: 'flex',
         backgroundColor: 'white',
         alignItems: 'center',
-        justifyContent: 'flexStart',
         height: '100%',
         padding: 10,
     },

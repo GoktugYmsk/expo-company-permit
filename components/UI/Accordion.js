@@ -26,14 +26,16 @@ const Accordion = ({ title, content }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding:8 , 
-    width:'92%'
+    width:'90%',
   },
   titleContainer : {
     paddingVertical:10,
     alignItems:'center',
-    backgroundColor:'#ff6131',
-    borderRadius:6
+    backgroundColor:'#8754ce',
+    borderRadius:6 ,
+    width: 350,
+    marginBottom: 4,
+    marginTop: 15,
   } ,
   titleText : {
     color:'#FFFFFF',

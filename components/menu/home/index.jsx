@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View ,ScrollView} from "react-native";
 import { Calendar } from "react-native-calendars";
 import { useSelector } from "react-redux";
 import Accordion from "../../UI/Accordion";
-import { Button } from "@react-native-material/core";
+import { Button, ListItem } from "@react-native-material/core";
 import CustomHamburger from "../../customHamburger";
 
 function Home() {
@@ -40,55 +40,75 @@ function Home() {
   };
 
   return (
-    <View style={styles.container}>
-      {/* <CustomHamburger /> */}
-      <Calendar
-        style={styles.calendar}
-        current={selectedDate}
-        onDayPress={updatePermitsOnCalendar}
-        monthFormat={"yyyy MMMM"}
-        markingType={"multi-dot"}
-        hideExtraDays={true}
-      />
-      <Text style={styles.permitTitle}>
-        {formattedSelectedDate} tarihinde izinli olan çalışanlar:
-      </Text>
-      {permitsOnCalendar.length > 0 ? (
-        permitsOnCalendar.map((user, index) => (
-          <Accordion
-            key={index}
-            title={user.name}
-            content={
-              <View>
-                <Text style={styles.contentText}>İzin Sebebi : {user.reason}</Text>
-                <Text style={styles.contentText}>Başlangıç Tarihi : {user.startDay}</Text>
-                {
-                  user.endDay &&
-                  <Text style={styles.contentText}>Bitiş Tarihi : {user.endDay || "Belirtilmemiş"}</Text>
-                }
-                <Text style={styles.contentText}>Yönetici : {user.manager}</Text>
-              </View>
-            }
-          />
-        ))
-      ) : (
-        <Button
-          title="SeçİLİ tarİhte İzİnlİ çalışan bulunamadı."
-          variant="outlined"
-          disabled
-          color="#8754ce"
-          tintColor="white"
-          style={{ marginTop: 20, }}
+    <ScrollView>
+      <View style={styles.container}>
+        {/* <CustomHamburger /> */}
+        <Calendar
+          style={styles.calendar}
+          current={selectedDate}
+          onDayPress={updatePermitsOnCalendar}
+          monthFormat={"yyyy MMMM"}
+          markingType={"multi-dot"}
+          hideExtraDays={true}
         />
-      )}
-    </View>
+        <Text style={styles.permitTitle}>
+          {formattedSelectedDate} tarihinde izinli olan çalışanlar:
+        </Text>
+        {permitsOnCalendar.length > 0 ? (
+          permitsOnCalendar.map((user, index) => (
+            <View style={styles.permitBox}>
+              <Accordion
+                key={index}
+                title={user.name}
+                content={
+                  <View style={styles.permitBoxDown}>
+                    <ListItem
+                      title={user.reason}
+                      secondaryText="İzin Sebebi : "
+                    />
+                    <ListItem
+                      title={user.startDay}
+                      secondaryText="Başlangıç Tarihi"
+                    />
+                    {
+                      user.endDay &&
+                      <ListItem
+                        title={user.endDay || "Belirtilmemiş"}
+                        secondaryText="Bitiş Tarihi "
+                      />
+                    }
+                    <ListItem
+                      title={user.manager}
+                      secondaryText="Yönetici : "
+                    />
+                  </View>
+                }
+              />
+            </View>
+          ))
+        ) : (
+          <Button
+            title="SeçİLİ tarİhte İzİnlİ çalışan bulunamadı."
+            variant="outlined"
+            disabled
+            color="#8754ce"
+            tintColor="white"
+            style={{ marginTop: 20, }}
+          />
+        )}
+        <View style={{ marginTop: 120, }}>
+        
+        </View>
+      </View>
+      
+      
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flexStart",
     alignItems: "center",
     width: "100%",
     backgroundColor: 'white',
@@ -101,10 +121,15 @@ const styles = StyleSheet.create({
     borderColor: "#cecece",
   },
   permitTitle: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "bold",
     marginTop: 8,
     marginBottom: 4,
+  },
+  permitBoxDown: {
+    width: 350,
+    borderWidth: 1,
+    borderColor: "#cecece",
   },
   contentText: {
     fontSize: 15,
