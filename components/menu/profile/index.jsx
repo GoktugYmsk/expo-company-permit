@@ -77,26 +77,29 @@ function Profile() {
                             <Icon name="account" size={24} color="white" />
                         </View>
 
-                        <View style={styles.profileText}>
-                            <Text style={{ fontSize: 25 }} variant="h6">Adı Soyadı</Text>
-                            {manageName ? (
-                                <Text>{manageName}</Text>
-                            ) : (
-                                <Text>{worker}</Text>
-                            )}
+                        <View style={styles.profileContent}>
+                            <View style={styles.profileText}>
+                                <Text style={{ fontSize: 25 }} variant="h6">Adı Soyadı</Text>
+                                {manageName ? (
+                                    <Text>{manageName}</Text>
+                                ) : (
+                                    <Text>{worker}</Text>
+                                )}
+                            </View>
+                            {regUser.map((item, key) => (
+                                <View style={styles.profileContent} key={key}>
+                                    {item.id === idControl && (
+                                        <View>
+                                            {!manageName &&
+                                                <Text>İşe Başlama Tarihi {item.startDate}</Text>
+                                            }
+                                        </View>
+                                    )}
+                                </View>
+                            ))}
                         </View>
                     </View>
-                    {regUser.map((item, key) => (
-                        <View key={key}>
-                            {item.id === idControl && (
-                                <View>
-                                    {!manageName &&
-                                        <Text>İşe Başlama Tarihi {item.startDate}</Text>
-                                    }
-                                </View>
-                            )}
-                        </View>
-                    ))}
+                    
 
                     <Text style={{ marginTop: 30, fontSize: 23, padding: 10, paddingLeft: 36, }} variant="h6">Yönetici Seç :</Text>
                     <Button
@@ -180,12 +183,19 @@ const styles = StyleSheet.create({
         borderColor: '#d2d2d2',
     },
     profileIcon: {
+        width: 60,
+        height: 60,
         marginRight: 20,
         backgroundColor: 'gray',
         padding: 18,
         borderRadius: 80,
     },
     profileText: {
+        flexDirection: 'column',
+        marginRight: 20,
+        padding: 5,
+    },
+    profileContent: {
         flexDirection: 'column',
         marginRight: 20,
         padding: 5,

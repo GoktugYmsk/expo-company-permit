@@ -23,7 +23,8 @@ function Login() {
         { name: 'Bora', email: 'bora@example.com', password: '123456' },
         { name: 'Gökhan', email: 'gokhan@example.com', password: '123456' },
         { name: 'Aydın', email: 'aydin@example.com', password: '123456' },
-        { name: 'Hakan', email: 'hakan@example.com', password: '123456' }
+        { name: 'Hakan', email: 'hakan@example.com', password: '123456' },
+        { name: '1', email: '1', password: '1' },
     ];
 
     const handleClick = () => {
