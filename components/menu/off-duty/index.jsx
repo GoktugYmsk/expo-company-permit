@@ -106,9 +106,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         width: '90%',
     },
-    workerIcon: {
-        alignItems: "right",
-    },
     workerDetails: {
         flexDirection: 'column',
         marginTop: 10,
