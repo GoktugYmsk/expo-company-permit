@@ -44,6 +44,18 @@ function Home() {
       selectedTextColor: 'white',
     }
   }), [formattedSelectedDate]);
+  
+
+
+  const walking = { selected: true, color: 'orange' };
+  const marked2 = {
+    '2023-08-17': {
+      dots: [walking]
+    },
+    '2023-08-18': {
+      dots: [walking]
+    },
+  };
 
   return (
     <ScrollView>
@@ -53,8 +65,8 @@ function Home() {
           current={selectedDate}
           onDayPress={updatePermitsOnCalendar}
           monthFormat={"yyyy MMMM"}
-          markingType={"multi-dot"}
-          markedDates={marked}
+          markingType="multi-dot"
+          markedDates={{ ...marked, ...marked2 }}
           hideExtraDays={false}
         />
         <Text style={styles.permitTitle}>
