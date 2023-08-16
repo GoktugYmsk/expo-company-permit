@@ -1,42 +1,28 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
-import { Calendar } from 'react-native-calendars';
 import { useDispatch, useSelector } from 'react-redux';
-import { setReason, setStartDay, setEndDay, setWorkerPerReq, setRegUser } from '../configure';
+import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+
+import { Calendar } from 'react-native-calendars';
 import { Switch, TextInput, Button } from "@react-native-material/core";
 
-import CustomHamburger from '../customHamburger';
-import { useEffect } from 'react';
+import { setWorkerPerReq, setRegUser } from '../configure';
 
 function PermissionRequest() {
     const [error, setError] = useState('')
+    const [sreason, setSreason] = useState('')
+    const [checked, setChecked] = useState(false)
     const [selectedEndDate, setSelectedEndDate] = useState(null);
     const [selectedStartDate, setSelectedStartDate] = useState(null);
-    const [checked, setChecked] = useState(false)
-
-    const [sreason, setSreason] = useState('')
-
 
     const dispatch = useDispatch()
     const navigation = useNavigation()
 
     const manager = useSelector((state) => state.management.manager)
-    const worker = useSelector((state) => state.workerInfoTotal.worker);
-    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
-    const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
     const regUser = useSelector((state) => state.saveRegUser.regUser)
+    const worker = useSelector((state) => state.workerInfoTotal.worker);
     const idControl = useSelector((state) => state.management.idControl);
-
-
-
-
-    // const reason = useSelector((state) => state.userReason.reason)
-    // const startDay = useSelector((state) => state.offDays.startDay)
-    // const endDay = useSelector((state) => state.offDays.endDay)
-
-    const allPermits = useSelector((state) => state.workerInfoTotal.allPermits)
-    console.log(workerPerReq);
+    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
 
     const handleStartDate = (e) => {
         setSelectedStartDate(e)
@@ -48,23 +34,12 @@ function PermissionRequest() {
     const handleReasonChange = (e) => {
         setSreason(e)
     }
-    // console.log("Manager:", manager);
-    // console.log("Selected Start Date:", selectedStartDate);
-    // console.log("Selected End Date:", selectedEndDate);
-    // console.log("Reason:", sreason);
 
     const signWorkerId = regUser.find(item => item.id === idControl);
-
-    useEffect(() => {
-        console.log('signWorkerId', signWorkerId)
-    }, [])
-
 
     const startDate = new Date(selectedStartDate);
     const endDate = checked ? new Date(selectedEndDate) : startDate;
     const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
-    const oneDay = Math.ceil((startDate) / (1000 * 60 * 60 * 24));
-
 
     const handleSendRequest = () => {
         if (manager && selectedStartDate && selectedEndDate) {
@@ -86,9 +61,7 @@ function PermissionRequest() {
                             }
                             return user;
                         });
-
                         dispatch(setRegUser(updatedRegUser));
-
 
                         const newWorkerInfo = {
                             name: worker,
@@ -110,14 +83,12 @@ function PermissionRequest() {
                     else {
                         const updatedRegUser = regUser.map(user => {
                             if (user.id === idControl) {
-                                const calculate = user.perDateTotal - daysDifference - 1; // or oneDay, depending on the scenario
+                                const calculate = user.perDateTotal - daysDifference - 1;
                                 return { ...user, perDateTotal: calculate };
                             }
                             return user;
                         });
-
                         dispatch(setRegUser(updatedRegUser));
-
 
                         const newWorkerInfo = {
                             name: worker,
@@ -140,15 +111,13 @@ function PermissionRequest() {
                     alert('Kullanabileceğiniz max izin 30 gündür')
                 }
                 else {
-
                     const updatedRegUser = regUser.map(user => {
                         if (user.id === idControl) {
-                            const calculate = user.perDateTotal - daysDifference - 1; // or oneDay, depending on the scenario
+                            const calculate = user.perDateTotal - daysDifference - 1;
                             return { ...user, perDateTotal: calculate };
                         }
                         return user;
                     });
-
                     dispatch(setRegUser(updatedRegUser));
 
                     const newWorkerInfo = {
@@ -163,7 +132,6 @@ function PermissionRequest() {
                     dispatch(setWorkerPerReq([newWorkerInfo]));
                     navigation.navigate("MyRequest");
                 }
-
             }
         }
         else if (manager && selectedStartDate) {
@@ -185,7 +153,6 @@ function PermissionRequest() {
                             }
                             return user;
                         });
-
                         dispatch(setRegUser(updatedRegUser));
 
                         const newWorkerInfo = {
@@ -213,9 +180,7 @@ function PermissionRequest() {
                             }
                             return user;
                         });
-
                         dispatch(setRegUser(updatedRegUser));
-
 
                         const newWorkerInfo = {
                             name: worker,
@@ -245,7 +210,6 @@ function PermissionRequest() {
                         }
                         return user;
                     });
-
                     dispatch(setRegUser(updatedRegUser));
 
                     const newWorkerInfo = {
@@ -260,7 +224,6 @@ function PermissionRequest() {
                     dispatch(setWorkerPerReq([newWorkerInfo]));
                     navigation.navigate("MyRequest");
                 }
-
             }
         }
         else if (!manager) {
@@ -270,14 +233,10 @@ function PermissionRequest() {
         }
     };
 
-
-
     return (
         <ScrollView>
-            {/* <CustomHamburger /> */}
             <>
                 <View style={styles.container}>
-
                     <View style={styles.header}>
                         <Text style={styles.headerText}>İZİN ALMA FORMU</Text>
                     </View>
@@ -303,8 +262,6 @@ function PermissionRequest() {
                         <Switch style={{ marginTop: 5, }} trackColor="#8754ce" thumbColor="white" value={checked} onValueChange={() => setChecked(!checked)} />
                     </View>
                     <View style={styles.altContent}>
-
-
                         <View style={styles.datePicker}>
                             <Button
                                 title="İZİN BAŞLANGIÇ TARİHİ SEÇİN"
@@ -321,7 +278,6 @@ function PermissionRequest() {
                             />
                         </View>
                         {checked &&
-
                             <View style={styles.datePicker}>
                                 <Button
                                     title="İZİN BİTİŞ TARİHİ SEÇİN"
@@ -340,7 +296,6 @@ function PermissionRequest() {
                         }
                     </View>
                     <TouchableOpacity style={styles.button}>
-
                         <Button
                             onPress={handleSendRequest}
                             title="İZİNİ ONAYA GÖNDER"

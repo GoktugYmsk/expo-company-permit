@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { setWorkerInfo, setWorkerPerReq } from '../../configure';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Button, ListItem, } from "@react-native-material/core";
+
+import { setWorkerInfo, setWorkerPerReq } from '../../configure';
 
 function OffDuty() {
     const [selectedWorker, setSelectedWorker] = useState(null);
 
+    const dispatch = useDispatch()
+
     const manageName = useSelector((state) => state.management.manageName);
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
-
-    console.log('GÖKTUĞ', workerPerReq)
-
-    const dispatch = useDispatch()
 
     const handleWorkerClick = (worker) => {
         if (selectedWorker === worker) {
@@ -79,14 +79,12 @@ function OffDuty() {
                                     title={worker.reason}
                                     secondaryText="Sebep"
                                 />
-
                                 <Button
                                     onPress={handleDelete}
                                     style={styles.workerButton}
                                     title="İZİNİ İPTAL ET"
                                     color="error"
                                 />
-
                             </View>
                         )}
                     </View>

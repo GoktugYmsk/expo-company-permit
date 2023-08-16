@@ -1,28 +1,19 @@
 import React from "react";
-import { Button, ListItem } from "@react-native-material/core";
-import { ScrollView } from 'react-native';
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-
-import {
-    StyleSheet,
-    Text,
-    View,
-    TextInput,
-    TouchableOpacity,
-} from "react-native";
 import { useSelector } from "react-redux";
+import { ScrollView } from 'react-native';
+
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { Button, ListItem } from "@react-native-material/core";
+
+import { StyleSheet, Text, View } from "react-native";
 
 function MyRequest() {
-    const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
 
-    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
-    console.log('ABD', workerPerReq)
     const worker = useSelector((state) => state.workerInfoTotal.worker);
-    console.log('workerPerReq', workerPerReq)
+    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
 
     return (
         <ScrollView>
-
             <View style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.headerText}>İzinlerim</Text>
@@ -50,13 +41,11 @@ function MyRequest() {
                                             {item.endDay &&
                                                 <ListItem title={item.endDay} secondaryText="bitiş tarihi" />
                                             }
-
                                             <ListItem title={item.reason} secondaryText="sebep" />
                                             <ListItem title={item.manager} secondaryText="yönetici" />
                                         </View>
                                     )}
                                     {item.accept === true && (
-
                                         <View>
                                             <View style={styles.circleTick}>
                                                 <Button
@@ -111,7 +100,6 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         paddingVertical: 16,
-
     },
     header: {
         backgroundColor: '#8754ce',

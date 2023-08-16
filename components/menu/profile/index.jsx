@@ -1,52 +1,32 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { setManager } from '../../configure';
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from '@react-navigation/native';
-import {
-    Provider,
-    Button,
-    Dialog,
-    DialogHeader,
-    DialogContent,
-    DialogActions,
-    Text,
-    ListItem,
-} from "@react-native-material/core";
 
-import CustomHamburger from '../../customHamburger';
-import { ScrollView } from 'react-native-gesture-handler';
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { Provider, Button, Dialog, DialogHeader, DialogContent, DialogActions, Text, ListItem } from "@react-native-material/core";
 
+import { setManager } from '../../configure';
 
 function Profile() {
+    const [visible, setVisible] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+    const dispatch = useDispatch()
+    const navigation = useNavigation();
+
     const manager = useSelector((state) => state.management.manager)
+    const regUser = useSelector((state) => state.saveRegUser.regUser)
     const worker = useSelector((state) => state.workerInfoTotal.worker)
+    const idControl = useSelector((state) => state.management.idControl);
     const manageName = useSelector((state) => state.management.manageName);
-    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
     const isWorkerPermit = useSelector((state) => state.isWorker.isWorkerPermit);
 
-    const regUser = useSelector((state) => state.saveRegUser.regUser)
-    const idControl = useSelector((state) => state.management.idControl);
+    const isAdmin = manageName !== '';
 
-    console.log('isWorkerPermit', isWorkerPermit)
-
-
-    // console.log('isWorkerPermit', isWorkerPermit)
-
-
-    const [visible, setVisible] = useState(false);
-
-    const navigation = useNavigation();
     const handleRequestClick = () => {
         navigation.navigate('PerRequest')
     }
-
-    const dispatch = useDispatch()
-
-    // console.log('DENEME', regUser, 'DENEME12', idControl)
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -54,29 +34,18 @@ function Profile() {
 
     const handleSelectManager = (managerName) => {
         dispatch(setManager(managerName))
-        // toggleMenu();
-        // if (worker && workerPerReq) {
-        //     const savedUser = workerPerReq.filter((item) => item.name === worker);
-        //     console.log('savedUser', savedUser)
-        //     setReqUser(savedUser)
-        // }
     }
 
     const managers = ['Bora', 'Gökhan', 'Aydın', 'Hakan']
 
-    const isAdmin = manageName !== '';
-
-
     return (
         <View>
             <View>
-                {/* <CustomHamburger /> */}
                 <View style={styles.container}>
                     <View style={styles.profile}>
                         <View style={styles.profileIcon}>
                             <Icon name="account" size={24} color="white" />
                         </View>
-
                         <View style={styles.profileContent}>
                             <View style={styles.profileText}>
                                 <Text style={{ fontSize: 25 }} variant="h6">Adı Soyadı</Text>
@@ -110,8 +79,6 @@ function Profile() {
                             ))}
                         </View>
                     </View>
-
-
                     <Text style={{ marginTop: 30, fontSize: 23, padding: 10, paddingLeft: 36, }} variant="h6">Yönetici Seç :</Text>
                     <Button
                         title="YÖNETİCİ LİSTESİ"
@@ -129,16 +96,11 @@ function Profile() {
                             <DialogContent>
                                 <View>
                                     {managers.map((managerName, index) => (
-
                                         <ListItem
-                                            key={index} onPress={() => handleSelectManager(managerName)} title={`${managerName}`
-
-                                            } />
-
+                                            key={index} onPress={() => handleSelectManager(managerName)} title={`${managerName}`} />
                                     ))}
                                 </View>
                             </DialogContent>
-
                             <DialogActions>
                                 <Button
                                     title="Çık"
@@ -154,7 +116,6 @@ function Profile() {
                                 />
                             </DialogActions>
                         </Dialog>
-
                         <View style={styles.selectedManager}>
                             <Text style={{ marginTop: 30, fontSize: 23, padding: 10, paddingLeft: 36, }} variant="h6">Seçilen Yönetici :</Text>
                             <Button style={{ marginLeft: 36, marginRight: 36, }} variant="outlined" title={`${manager}`} />
@@ -169,18 +130,14 @@ function Profile() {
                                     tintColor="white"
                                     title="İZİN TALEBİ OLUŞTUR"
                                     onPress={handleRequestClick}
-
                                 />
                             }
-
                         </>}
-
                 </View>
             </View>
         </View>
     );
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -222,6 +179,5 @@ const styles = StyleSheet.create({
     },
 
 });
-
 
 export default Profile;

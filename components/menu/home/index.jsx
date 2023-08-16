@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View ,ScrollView} from "react-native";
-import { Calendar } from "react-native-calendars";
 import { useSelector } from "react-redux";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
+
 import Accordion from "../../UI/Accordion";
+import { Calendar } from "react-native-calendars";
 import { Button, ListItem } from "@react-native-material/core";
-import CustomHamburger from "../../customHamburger";
 
 function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [permitsOnCalendar, setPermitsOnCalendar] = useState([]);
 
   const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+
   const formattedSelectedDate = selectedDate.toISOString().split("T")[0];
 
   const updatePermitsOnCalendar = (selectedDay) => {
@@ -21,28 +22,24 @@ function Home() {
 
       if (workerPerReq) {
         const permitsOnSelectedDate = workerPerReq.filter((user) => {
-          const startDate = new Date(user.startDay);
+          const startDate = new Date(user.startDay)
 
           if (user.endDay) {
-            const endDate = new Date(user.endDay);
-            return startDate <= newSelectedDate && endDate >= newSelectedDate;
+            const endDate = new Date(user.endDay)
+            return startDate <= newSelectedDate && endDate >= newSelectedDate
           }
-
-          return startDate.getTime() === newSelectedDate.getTime();
-        });
-
+          return startDate.getTime() === newSelectedDate.getTime()
+        })
         setPermitsOnCalendar(permitsOnSelectedDate);
       } else {
-        console.log("Worker Info is empty");
         setPermitsOnCalendar([]);
       }
     }
-  };
+  }
 
   return (
     <ScrollView>
       <View style={styles.container}>
-        {/* <CustomHamburger /> */}
         <Calendar
           style={styles.calendar}
           current={selectedDate}
@@ -96,12 +93,7 @@ function Home() {
             style={{ marginTop: 20, }}
           />
         )}
-        <View style={{ marginTop: 120, }}>
-        
-        </View>
       </View>
-      
-      
     </ScrollView>
   );
 }

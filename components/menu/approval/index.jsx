@@ -1,35 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from "react-native";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setWorkerInfo, setStartDay, setEndDay, setWorker, setWorkerPerReq, setRegUser } from '../../configure';
+import { StyleSheet, Text, View, ScrollView } from "react-native";
+
 import { Button, ListItem } from "@react-native-material/core";
+
+import { setWorkerPerReq, setRegUser } from '../../configure';
 
 function Approval() {
   const dispatch = useDispatch();
 
+  const regUser = useSelector((state) => state.saveRegUser.regUser)
   const idControl = useSelector((state) => state.management.idControl);
   const manageName = useSelector((state) => state.management.manageName);
-  const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
   const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
-  const regUser = useSelector((state) => state.saveRegUser.regUser)
-
 
   const isAdmin = manageName !== '';
-
-  useEffect(() => {
-    // console.log('denem', workerPerReq);
-  }, [workerPerReq]);
 
   const handleApprovalClick = (index) => {
     if (isAdmin && index >= 0 && index < workerPerReq.length) {
       const approvedWorker = workerPerReq[index];
-      // 26. satırda hata olabilir
-
 
       const isWorkerAlreadyExists = workerPerReq.includes(worker => worker.id === approvedWorker.id);
-
-      console.log('Gökay', isWorkerAlreadyExists)
-
 
       if (!isWorkerAlreadyExists) {
         const newWorkerInfo = {
@@ -41,8 +32,6 @@ function Approval() {
           id: idControl,
           accept: true,
         };
-
-        console.log('ANTALYA')
         dispatch(setWorkerPerReq(workerPerReq.map((worker, i) => i === index ? newWorkerInfo : worker)));
       }
     }
@@ -52,16 +41,10 @@ function Approval() {
     if (isAdmin && index >= 0 && index < workerPerReq.length) {
       const approvedWorker = workerPerReq[index];
 
-
       const starttDay = approvedWorker.startDay
       const enddDay = approvedWorker.endDay
 
-      console.log('START', starttDay)
-      console.log('START', enddDay)
-
       const isWorkerAlreadyExists = workerPerReq.includes(worker => worker.id === approvedWorker.id);
-
-      console.log('KEŞAN', isWorkerAlreadyExists)
 
       if (!isWorkerAlreadyExists) {
 
@@ -77,13 +60,9 @@ function Approval() {
         const startDate = new Date(newWorkerInfo.startDay);
         const endDate = new Date(newWorkerInfo.endDay);
 
-
-
         if (starttDay && enddDay) {
 
           const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
-
-          console.log('TURKEY', daysDifference);
 
           const updatedRegUser = regUser.map(user => {
             if (user.id === idControl) {
@@ -92,13 +71,10 @@ function Approval() {
             }
             return user;
           });
-
           dispatch(setWorkerPerReq(workerPerReq.map((worker, i) => i === index ? newWorkerInfo : worker)));
           dispatch(setRegUser(updatedRegUser));
         }
         else if (starttDay) {
-
-          console.log('İZMİR')
 
           const updatedRegUser = regUser.map(user => {
             if (user.id === idControl) {
@@ -107,16 +83,12 @@ function Approval() {
             }
             return user;
           });
-
           dispatch(setWorkerPerReq(workerPerReq.map((worker, i) => i === index ? newWorkerInfo : worker)));
           dispatch(setRegUser(updatedRegUser));
         }
-
-
       }
     }
   };
-
 
   return (
     <ScrollView>
@@ -210,7 +182,6 @@ function Approval() {
       </View>
     </ScrollView>
   );
-
 }
 
 const styles = StyleSheet.create({

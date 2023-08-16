@@ -1,40 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { TextInput, Button, IconButton } from "@react-native-material/core";
+import { TextInput, Button } from "@react-native-material/core";
+
 import { useDispatch, useSelector } from 'react-redux';
-import { setEndDay, setManageName, setManager, setReason, setStartDay, setWorker, setWorkerInfo, setWorkerPerReq, setIdControl, setRegUser } from '../configure';
+import { setManageName, setManager, setWorker, setIdControl, setWorkerInfo, setRegUser, setReason, setStartDay, setEndDay, setWorkerPerReq } from '../configure';
 
 function Login() {
-    const navigation = useNavigation();
+    const [email, setEmail] = useState('')
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('')
-
-    const regUser = useSelector((state) => state.saveRegUser.regUser) || [];
-    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
 
     const dispatch = useDispatch()
+    const navigation = useNavigation();
 
+    const regUser = useSelector((state) => state.saveRegUser.regUser) || [];
 
     const validManagement = [
-        { name: 'Bora', email: 'bora@example.com', password: '123456' },
-        { name: 'Gökhan', email: 'Gökhan', password: '1' },
-        { name: 'Aydın', email: 'aydin@example.com', password: '123456' },
-        { name: 'Hakan', email: 'hakan@example.com', password: '123456' },
         { name: '1', email: '1', password: '1' },
+        { name: 'Bora', email: 'bora@example.com', password: '123456' },
+        { name: 'Hakan', email: 'hakan@example.com', password: '123456' },
+        { name: 'Aydın', email: 'aydin@example.com', password: '123456' },
+        { name: 'Gökhan', email: 'gökhan@example.com', password: '123456' },
     ];
 
     const handleClick = () => {
-
-
-
         const isValidWorker = regUser.find(worker => worker.name === username);
         const isValidManagement = validManagement.find(manager => manager.name === username);
-
-        // if(regUser)
 
         if (isValidWorker) {
             const matchedUser = regUser.find(worker => worker.name === username && worker.email === email);
@@ -81,7 +76,6 @@ function Login() {
     return (
         <View style={styles.container} >
             <Text style={styles.title}>Giriş Yap</Text>
-
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, padding: 0, width: 240, }}>
                 <Icon name="account" size={25} color="gray" />
                 <TextInput
@@ -111,13 +105,10 @@ function Login() {
             <TouchableOpacity  >
                 <Button title="Giriş Yap" onPress={handleClick} uppercase={false} color="#8754ce" tintColor="white" />
             </TouchableOpacity>
-
             <Text style={styles.titleDown}>Hesabınız mı yok mu ?</Text>
-
             <TouchableOpacity  >
                 <Button title="Kayıt Ol" variant="outlined" onPress={handleClickSignup} uppercase={false} color="#8754ce" tintColor="white" />
             </TouchableOpacity>
-
             <StatusBar style="auto" />
         </View>
     );

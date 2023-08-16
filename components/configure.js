@@ -8,7 +8,7 @@ const initialState = {
     manageName: '',
     worker: [],
     workerInfo: [],
-    workerPerReq: [],   //--> bütün gönderilen izinler burada gözüküyor.
+    workerPerReq: [],
     allPermits: [],
     isWorkerPermit: false,
     hamburgerActive: false,

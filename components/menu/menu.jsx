@@ -1,18 +1,15 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useEffect } from 'react'
-import { useState } from 'react';
-
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsWorkerPermit } from '../configure';
+import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
+import { setIsWorkerPermit } from '../configure';
 
 function Menu() {
-    const navigation = useNavigation();
-
-
     const dispatch = useDispatch()
+    const navigation = useNavigation();
 
     const manageName = useSelector((state) => state.management.manageName);
     const manager = useSelector((state) => state.management.manager)
@@ -20,6 +17,8 @@ function Menu() {
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
     const regUser = useSelector((state) => state.saveRegUser.regUser)
     const idControl = useSelector((state) => state.management.idControl);
+
+    const isAdmin = manageName !== '';
 
     const handleMainClick = () => {
         if (manager) {
@@ -68,14 +67,11 @@ function Menu() {
         navigation.navigate('Profile');
     }
 
-    const isAdmin = manageName !== '';
-
     return (
         <View style={styles.container}  >
             <View style={styles.header}>
                 <Text style={styles.headerText}>Pinsoft İzinlerim</Text>
             </View>
-
             <View style={styles.menu}>
                 <TouchableOpacity style={styles.button} onPress={handleMainClick} >
                     <Icon name="home" size={30} color="#8754ce" />
@@ -87,7 +83,6 @@ function Menu() {
                     <Text style={styles.buttonText}>Profil</Text>
                     <Icon name="arrow-right" size={23} color="#6d6e70" />
                 </TouchableOpacity>
-
                 {!manageName &&
                     <TouchableOpacity style={styles.button} onPress={handleRequestClick} >
                         <Icon name="thumb-up" size={30} color="#8754ce" />
@@ -95,7 +90,6 @@ function Menu() {
                         <Icon name="arrow-right" size={23} color="#6d6e70" />
                     </TouchableOpacity>
                 }
-
                 {
                     isAdmin &&
                     <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('OffDuty')}>
@@ -113,6 +107,7 @@ function Menu() {
         </View >
     );
 }
+
 const styles = StyleSheet.create({
     container: {
         display: 'flex',
