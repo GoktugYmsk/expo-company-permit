@@ -18,7 +18,8 @@ function Menu() {
     const manager = useSelector((state) => state.management.manager)
     const worker = useSelector((state) => state.workerInfoTotal.worker);
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
-    const isWorkerPermit = useSelector((state) => state.isWorker.isWorkerPermit);
+    const regUser = useSelector((state) => state.saveRegUser.regUser)
+    const idControl = useSelector((state) => state.management.idControl);
 
     const handleMainClick = () => {
         if (manager) {
@@ -26,9 +27,6 @@ function Menu() {
         }
         else {
             alert('Profile sayfasından yönetici Seçimi yapınız')
-            // setTimeout(() => {
-            //     navigation.navigate('Profile')
-            // }, 3000);
         }
     }
 
@@ -38,9 +36,6 @@ function Menu() {
         }
         else {
             alert('Profile sayfasından yönetici Seçimi yapınız')
-            // setTimeout(() => {
-            //     navigation.navigate('Profile')
-            // }, 3000);
         }
     }
 
@@ -53,29 +48,25 @@ function Menu() {
         }
         else if (!manageName && worker && !manager) {
             alert('Profile sayfasından yönetici Seçimi yapınız')
-            // setTimeout(() => {
-            //     navigation.navigate('Profile')
-            // }, 3000);
         }
     }
 
     const handleProfileClick = () => {
         if (worker && workerPerReq) {
-            const savedUser = workerPerReq.filter((item) => item.name === worker);
-            // console.log('savedUser', savedUser);
+            const isWorkerHavePerm = regUser.find((item) => item.id === idControl);
 
-            // Eğer savedUser boş değilse (eşleşme varsa), true döndür
-            const isUserSaved = savedUser.length > 0;
-            // console.log('isUserSaved', isUserSaved);
-
-            dispatch(setIsWorkerPermit(isUserSaved));
+            if (isWorkerHavePerm.perDateTotal === 0) {
+                dispatch(setIsWorkerPermit(false));
+            }
+            else {
+                dispatch(setIsWorkerPermit(true));
+            }
         }
         else {
-            dispatch(setIsWorkerPermit(false));
+            dispatch(setIsWorkerPermit(true));
         }
         navigation.navigate('Profile');
     }
-
 
     const isAdmin = manageName !== '';
 

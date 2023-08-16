@@ -160,19 +160,20 @@ function Profile() {
                             <Button style={{ marginLeft: 36, marginRight: 36, }} variant="outlined" title={`${manager}`} />
                         </View>
                     </Provider>
-                    {!isAdmin && <>
-                        {!isWorkerPermit &&
-                            <Button
-                                style={{ marginLeft: 36, marginRight: 36, position: 'relative', bottom: 120, }}
-                                color="#8754ce"
-                                tintColor="white"
-                                title="İZİN TALEBİ OLUŞTUR"
-                                onPress={handleRequestClick}
+                    {!isAdmin &&
+                        <>
+                            {isWorkerPermit &&
+                                <Button
+                                    style={{ marginLeft: 36, marginRight: 36, position: 'relative', bottom: 120, }}
+                                    color="#8754ce"
+                                    tintColor="white"
+                                    title="İZİN TALEBİ OLUŞTUR"
+                                    onPress={handleRequestClick}
 
-                            />
-                        }
+                                />
+                            }
 
-                    </>}
+                        </>}
 
                 </View>
             </View>

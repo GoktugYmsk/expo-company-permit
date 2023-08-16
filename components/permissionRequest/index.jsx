@@ -72,7 +72,7 @@ function PermissionRequest() {
                 const isWorkerId = workerPerReq.find(workerInfo => workerInfo.id === idControl);
                 const signWorkerId = regUser.find(item => item.id === idControl);
 
-                const calculate = signWorkerId.perDateTotal - daysDifference
+                const calculate = signWorkerId.perDateTotal - daysDifference - 1
 
                 if (isWorkerId) {
                     if (calculate < 0) {
@@ -81,7 +81,7 @@ function PermissionRequest() {
                     else {
                         const updatedRegUser = regUser.map(user => {
                             if (user.id === idControl) {
-                                const calculate = user.perDateTotal - daysDifference; // or oneDay, depending on the scenario
+                                const calculate = user.perDateTotal - daysDifference - 1;
                                 return { ...user, perDateTotal: calculate };
                             }
                             return user;
@@ -110,7 +110,7 @@ function PermissionRequest() {
                     else {
                         const updatedRegUser = regUser.map(user => {
                             if (user.id === idControl) {
-                                const calculate = user.perDateTotal - daysDifference; // or oneDay, depending on the scenario
+                                const calculate = user.perDateTotal - daysDifference - 1; // or oneDay, depending on the scenario
                                 return { ...user, perDateTotal: calculate };
                             }
                             return user;
@@ -134,7 +134,7 @@ function PermissionRequest() {
                 }
             }
             else {
-                const calculate = signWorkerId.perDateTotal - daysDifference
+                const calculate = signWorkerId.perDateTotal - daysDifference - 1
 
                 if (calculate < 0) {
                     alert('Kullanabileceğiniz max izin 30 gündür')
@@ -143,7 +143,7 @@ function PermissionRequest() {
 
                     const updatedRegUser = regUser.map(user => {
                         if (user.id === idControl) {
-                            const calculate = user.perDateTotal - daysDifference; // or oneDay, depending on the scenario
+                            const calculate = user.perDateTotal - daysDifference - 1; // or oneDay, depending on the scenario
                             return { ...user, perDateTotal: calculate };
                         }
                         return user;
@@ -180,7 +180,7 @@ function PermissionRequest() {
                     else {
                         const updatedRegUser = regUser.map(user => {
                             if (user.id === idControl) {
-                                const calculate = user.perDateTotal - 1; // or oneDay, depending on the scenario
+                                const calculate = user.perDateTotal - 1;
                                 return { ...user, perDateTotal: calculate };
                             }
                             return user;
