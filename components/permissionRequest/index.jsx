@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
@@ -233,6 +233,23 @@ function PermissionRequest() {
         }
     };
 
+    const marked1 = useMemo(() => ({
+        [selectedStartDate]: {
+          selected: true,
+          selectedColor: '#8754ce',
+          selectedTextColor: 'white',
+        }
+      }), [selectedStartDate]);
+
+      const marked2 = useMemo(() => ({
+        [selectedEndDate]: {
+          selected: true,
+          selectedColor: '#8754ce',
+          selectedTextColor: 'white',
+        }
+      }), [selectedEndDate]);
+
+
     return (
         <ScrollView>
             <>
@@ -247,7 +264,7 @@ function PermissionRequest() {
                         <TextInput
                             placeholder="İzin Nedeni"
                             variant="outlined"
-                            style={{ width: 265 }}
+                            style={{ width: 350 }}
                             onChangeText={handleReasonChange}
                         />
                     </View>
@@ -275,6 +292,9 @@ function PermissionRequest() {
                                 style={styles.calendar}
                                 onDayPress={(day) => handleStartDate(day.dateString)}
                                 selected={selectedStartDate}
+                                monthFormat={"yyyy MMMM"}
+                                markingType={"multi-dot"}
+                                markedDates={marked1}
                             />
                         </View>
                         {checked &&
@@ -291,6 +311,7 @@ function PermissionRequest() {
                                     style={styles.calendar}
                                     onDayPress={(day) => handleEndDate(day.dateString)}
                                     selected={selectedEndDate}
+                                    markedDates={marked2}
                                 />
                             </View>
                         }
@@ -336,10 +357,12 @@ const styles = StyleSheet.create({
     },
     middleContent: {
         flexDirection: 'row',
-        backgroundColor: '#f1f1f1',
+        backgroundColor: 'white',
         justifyContent: 'space-around',
         width: '95%',
         borderRadius: 5,
+        borderWidth: 1,
+        borderColor: "#cecece",
     },
     middleContentText: {
         flexDirection: 'row',
@@ -365,6 +388,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 5,
+        marginTop: 10,
+        marginBottom: 60,
     },
     altContent: {
         flexDirection: 'column',
