@@ -7,7 +7,7 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from "@react-native-material/core";
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setManageName, setManager, setWorker, setIdControl, setWorkerInfo, setRegUser, setReason, setStartDay, setEndDay, setWorkerPerReq } from '../configure';
+import { setManageName, setManager, setWorker, setIdControl } from '../configure';
 
 function Login() {
     const [email, setEmail] = useState('')
@@ -50,6 +50,9 @@ function Login() {
 
         } else if (isValidManagement && isValidManagement.password === password) {
             dispatch(setManageName(username));
+            setEmail('')
+            setPassword('')
+            setUsername('')
             navigation.navigate('Menu');
         } else {
             alert("Çalışan bulunamadı");
@@ -59,19 +62,6 @@ function Login() {
     const handleClickSignup = () => {
         navigation.navigate('SignUp')
     }
-
-    // useEffect(() => {
-    //     dispatch(setReason(''))
-    //     dispatch(setStartDay(''))
-    //     dispatch(setEndDay(''))
-    //     dispatch(setManager(''))
-    //     dispatch(setManageName(''))
-    //     dispatch(setWorker(''))
-    //     dispatch(setWorkerInfo(''))
-    //     dispatch(setWorkerPerReq(''))
-    //     dispatch(setIdControl(''))
-    //     dispatch(setRegUser(''))
-    // }, [])
 
     return (
         <View style={styles.container} >
