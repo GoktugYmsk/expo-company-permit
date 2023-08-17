@@ -7,6 +7,7 @@ import { Calendar } from 'react-native-calendars';
 import { Switch, TextInput, Button } from "@react-native-material/core";
 
 import { setWorkerPerReq, setRegUser } from '../configure';
+import { useEffect } from 'react';
 
 function PermissionRequest() {
     const [error, setError] = useState('');
@@ -14,6 +15,7 @@ function PermissionRequest() {
     const [checked, setChecked] = useState(false);
     const [selectedEndDate, setSelectedEndDate] = useState(null);
     const [selectedStartDate, setSelectedStartDate] = useState(null);
+
 
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -23,6 +25,12 @@ function PermissionRequest() {
     const worker = useSelector((state) => state.workerInfoTotal.worker);
     const idControl = useSelector((state) => state.management.idControl);
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq) || [];
+
+
+
+    useEffect(() => {
+        console.log('DENEME', workerPerReq)
+    }, [])
 
     const handleStartDate = (e) => {
         setSelectedStartDate(e);
@@ -234,6 +242,7 @@ function PermissionRequest() {
             setError('Lütfen profil sayfasından yönetici seçiniz.');
         }
     };
+
     workerPerReq.forEach((user) => {
         const startDate = new Date(user.startDay);
         const endDate = user.endDay ? new Date(user.endDay) : startDate;
@@ -329,8 +338,10 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     header: {
-        alignItems: 'center',
-        marginBottom: 20,
+        backgroundColor: '#8754ce',
+        width: '100%',
+        padding: 10,
+        borderRadius: 4,
     },
     headerText: {
         fontSize: 20,
@@ -344,10 +355,12 @@ const styles = StyleSheet.create({
     },
     middleContent: {
         flexDirection: 'row',
-        backgroundColor: '#f1f1f1',
+        backgroundColor: 'white',
         justifyContent: 'space-around',
         width: '95%',
         borderRadius: 5,
+        borderWidth: 1,
+        borderColor: "#cecece",
     },
     middleContentText: {
         flexDirection: 'row',
@@ -373,6 +386,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 5,
+        marginTop: 10,
+        marginBottom: 60,
     },
     altContent: {
         flexDirection: 'column',
