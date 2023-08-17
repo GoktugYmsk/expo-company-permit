@@ -9,6 +9,7 @@ import { Button, ListItem } from "@react-native-material/core";
 function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [permitsOnCalendar, setPermitsOnCalendar] = useState([]);
+  const [markedDates, setMarkedDates] = useState({});
 
   const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
 
@@ -22,20 +23,35 @@ function Home() {
 
       if (workerPerReq) {
         const permitsOnSelectedDate = workerPerReq.filter((user) => {
-          const startDate = new Date(user.startDay)
+          const startDate = new Date(user.startDay);
 
           if (user.endDay) {
-            const endDate = new Date(user.endDay)
-            return startDate <= newSelectedDate && endDate >= newSelectedDate
+            const endDate = new Date(user.endDay);
+            return startDate <= newSelectedDate && endDate >= newSelectedDate;
           }
-          return startDate.getTime() === newSelectedDate.getTime()
-        })
+          return startDate.getTime() === newSelectedDate.getTime();
+        });
         setPermitsOnCalendar(permitsOnSelectedDate);
+
+        const markedDates = {};
+        permitsOnSelectedDate.forEach((user) => {
+          const startDate = new Date(user.startDay);
+          const endDate = user.endDay ? new Date(user.endDay) : startDate;
+          const currentDate = new Date(startDate);
+
+          while (currentDate <= endDate) {
+            const dateString = currentDate.toISOString().split("T")[0];
+            markedDates[dateString] = { selected: true, selectedColor: "red" };
+            currentDate.setDate(currentDate.getDate() + 1);
+          }
+        });
+        setMarkedDates(markedDates);
       } else {
         setPermitsOnCalendar([]);
+        setMarkedDates({});
       }
     }
-  }
+  };
 
   return (
     <ScrollView>
@@ -47,6 +63,7 @@ function Home() {
           monthFormat={"yyyy MMMM"}
           markingType={"multi-dot"}
           hideExtraDays={true}
+          markedDates={markedDates}
         />
         <Text style={styles.permitTitle}>
           {formattedSelectedDate} tarihinde izinli olan çalışanlar:
