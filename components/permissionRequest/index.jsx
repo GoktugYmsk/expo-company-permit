@@ -9,31 +9,31 @@ import { Switch, TextInput, Button } from "@react-native-material/core";
 import { setWorkerPerReq, setRegUser } from '../configure';
 
 function PermissionRequest() {
-    const [error, setError] = useState('')
-    const [sreason, setSreason] = useState('')
-    const [checked, setChecked] = useState(false)
+    const [error, setError] = useState('');
+    const [sreason, setSreason] = useState('');
+    const [checked, setChecked] = useState(false);
     const [selectedEndDate, setSelectedEndDate] = useState(null);
     const [selectedStartDate, setSelectedStartDate] = useState(null);
 
-    const dispatch = useDispatch()
-    const navigation = useNavigation()
+    const dispatch = useDispatch();
+    const navigation = useNavigation();
 
-    const manager = useSelector((state) => state.management.manager)
-    const regUser = useSelector((state) => state.saveRegUser.regUser)
+    const manager = useSelector((state) => state.management.manager);
+    const regUser = useSelector((state) => state.saveRegUser.regUser);
     const worker = useSelector((state) => state.workerInfoTotal.worker);
     const idControl = useSelector((state) => state.management.idControl);
-    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq) || [];
 
     const handleStartDate = (e) => {
-        setSelectedStartDate(e)
-    }
+        setSelectedStartDate(e);
+    };
     const handleEndDate = (e) => {
-        setSelectedEndDate(e)
-    }
+        setSelectedEndDate(e);
+    };
 
     const handleReasonChange = (e) => {
-        setSreason(e)
-    }
+        setSreason(e);
+    };
 
     const signWorkerId = regUser.find(item => item.id === idControl);
 
@@ -41,19 +41,23 @@ function PermissionRequest() {
     const endDate = checked ? new Date(selectedEndDate) : startDate;
     const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
 
+    const initialMarkedDates = {};
+
     const handleSendRequest = () => {
+
+        console.log(workerPerReq)
+
         if (manager && selectedStartDate && selectedEndDate) {
             if (workerPerReq) {
                 const isWorkerId = workerPerReq.find(workerInfo => workerInfo.id === idControl);
                 const signWorkerId = regUser.find(item => item.id === idControl);
 
-                const calculate = signWorkerId.perDateTotal - daysDifference - 1
+                const calculate = signWorkerId.perDateTotal - daysDifference - 1;
 
                 if (isWorkerId) {
                     if (calculate < 0) {
-                        alert('Kullanabileceğiniz max izin 30 gündür')
-                    }
-                    else {
+                        alert('Kullanabileceğiniz max izin 30 gündür');
+                    } else {
                         const updatedRegUser = regUser.map(user => {
                             if (user.id === idControl) {
                                 const calculate = user.perDateTotal - daysDifference - 1;
@@ -228,10 +232,19 @@ function PermissionRequest() {
         }
         else if (!manager) {
             setError('Lütfen profil sayfasından yönetici seçiniz.');
-        } else {
-            console.log('Tarih bilgilerini kontrol ediniz.');
         }
     };
+    workerPerReq.forEach((user) => {
+        const startDate = new Date(user.startDay);
+        const endDate = user.endDay ? new Date(user.endDay) : startDate;
+        const currentDate = new Date(startDate);
+
+        while (currentDate <= endDate) {
+            const dateString = currentDate.toISOString().split('T')[0];
+            initialMarkedDates[dateString] = { disabled: true, disableTouchEvent: true };
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+    });
 
     return (
         <ScrollView>
@@ -240,9 +253,7 @@ function PermissionRequest() {
                     <View style={styles.header}>
                         <Text style={styles.headerText}>İZİN ALMA FORMU</Text>
                     </View>
-                    {error &&
-                        <Text>{error}</Text>
-                    }
+                    {error && <Text>{error}</Text>}
                     <View style={styles.topContent}>
                         <TextInput
                             placeholder="İzin Nedeni"
@@ -254,10 +265,7 @@ function PermissionRequest() {
                     <View style={styles.middleContent}>
                         <View style={styles.middleContentText}>
                             <Text style={styles.inlineText}>Tek gün izin</Text>
-                            {
-                                checked &&
-                                <Text style={styles.inlineText}>/ Çoklu gün izin</Text>
-                            }
+                            {checked && <Text style={styles.inlineText}>/ Çoklu gün izin</Text>}
                         </View>
                         <Switch style={{ marginTop: 5, }} trackColor="#8754ce" thumbColor="white" value={checked} onValueChange={() => setChecked(!checked)} />
                     </View>
@@ -275,9 +283,10 @@ function PermissionRequest() {
                                 style={styles.calendar}
                                 onDayPress={(day) => handleStartDate(day.dateString)}
                                 selected={selectedStartDate}
+                                markedDates={{ ...initialMarkedDates }}
                             />
                         </View>
-                        {checked &&
+                        {checked && (
                             <View style={styles.datePicker}>
                                 <Button
                                     title="İZİN BİTİŞ TARİHİ SEÇİN"
@@ -291,9 +300,10 @@ function PermissionRequest() {
                                     style={styles.calendar}
                                     onDayPress={(day) => handleEndDate(day.dateString)}
                                     selected={selectedEndDate}
+                                    markedDates={{ ...initialMarkedDates }}
                                 />
                             </View>
-                        }
+                        )}
                     </View>
                     <TouchableOpacity style={styles.button}>
                         <Button
@@ -319,10 +329,8 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     header: {
-        backgroundColor: '#8754ce',
-        width: '100%',
-        padding: 10,
-        borderRadius: 4,
+        alignItems: 'center',
+        marginBottom: 20,
     },
     headerText: {
         fontSize: 20,

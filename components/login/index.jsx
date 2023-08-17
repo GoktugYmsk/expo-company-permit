@@ -7,7 +7,7 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from "@react-native-material/core";
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setManageName, setManager, setWorker, setIdControl } from '../configure';
+import { setManageName, setManager, setWorker, setIdControl, setReason, setStartDay, setEndDay, setWorkerInfo, setWorkerPerReq, setRegUser } from '../configure';
 
 function Login() {
     const [email, setEmail] = useState('')
@@ -61,6 +61,19 @@ function Login() {
     const handleClickSignup = () => {
         navigation.navigate('SignUp')
     }
+
+    // useEffect(() => {
+    //     dispatch(setReason(''))
+    //     dispatch(setStartDay(''))
+    //     dispatch(setEndDay(''))
+    //     dispatch(setManager(''))
+    //     dispatch(setManageName(''))
+    //     dispatch(setWorker(''))
+    //     dispatch(setWorkerInfo(''))
+    //     dispatch(setWorkerPerReq(''))
+    //     dispatch(setIdControl(''))
+    //     dispatch(setRegUser(''))
+    // }, [])
 
     return (
         <View style={styles.container} >
