@@ -1,25 +1,24 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+
 import { v4 as uuidv4 } from 'uuid';
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { TextInput, Button } from "@react-native-material/core";
 
-import { TextInput, Button, IconButton } from "@react-native-material/core";
-import { useDispatch, useSelector } from 'react-redux';
 import { setRegUser } from '../configure';
 
 function SignUp() {
+    const [nameWorker, setNameWorker] = useState('')
     const [emailWorker, setEmailWorker] = useState('');
     const [passwordWorker, setPasswordWorker] = useState('');
-    const [nameWorker, setNameWorker] = useState('')
-
-    const regUser = useSelector((state) => state.saveRegUser.regUser) || [];
-
-
-    const navigation = useNavigation()
 
     const dispatch = useDispatch()
+    const navigation = useNavigation()
+
+    const regUser = useSelector((state) => state.saveRegUser.regUser) || [];
 
     const handleSignUp = () => {
         if (nameWorker) {
@@ -79,12 +78,6 @@ function SignUp() {
                 <Button onPress={handleSignUp} title="Kayıt Ol" uppercase={false} color="#8754ce" tintColor="white" />
             </TouchableOpacity>
         </View>
-
-        // const nameControl = regUser.find(worker => worker.name === nameWorker)
-        // const passWordControl = regUser.find(worker => worker.name === nameWorker)
-        // const emailControl = regUser.find(worker => worker.name === nameWorker)
-
-
     );
 }
 
@@ -99,7 +92,6 @@ const styles = StyleSheet.create({
         fontSize: 24,
         marginBottom: 10,
     },
-
     button: {
         padding: 10,
         zIndex: 2,

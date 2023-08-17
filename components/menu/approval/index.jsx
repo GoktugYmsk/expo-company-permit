@@ -1,32 +1,31 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from "react-native";
+import React from "react";
+import { Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { setWorkerInfo, setStartDay, setEndDay, setWorker, setWorkerPerReq } from '../../configure';
+import { StyleSheet, Text, View, ScrollView } from "react-native";
+
 import { Button, ListItem } from "@react-native-material/core";
 
-
+import { setWorkerPerReq, setRegUser } from "../../configure";
 
 function Approval() {
   const dispatch = useDispatch();
 
+  const regUser = useSelector((state) => state.saveRegUser.regUser);
   const idControl = useSelector((state) => state.management.idControl);
   const manageName = useSelector((state) => state.management.manageName);
-  const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
-  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+  const workerPerReq = useSelector(
+    (state) => state.workerInfoTotal.workerPerReq
+  );
 
-  const isAdmin = manageName !== '';
-
-  useEffect(() => {
-    // console.log('denem', workerPerReq);
-  }, [workerPerReq]);
+  const isAdmin = manageName !== "";
 
   const handleApprovalClick = (index) => {
     if (isAdmin && index >= 0 && index < workerPerReq.length) {
       const approvedWorker = workerPerReq[index];
-      // 26. satırda hata olabilir
 
-      const isWorkerAlreadyExists = workerInfo?.includes(worker => worker.id === approvedWorker.id);
-
+      const isWorkerAlreadyExists = workerPerReq.includes(
+        (worker) => worker.id === approvedWorker.id
+      );
 
       if (!isWorkerAlreadyExists) {
         const newWorkerInfo = {
@@ -38,8 +37,13 @@ function Approval() {
           id: idControl,
           accept: true,
         };
-        dispatch(setWorkerInfo([...workerInfo, newWorkerInfo]));
-        dispatch(setWorkerPerReq(workerPerReq.map((worker, i) => i === index ? newWorkerInfo : worker)));
+        dispatch(
+          setWorkerPerReq(
+            workerPerReq.map((worker, i) =>
+              i === index ? newWorkerInfo : worker
+            )
+          )
+        );
       }
     }
   };
@@ -48,7 +52,12 @@ function Approval() {
     if (isAdmin && index >= 0 && index < workerPerReq.length) {
       const approvedWorker = workerPerReq[index];
 
-      const isWorkerAlreadyExists = workerInfo?.includes(worker => worker.name === approvedWorker.name);
+      const starttDay = approvedWorker.startDay;
+      const enddDay = approvedWorker.endDay;
+
+      const isWorkerAlreadyExists = workerPerReq.includes(
+        (worker) => worker.id === approvedWorker.id
+      );
 
       if (!isWorkerAlreadyExists) {
         const newWorkerInfo = {
@@ -59,7 +68,47 @@ function Approval() {
           manager: approvedWorker.manager,
           accept: false,
         };
-        dispatch(setWorkerPerReq(workerPerReq.map((worker, i) => i === index ? newWorkerInfo : worker)));
+
+        const startDate = new Date(newWorkerInfo.startDay);
+        const endDate = new Date(newWorkerInfo.endDay);
+
+        if (starttDay && enddDay) {
+          const daysDifference = Math.ceil(
+            (endDate - startDate) / (1000 * 60 * 60 * 24)
+          );
+
+          const updatedRegUser = regUser.map((user) => {
+            if (user.id === idControl) {
+              const calculate = user.perDateTotal + daysDifference;
+              return { ...user, perDateTotal: calculate };
+            }
+            return user;
+          });
+          dispatch(
+            setWorkerPerReq(
+              workerPerReq.map((worker, i) =>
+                i === index ? newWorkerInfo : worker
+              )
+            )
+          );
+          dispatch(setRegUser(updatedRegUser));
+        } else if (starttDay) {
+          const updatedRegUser = regUser.map((user) => {
+            if (user.id === idControl) {
+              const calculate = user.perDateTotal + 1;
+              return { ...user, perDateTotal: calculate };
+            }
+            return user;
+          });
+          dispatch(
+            setWorkerPerReq(
+              workerPerReq.map((worker, i) =>
+                i === index ? newWorkerInfo : worker
+              )
+            )
+          );
+          dispatch(setRegUser(updatedRegUser));
+        }
       }
     }
   };
@@ -72,18 +121,16 @@ function Approval() {
             <View style={styles.header}>
               <Text style={styles.headerText}>Onay Bekleyen İzinler</Text>
             </View>
-            {workerPerReq && workerPerReq.some(item => item.accept === null) ? (
+            {workerPerReq &&
+            workerPerReq.some((item) => item.accept === null) ? (
               workerPerReq.map((item, index) => (
                 <View key={index}>
-                  {item.manager === manageName &&
+                  {item.manager === manageName && (
                     <View>
                       {item.accept === null ? (
                         <View style={styles.container} key={index}>
                           <View style={styles.permitTextContainer}>
-                            <ListItem
-                              title={item.name}
-                              secondaryText="İsim"
-                            />
+                            <ListItem title={item.name} secondaryText="İsim" />
                           </View>
                           <View style={styles.permitTextContainer}>
                             <ListItem
@@ -125,10 +172,9 @@ function Approval() {
                             />
                           </View>
                         </View>
-                      ) : null
-                      }
+                      ) : null}
                     </View>
-                  }
+                  )}
                 </View>
               ))
             ) : (
@@ -138,7 +184,7 @@ function Approval() {
                 disabled
                 color="#8754ce"
                 tintColor="white"
-                style={{ marginTop: 20, marginHorizontal: 20, }}
+                style={{ marginTop: 20, marginHorizontal: 20 }}
               />
             )}
           </View>
@@ -150,18 +196,18 @@ function Approval() {
             disabled
             color="#8754ce"
             tintColor="white"
-            style={{ marginTop: 20, marginHorizontal: 20, }}
+            style={{ marginTop: 20, marginHorizontal: 20 }}
           />
         )}
       </View>
     </ScrollView>
   );
-
 }
 
 const styles = StyleSheet.create({
   mainContainer: {
     padding: 24,
+    paddingLeft: Platform.OS === "web" ? 300 : 0,
   },
   container: {
     padding: 20,
@@ -170,17 +216,17 @@ const styles = StyleSheet.create({
     borderBottomColor: "#a767ff",
   },
   header: {
-    backgroundColor: '#8754ce',
-    width: '100%',
+    backgroundColor: "#8754ce",
+    width: "100%",
     padding: 10,
     borderRadius: 4,
   },
   headerText: {
     fontSize: 20,
-    width: '100%',
+    width: "100%",
     textAlign: "center",
     fontWeight: "bold",
-    color: 'white',
+    color: "white",
   },
   permitTextContainer: {
     backgroundColor: "#a95e13",
@@ -193,16 +239,16 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     backgroundColor: "white",
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     padding: 15,
   },
   buttonApprove: {
-    marginRight: 10
+    marginRight: 10,
   },
   buttonReject: {
-    marginLeft: 10
-  }
+    marginLeft: 10,
+  },
 });
 
 export default Approval;

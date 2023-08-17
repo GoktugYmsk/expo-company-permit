@@ -1,22 +1,15 @@
-import { useNavigation } from "@react-navigation/native";
-import React, { useEffect } from "react";
-import { useState } from "react";
-
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsWorkerPermit, setLoggedInUser } from "../configure";
+import { useNavigation } from "@react-navigation/native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
-function Menu() {
-  const navigation = useNavigation();
+import { setIsWorkerPermit } from "../configure";
 
+function Menu() {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const manageName = useSelector((state) => state.management.manageName);
   const manager = useSelector((state) => state.management.manager);
@@ -24,22 +17,18 @@ function Menu() {
   const workerPerReq = useSelector(
     (state) => state.workerInfoTotal.workerPerReq
   );
-  const isWorkerPermit = useSelector((state) => state.isWorker.isWorkerPermit);
-  const regUser = useSelector(state => state.saveRegUser.regUser )
+  const regUser = useSelector((state) => state.saveRegUser.regUser);
+  const idControl = useSelector((state) => state.management.idControl);
 
-  useEffect(() => {
-    const authLoggedUser = regUser.find(user => user.name === worker)
-    dispatch(setLoggedInUser(authLoggedUser))
-  }, []);
+  console.log(regUser);
+
+  const isAdmin = manageName !== "";
 
   const handleMainClick = () => {
     if (manager) {
       navigation.navigate("Home");
     } else {
       alert("Profile sayfasından yönetici Seçimi yapınız");
-      // setTimeout(() => {
-      //     navigation.navigate('Profile')
-      // }, 3000);
     }
   };
 
@@ -48,9 +37,6 @@ function Menu() {
       navigation.navigate("PerRequest");
     } else {
       alert("Profile sayfasından yönetici Seçimi yapınız");
-      // setTimeout(() => {
-      //     navigation.navigate('Profile')
-      // }, 3000);
     }
   };
 
@@ -61,36 +47,29 @@ function Menu() {
       navigation.navigate("MyRequest");
     } else if (!manageName && worker && !manager) {
       alert("Profile sayfasından yönetici Seçimi yapınız");
-      // setTimeout(() => {
-      //     navigation.navigate('Profile')
-      // }, 3000);
     }
   };
 
   const handleProfileClick = () => {
     if (worker && workerPerReq) {
-      const savedUser = workerPerReq.filter((item) => item.name === worker);
-      // console.log('savedUser', savedUser);
+      const isWorkerHavePerm = regUser.find((item) => item.id === idControl);
 
-      // Eğer savedUser boş değilse (eşleşme varsa), true döndür
-      const isUserSaved = savedUser.length > 0;
-      // console.log('isUserSaved', isUserSaved);
-
-      dispatch(setIsWorkerPermit(isUserSaved));
+      if (isWorkerHavePerm.perDateTotal === 0) {
+        dispatch(setIsWorkerPermit(false));
+      } else {
+        dispatch(setIsWorkerPermit(true));
+      }
     } else {
-      dispatch(setIsWorkerPermit(false));
+      dispatch(setIsWorkerPermit(true));
     }
     navigation.navigate("Profile");
   };
-
-  const isAdmin = manageName !== "";
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Pinsoft İzinlerim</Text>
       </View>
-
       <View style={styles.menu}>
         <TouchableOpacity style={styles.button} onPress={handleMainClick}>
           <Icon name="home" size={30} color="#8754ce" />
@@ -102,7 +81,6 @@ function Menu() {
           <Text style={styles.buttonText}>Profil</Text>
           <Icon name="arrow-right" size={23} color="#6d6e70" />
         </TouchableOpacity>
-
         {!manageName && (
           <TouchableOpacity style={styles.button} onPress={handleRequestClick}>
             <Icon name="thumb-up" size={30} color="#8754ce" />
@@ -110,7 +88,6 @@ function Menu() {
             <Icon name="arrow-right" size={23} color="#6d6e70" />
           </TouchableOpacity>
         )}
-
         {isAdmin && (
           <TouchableOpacity
             style={styles.button}
@@ -130,12 +107,12 @@ function Menu() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     display: "flex",
     backgroundColor: "white",
     alignItems: "center",
-    justifyContent: "flex-start",
     height: "100%",
     padding: 10,
   },

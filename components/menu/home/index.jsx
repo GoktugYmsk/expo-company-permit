@@ -1,16 +1,17 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Calendar } from "react-native-calendars";
+import React, { useState,useMemo } from "react";
 import { useSelector } from "react-redux";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
+
 import Accordion from "../../UI/Accordion";
-import { Button } from "@react-native-material/core";
-import CustomHamburger from "../../customHamburger";
+import { Calendar } from "react-native-calendars";
+import { Button, ListItem } from "@react-native-material/core";
 
 function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [permitsOnCalendar, setPermitsOnCalendar] = useState([]);
 
-  const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
+  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+
   const formattedSelectedDate = selectedDate.toISOString().split("T")[0];
 
   const updatePermitsOnCalendar = (selectedDay) => {
@@ -19,76 +20,112 @@ function Home() {
     if (newSelectedDate.getTime() !== selectedDate.getTime()) {
       setSelectedDate(newSelectedDate);
 
-      if (workerInfo) {
-        const permitsOnSelectedDate = workerInfo.filter((user) => {
-          const startDate = new Date(user.startDay);
+      if (workerPerReq) {
+        const permitsOnSelectedDate = workerPerReq.filter((user) => {
+          const startDate = new Date(user.startDay)
 
           if (user.endDay) {
-            const endDate = new Date(user.endDay);
-            return startDate <= newSelectedDate && endDate >= newSelectedDate;
+            const endDate = new Date(user.endDay)
+            return startDate <= newSelectedDate && endDate >= newSelectedDate
           }
-
-          return startDate.getTime() === newSelectedDate.getTime();
-        });
-
+          return startDate.getTime() === newSelectedDate.getTime()
+        })
         setPermitsOnCalendar(permitsOnSelectedDate);
       } else {
-        console.log("Worker Info is empty");
         setPermitsOnCalendar([]);
       }
     }
+  }
+  
+  const marked = useMemo(() => ({
+    [formattedSelectedDate]: {
+      selected: true,
+      selectedColor: '#8754ce',
+      selectedTextColor: 'white',
+    }
+  }), [formattedSelectedDate]);
+  
+
+
+  const walking = { selected: true, color: 'orange' };
+  const marked2 = {
+    '2023-08-17': {
+      dots: [walking]
+    },
+    '2023-08-18': {
+      dots: [walking]
+    },
   };
 
   return (
-    <View style={styles.container}>
-      {/* <CustomHamburger /> */}
-      <Calendar
-        style={styles.calendar}
-        current={selectedDate}
-        onDayPress={updatePermitsOnCalendar}
-        monthFormat={"yyyy MMMM"}
-        markingType={"multi-dot"}
-        hideExtraDays={true}
-      />
-      <Text style={styles.permitTitle}>
-        {formattedSelectedDate} tarihinde izinli olan çalışanlar:
-      </Text>
-      {permitsOnCalendar.length > 0 ? (
-        permitsOnCalendar.map((user, index) => (
-          <Accordion
-            key={index}
-            title={user.name}
-            content={
-              <View>
-                <Text style={styles.contentText}>İzin Sebebi : {user.reason}</Text>
-                <Text style={styles.contentText}>Başlangıç Tarihi : {user.startDay}</Text>
-                <Text style={styles.contentText}>Bitiş Tarihi : {user.endDay || "Belirtilmemiş"}</Text>
-                <Text style={styles.contentText}>Yönetici : {user.manager}</Text>
-              </View>
-            }
-          />
-        ))
-      ) : (
-        <Button 
-          title="SeçİLİ tarİhte İzİnlİ çalışan bulunamadı." 
-          variant="outlined" 
-          disabled 
-          color="#8754ce" 
-          tintColor="white" 
-          style={{ marginTop: 20, }}
+    <ScrollView>
+      <View style={styles.container}>
+        <Calendar
+          style={styles.calendar}
+          current={selectedDate}
+          onDayPress={updatePermitsOnCalendar}
+          monthFormat={"yyyy MMMM"}
+          markingType="multi-dot"
+          markedDates={{ ...marked, ...marked2 }}
+          hideExtraDays={false}
         />
-      )}
-    </View>
+        <Text style={styles.permitTitle}>
+          {formattedSelectedDate} tarihinde izinli olan çalışanlar:
+        </Text>
+        {permitsOnCalendar.length > 0 ? (
+          permitsOnCalendar.map((user, index) => (
+            <View style={styles.permitBox}>
+              <Accordion
+                key={index}
+                title={user.name}
+                content={
+                  <View style={styles.permitBoxDown}>
+                    <ListItem
+                      title={user.reason}
+                      secondaryText="İzin Sebebi : "
+                    />
+                    <ListItem
+                      title={user.startDay}
+                      secondaryText="Başlangıç Tarihi"
+                    />
+                    {
+                      user.endDay &&
+                      <ListItem
+                        title={user.endDay || "Belirtilmemiş"}
+                        secondaryText="Bitiş Tarihi "
+                      />
+                    }
+                    <ListItem
+                      title={user.manager}
+                      secondaryText="Yönetici : "
+                    />
+                  </View>
+                }
+              />
+            </View>
+          ))
+        ) : (
+          <Button
+            title="SeçİLİ tarİhte İzİnlİ çalışan bulunamadı."
+            variant="outlined"
+            disabled
+            color="#8754ce"
+            tintColor="white"
+            style={{ marginTop: 20, }}
+          />
+        )}
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flexStart",
     alignItems: "center",
     width: "100%",
     backgroundColor: 'white',
+    height:'100%'
   },
   calendar: {
     width: 350,
@@ -98,10 +135,15 @@ const styles = StyleSheet.create({
     borderColor: "#cecece",
   },
   permitTitle: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "bold",
     marginTop: 8,
     marginBottom: 4,
+  },
+  permitBoxDown: {
+    width: 350,
+    borderWidth: 1,
+    borderColor: "#cecece",
   },
   contentText: {
     fontSize: 15,

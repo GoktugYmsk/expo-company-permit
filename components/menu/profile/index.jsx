@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { setAnnualLeave, setManager } from "../../configure";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
+
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import {
   Provider,
   Button,
@@ -15,68 +15,26 @@ import {
   ListItem,
 } from "@react-native-material/core";
 
-import CustomHamburger from "../../customHamburger";
-import { ScrollView } from "react-native-gesture-handler";
-import { useEffect } from "react";
+import { setManager } from "../../configure";
 
 function Profile() {
-  const dispatch = useDispatch();
+  const [visible, setVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
   const manager = useSelector((state) => state.management.manager);
+  const regUser = useSelector((state) => state.saveRegUser.regUser);
   const worker = useSelector((state) => state.workerInfoTotal.worker);
+  const idControl = useSelector((state) => state.management.idControl);
   const manageName = useSelector((state) => state.management.manageName);
-  const workerPerReq = useSelector(
-    (state) => state.workerInfoTotal.workerPerReq
-  );
   const isWorkerPermit = useSelector((state) => state.isWorker.isWorkerPermit);
 
-  const regUser = useSelector((state) => state.saveRegUser.regUser);
-  const idControl = useSelector((state) => state.management.idControl);
-  const loggedInUser = useSelector(
-    (state) => state.workerInfoTotal.loggedInUser
-  );
+  console.log(regUser);
 
-  //Annual Leave Algorithm
-  const permitsPerUser = workerPerReq.filter(
-    (permit) => permit.name === worker
-  );
-  const acceptedPermitsPerUser = permitsPerUser.filter(
-    (permit) => permit.accept === true
-  );
-  const rejectedPermitsPerUser = permitsPerUser.filter(
-    (permit) => permit.accept === false
-  );
+  const isAdmin = manageName !== "";
 
-  const handleRemainingAnnualLeave = () => {  // ---> tek yapacağımız şey kalan günler  - seçilen tarihler arasındaki gün sayısı kalan izinleri 0 ın altına indirip indirmediğine bakmak.
-    if (acceptedPermitsPerUser.length > 0) {
-      const calculatedPermits = acceptedPermitsPerUser.map((permit) => {
-        const oneDay = 24 * 60 * 60 * 1000;
-        const firstDate = new Date(permit.startDay);
-        const secondDate = new Date(permit.endDay);
-
-        return Math.round(Math.abs((firstDate - secondDate) / oneDay));
-      });
-
-      const totalPermitDays = calculatedPermits.reduce(
-        (partialSum, a) => partialSum + a,
-        0
-      );
-
-      const remainingAnnualLeave = 30 - totalPermitDays;
-      dispatch(setAnnualLeave(remainingAnnualLeave));
-    }
-  };
-
-  useEffect(() => {
-    handleRemainingAnnualLeave();
-  }, []);
-
-  console.log("LOGGED IN USER :", loggedInUser);
-
-  const [visible, setVisible] = useState(false);
-
-  const navigation = useNavigation();
   const handleRequestClick = () => {
     navigation.navigate("PerRequest");
   };
@@ -87,43 +45,65 @@ function Profile() {
 
   const handleSelectManager = (managerName) => {
     dispatch(setManager(managerName));
-    // toggleMenu();
-    // if (worker && workerPerReq) {
-    //     const savedUser = workerPerReq.filter((item) => item.name === worker);
-    //     console.log('savedUser', savedUser)
-    //     setReqUser(savedUser)
-    // }
   };
 
   const managers = ["Bora", "Gökhan", "Aydın", "Hakan"];
 
-  const isAdmin = manageName !== "";
-
   return (
     <View>
       <View>
-        {/* <CustomHamburger /> */}
         <View style={styles.container}>
           <View style={styles.profile}>
             <View style={styles.profileIcon}>
               <Icon name="account" size={24} color="white" />
             </View>
-
-            <View style={styles.profileText}>
-              <Text style={{ fontSize: 25 }} variant="h6">
-                Adı Soyadı
-              </Text>
-              {manageName ? <Text>{manageName}</Text> : <Text>{worker}</Text>}
+            <View style={styles.profileContent}>
+              <View style={styles.profileText}>
+                <Text style={{ fontSize: 25 }} variant="h6">
+                  Adı Soyadı
+                </Text>
+                {manageName ? <Text>{manageName}</Text> : <Text>{worker}</Text>}
+              </View>
+              {regUser.map((item, key) => (
+                <View key={key}>
+                  {item.id === idControl && (
+                    <View style={styles.profileContent}>
+                      {!manageName && (
+                        <View>
+                          <Text style={{ color: "gray", fontSize: 14 }}>
+                            İşe Başlama Tarihi :
+                            <Text
+                              style={{
+                                color: "gray",
+                                fontSize: 17,
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {" "}
+                              {item.startDate}
+                            </Text>
+                          </Text>
+                          <Text style={{ color: "gray", fontSize: 14 }}>
+                            Kalan izin hakkı :
+                            <Text
+                              style={{
+                                color: "gray",
+                                fontSize: 17,
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {" "}
+                              {item.perDateTotal}
+                            </Text>
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  )}
+                </View>
+              ))}
             </View>
           </View>
-
-          <View>
-            <View>
-              <Text>İşe Başlama Tarihi {loggedInUser.startDate}</Text>
-              <Text>Kalan Yıllık İzin : {loggedInUser.perDateTotal}</Text>
-            </View>
-          </View>
-
           <Text
             style={{
               marginTop: 30,
@@ -166,7 +146,6 @@ function Profile() {
                   ))}
                 </View>
               </DialogContent>
-
               <DialogActions>
                 <Button
                   title="Çık"
@@ -182,7 +161,6 @@ function Profile() {
                 />
               </DialogActions>
             </Dialog>
-
             <View style={styles.selectedManager}>
               <Text
                 style={{
@@ -204,7 +182,7 @@ function Profile() {
           </Provider>
           {!isAdmin && (
             <>
-              {!isWorkerPermit && (
+              {isWorkerPermit && (
                 <Button
                   style={{
                     marginLeft: 36,
@@ -231,6 +209,7 @@ const styles = StyleSheet.create({
     padding: 0,
     backgroundColor: "white",
     height: "100%",
+    paddingLeft: Platform.OS === 'web' ? 300:0
   },
   profile: {
     flexDirection: "row",
@@ -239,6 +218,8 @@ const styles = StyleSheet.create({
     borderColor: "#d2d2d2",
   },
   profileIcon: {
+    width: 60,
+    height: 60,
     marginRight: 20,
     backgroundColor: "gray",
     padding: 18,
@@ -249,13 +230,18 @@ const styles = StyleSheet.create({
     marginRight: 20,
     padding: 5,
   },
+  profileContent: {
+    flexDirection: "column",
+    marginRight: 20,
+    padding: 5,
+  },
   listItem: {
     borderWidth: 1,
     fontSize: 20,
   },
   selectedManager: {
     flexDirection: "column",
-    marginBottom: 320,
+    marginBottom: 280,
   },
 });
 

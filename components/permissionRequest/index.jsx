@@ -1,5 +1,6 @@
+import React, { useState, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,51 +8,30 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import { Platform } from "react-native";
+
 import { Calendar } from "react-native-calendars";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  setReason,
-  setStartDay,
-  setEndDay,
-  setWorkerPerReq,
-} from "../configure";
 import { Switch, TextInput, Button } from "@react-native-material/core";
 
-import CustomHamburger from "../customHamburger";
-import { useEffect } from "react";
+import { setWorkerPerReq, setRegUser } from "../configure";
 
 function PermissionRequest() {
   const [error, setError] = useState("");
+  const [sreason, setSreason] = useState("");
+  const [checked, setChecked] = useState(false);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
-  const [checked, setChecked] = useState(false);
-
-  const [sreason, setSreason] = useState("");
-
-  // console.log('checked', checked)
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
   const manager = useSelector((state) => state.management.manager);
+  const regUser = useSelector((state) => state.saveRegUser.regUser);
   const worker = useSelector((state) => state.workerInfoTotal.worker);
+  const idControl = useSelector((state) => state.management.idControl);
   const workerPerReq = useSelector(
     (state) => state.workerInfoTotal.workerPerReq
   );
-  const workerInfo = useSelector((state) => state.workerInfoTotal.workerInfo);
-  const regUser = useSelector((state) => state.saveRegUser.regUser);
-  const idControl = useSelector((state) => state.management.idControl);
-
-  console.log("REGUSER", regUser);
-
-  console.log("workerPerReq", workerPerReq);
-
-  // const reason = useSelector((state) => state.userReason.reason)
-  // const startDay = useSelector((state) => state.offDays.startDay)
-  // const endDay = useSelector((state) => state.offDays.endDay)
-
-  const allPermits = useSelector((state) => state.workerInfoTotal.allPermits);
-  // console.log(workerPerReq);
 
   const handleStartDate = (e) => {
     setSelectedStartDate(e);
@@ -63,81 +43,38 @@ function PermissionRequest() {
   const handleReasonChange = (e) => {
     setSreason(e);
   };
-  // console.log("Manager:", manager);
-  // console.log("Selected Start Date:", selectedStartDate);
-  // console.log("Selected End Date:", selectedEndDate);
-  // console.log("Reason:", sreason);
+
+  const signWorkerId = regUser.find((item) => item.id === idControl);
 
   const startDate = new Date(selectedStartDate);
   const endDate = checked ? new Date(selectedEndDate) : startDate;
   const daysDifference = Math.ceil(
     (endDate - startDate) / (1000 * 60 * 60 * 24)
   );
-  const oneDay = Math.ceil(startDate / (1000 * 60 * 60 * 24));
-
-  console.log("oneDay", oneDay);
-  console.log("daysDifference", oneDay);
-  console.log("WORKERPERREQ", workerPerReq);
-
-  useEffect(() => {
-    console.log("DAYSDİFFERENCE ", daysDifference);
-  }, [daysDifference]);
 
   const handleSendRequest = () => {
     if (manager && selectedStartDate && selectedEndDate) {
       if (workerPerReq) {
-        const isWorkerId = workerPerReq.find((workerInfo) => workerInfo.id);
-        console.log('IS WORKER ID :' , isWorkerId);
+        const isWorkerId = workerPerReq.find(
+          (workerInfo) => workerInfo.id === idControl
+        );
+        const signWorkerId = regUser.find((item) => item.id === idControl);
 
-        if (idControl === isWorkerId) {
-          const isNameInWorkerPerReq = workerPerReq.find(
-            (workerInfo) => workerInfo.totalPerDay
-          );
+        const calculate = signWorkerId.perDateTotal - daysDifference - 1;
 
-          console.log("isNameInWorkerPerReq", isNameInWorkerPerReq);
-
-          const leavePer = 30 - isNameInWorkerPerReq.totalPerDay;
-
-          if (isNameInWorkerPerReq.totalPerDay >= 30) {
-            setError(
-              `Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı ${leavePer}`
-            );
+        if (isWorkerId) {
+          if (calculate < 0) {
+            alert("Kullanabileceğiniz max izin 30 gündür");
           } else {
-            const newPerDate =
-              daysDifference + isNameInWorkerPerReq.totalPerDay;
+            const updatedRegUser = regUser.map((user) => {
+              if (user.id === idControl) {
+                const calculate = user.perDateTotal - daysDifference - 1;
+                return { ...user, perDateTotal: calculate };
+              }
+              return user;
+            });
+            dispatch(setRegUser(updatedRegUser));
 
-            if (newPerDate >= 30) {
-              const leavePer = 30 - isNameInWorkerPerReq.totalPerDay;
-              console.log("leavePer", leavePer);
-
-              setError(
-                `Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı ${leavePer}`
-              );
-            } else {
-              const newWorkerInfo = {
-                name: worker,
-                startDay: selectedStartDate,
-                endDay: selectedEndDate,
-                reason: sreason,
-                manager: manager,
-                accept: null,
-                id: idControl,
-                totalPerDay: newPerDate,
-              };
-              dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
-              navigation.navigate("MyRequest");
-            }
-          }
-        } else {
-          const newPerDate = daysDifference;
-
-          console.log("newPerDate", newPerDate);
-
-          if (newPerDate >= 30) {
-            setError(
-              `Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı 30`
-            );
-          } else {
             const newWorkerInfo = {
               name: worker,
               startDay: selectedStartDate,
@@ -146,22 +83,51 @@ function PermissionRequest() {
               manager: manager,
               accept: null,
               id: idControl,
-              totalPerDay: newPerDate,
+            };
+            dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+            navigation.navigate("MyRequest");
+          }
+        } else {
+          if (calculate < 0) {
+            alert("Kullanabileceğiniz max izin 30 gündür");
+          } else {
+            const updatedRegUser = regUser.map((user) => {
+              if (user.id === idControl) {
+                const calculate = user.perDateTotal - daysDifference - 1;
+                return { ...user, perDateTotal: calculate };
+              }
+              return user;
+            });
+            dispatch(setRegUser(updatedRegUser));
+
+            const newWorkerInfo = {
+              name: worker,
+              startDay: selectedStartDate,
+              endDay: selectedEndDate,
+              reason: sreason,
+              manager: manager,
+              accept: null,
+              id: idControl,
             };
             dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
             navigation.navigate("MyRequest");
           }
         }
       } else {
-        const newPerDate = daysDifference;
+        const calculate = signWorkerId.perDateTotal - daysDifference - 1;
 
-        console.log("newPerDate", newPerDate);
-
-        if (newPerDate >= 30) {
-          setError(
-            `Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı 30`
-          );
+        if (calculate < 0) {
+          alert("Kullanabileceğiniz max izin 30 gündür");
         } else {
+          const updatedRegUser = regUser.map((user) => {
+            if (user.id === idControl) {
+              const calculate = user.perDateTotal - daysDifference - 1;
+              return { ...user, perDateTotal: calculate };
+            }
+            return user;
+          });
+          dispatch(setRegUser(updatedRegUser));
+
           const newWorkerInfo = {
             name: worker,
             startDay: selectedStartDate,
@@ -170,36 +136,33 @@ function PermissionRequest() {
             manager: manager,
             accept: null,
             id: idControl,
-            totalPerDay: newPerDate,
           };
-          dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+          dispatch(setWorkerPerReq([newWorkerInfo]));
           navigation.navigate("MyRequest");
         }
       }
     } else if (manager && selectedStartDate) {
       if (workerPerReq) {
-        const isNameInWorkerPerReq = workerPerReq.find(
-          (workerInfo) => workerInfo.totalPerDay
+        const isWorkerId = workerPerReq.find(
+          (workerInfo) => workerInfo.id === idControl
         );
+        const signWorkerId = regUser.find((item) => item.id === idControl);
 
-        console.log("isNameInWorkerPerReq", isNameInWorkerPerReq);
+        const calculate = signWorkerId.perDateTotal - 1;
 
-        const leavePer = 30 - isNameInWorkerPerReq.totalPerDay;
-
-        if (isNameInWorkerPerReq.totalPerDay >= 30) {
-          setError(
-            `Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı ${leavePer}`
-          );
-        } else {
-          const newPerDate = oneDay + isNameInWorkerPerReq.totalPerDay;
-
-          console.log("newPerDate", newPerDate);
-
-          if (newPerDate >= 30) {
-            setError(
-              `Bu çalışan yılık toplam 30 günden fazla izin talebinde bulunamaz kalan izin hakkı 30`
-            );
+        if (isWorkerId) {
+          if (calculate < 0) {
+            alert("Kullanabileceğiniz max izin 30 gündür");
           } else {
+            const updatedRegUser = regUser.map((user) => {
+              if (user.id === idControl) {
+                const calculate = user.perDateTotal - 1;
+                return { ...user, perDateTotal: calculate };
+              }
+              return user;
+            });
+            dispatch(setRegUser(updatedRegUser));
+
             const newWorkerInfo = {
               name: worker,
               startDay: selectedStartDate,
@@ -208,25 +171,63 @@ function PermissionRequest() {
               manager: manager,
               accept: null,
               id: idControl,
-              totalPerDay: newPerDate,
+            };
+            dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+            navigation.navigate("MyRequest");
+          }
+        } else {
+          if (calculate < 0) {
+            alert("Kullanabileceğiniz max izin 30 gündür");
+          } else {
+            const updatedRegUser = regUser.map((user) => {
+              if (user.id === idControl) {
+                const calculate = user.perDateTotal - 1;
+                return { ...user, perDateTotal: calculate };
+              }
+              return user;
+            });
+            dispatch(setRegUser(updatedRegUser));
+
+            const newWorkerInfo = {
+              name: worker,
+              startDay: selectedStartDate,
+              endDay: selectedEndDate,
+              reason: sreason,
+              manager: manager,
+              accept: null,
+              id: idControl,
             };
             dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
             navigation.navigate("MyRequest");
           }
         }
       } else {
-        const newWorkerInfo = {
-          name: worker,
-          startDay: selectedStartDate,
-          endDay: selectedEndDate,
-          reason: sreason,
-          manager: manager,
-          accept: null,
-          id: idControl,
-          totalPerDay: newPerDate,
-        };
-        dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
-        navigation.navigate("MyRequest");
+        const calculate = signWorkerId.perDateTotal - 1;
+
+        if (calculate < 0) {
+          alert("Kullanabileceğiniz max izin 30 gündür");
+        } else {
+          const updatedRegUser = regUser.map((user) => {
+            if (user.id === idControl) {
+              const calculate = user.perDateTotal - 1;
+              return { ...user, perDateTotal: calculate };
+            }
+            return user;
+          });
+          dispatch(setRegUser(updatedRegUser));
+
+          const newWorkerInfo = {
+            name: worker,
+            startDay: selectedStartDate,
+            endDay: selectedEndDate,
+            reason: sreason,
+            manager: manager,
+            accept: null,
+            id: idControl,
+          };
+          dispatch(setWorkerPerReq([newWorkerInfo]));
+          navigation.navigate("MyRequest");
+        }
       }
     } else if (!manager) {
       setError("Lütfen profil sayfasından yönetici seçiniz.");
@@ -235,9 +236,30 @@ function PermissionRequest() {
     }
   };
 
+  const marked1 = useMemo(
+    () => ({
+      [selectedStartDate]: {
+        selected: true,
+        selectedColor: "#8754ce",
+        selectedTextColor: "white",
+      },
+    }),
+    [selectedStartDate]
+  );
+
+  const marked2 = useMemo(
+    () => ({
+      [selectedEndDate]: {
+        selected: true,
+        selectedColor: "#8754ce",
+        selectedTextColor: "white",
+      },
+    }),
+    [selectedEndDate]
+  );
+
   return (
     <ScrollView>
-      {/* <CustomHamburger /> */}
       <>
         <View style={styles.container}>
           <View style={styles.header}>
@@ -248,7 +270,7 @@ function PermissionRequest() {
             <TextInput
               placeholder="İzin Nedeni"
               variant="outlined"
-              style={{ width: 265 }}
+              style={{ width: 350 }}
               onChangeText={handleReasonChange}
             />
           </View>
@@ -281,6 +303,9 @@ function PermissionRequest() {
                 style={styles.calendar}
                 onDayPress={(day) => handleStartDate(day.dateString)}
                 selected={selectedStartDate}
+                monthFormat={"yyyy MMMM"}
+                markingType={"multi-dot"}
+                markedDates={marked1}
               />
             </View>
             {checked && (
@@ -297,6 +322,7 @@ function PermissionRequest() {
                   style={styles.calendar}
                   onDayPress={(day) => handleEndDate(day.dateString)}
                   selected={selectedEndDate}
+                  markedDates={marked2}
                 />
               </View>
             )}
@@ -323,6 +349,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 20,
     height: "100%",
+    paddingLeft: Platform.OS === "web" ? 300 : 0,
   },
   header: {
     backgroundColor: "#8754ce",
@@ -342,10 +369,12 @@ const styles = StyleSheet.create({
   },
   middleContent: {
     flexDirection: "row",
-    backgroundColor: "#f1f1f1",
+    backgroundColor: "white",
     justifyContent: "space-around",
     width: "95%",
     borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#cecece",
   },
   middleContentText: {
     flexDirection: "row",
@@ -371,6 +400,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
+    marginTop: 10,
+    marginBottom: 60,
   },
   altContent: {
     flexDirection: "column",
@@ -383,44 +414,3 @@ const styles = StyleSheet.create({
 });
 
 export default PermissionRequest;
-
-const handleSendRequest = () => {
-  if (!manager) {
-    setError("Lütfen profil sayfasından yönetici seçiniz.");
-    return;
-  }
-
-  if (!selectedStartDate || (!selectedEndDate && checked)) {
-    setError("Tarih bilgilerini kontrol ediniz.");
-    return;
-  }
-
-  const startDate = new Date(selectedStartDate);
-  const endDate = checked ? new Date(selectedEndDate) : startDate;
-
-  const daysDifference =
-    Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
-
-  if (daysDifference <= 0) {
-    setError("Geçersiz tarih aralığı.");
-    return;
-  }
-
-  if (daysDifference > regUser.perDateTotal) {
-    setError("30 günden fazla izin kullanamazsınız.");
-    return;
-  }
-
-  const newWorkerInfo = {
-    name: worker,
-    startDay: selectedStartDate,
-    endDay: selectedEndDate,
-    reason: sreason,
-    manager: manager,
-    accept: null,
-    id: idControl,
-  };
-
-  dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
-  navigation.navigate("MyRequest");
-};
