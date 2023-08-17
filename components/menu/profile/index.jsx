@@ -31,12 +31,12 @@ function Profile() {
   const manageName = useSelector((state) => state.management.manageName);
   const isWorkerPermit = useSelector((state) => state.isWorker.isWorkerPermit);
 
-  console.log(regUser);
-
   const isAdmin = manageName !== "";
 
   const handleRequestClick = () => {
-    navigation.navigate("PerRequest");
+    if(manager){
+      navigation.navigate("PerRequest");
+    }
   };
 
   const toggleMenu = () => {

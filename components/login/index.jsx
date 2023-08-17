@@ -42,7 +42,7 @@ function Login() {
                 setEmail('')
                 setPassword('')
                 setUsername('')
-                const isWeb = Platform.OS === 'web' ? 'Home':'Menu'
+                const isWeb = Platform.OS === 'web' ? 'Profile':'Menu'
                 navigation.navigate(isWeb);
             }
             else {
