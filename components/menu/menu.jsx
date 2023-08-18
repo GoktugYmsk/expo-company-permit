@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, StatusBar } from "react-native";
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
@@ -10,7 +10,6 @@ import { setIsWorkerPermit } from "../configure";
 function Menu() {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
   const manageName = useSelector((state) => state.management.manageName);
   const manager = useSelector((state) => state.management.manager);
   const worker = useSelector((state) => state.workerInfoTotal.worker);
@@ -49,6 +48,10 @@ function Menu() {
       alert("Profile sayfasından yönetici Seçimi yapınız");
     }
   };
+  const handleLoginClick = (navigation) => {
+    navigation.navigate("Login");
+  };
+
 
   const handleProfileClick = () => {
     if (worker && workerPerReq) {
@@ -72,8 +75,8 @@ function Menu() {
       </View>
       <View style={styles.menu}>
         <TouchableOpacity style={styles.button} onPress={handleMainClick}>
-          <Icon name="home" size={30} color="#8754ce" />
-          <Text style={styles.buttonText}>Anasayfa</Text>
+          <Icon name="calendar" size={30} color="#8754ce" />
+          <Text style={styles.buttonText}>İzinliler Takvimi</Text>
           <Icon name="arrow-right" size={23} color="#6d6e70" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleProfileClick}>
@@ -103,6 +106,10 @@ function Menu() {
           <Text style={styles.buttonText}>Onay Bekleyen İşlemler</Text>
           <Icon name="arrow-right" size={23} color="#6d6e70" />
         </TouchableOpacity>
+        <TouchableOpacity style={styles.button}onPress={() => handleLoginClick(navigation)}>
+          <Icon name="door" size={30} color="#8754ce" />
+          <Text style={styles.buttonText}>Çıkış yap</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -113,8 +120,9 @@ const styles = StyleSheet.create({
     display: "flex",
     backgroundColor: "white",
     alignItems: "center",
-    height: "100%",
+    height: 1000,
     padding: 10,
+    paddingTop: 50,
   },
   menu: {
     width: "100%",

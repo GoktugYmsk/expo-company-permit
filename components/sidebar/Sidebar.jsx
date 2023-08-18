@@ -28,32 +28,32 @@ export default function Sidebar() {
         style={styles.sidebarContainer}
         onPress={()=>checkManager('Home')}
       >
-        <Text style={styles.sidebarItem}>Home</Text>
+        <Text style={styles.sidebarItem}>İzinliler Takvimi</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.sidebarContainer}
         onPress={() => navigation.navigate("Profile")}
       >
-        <Text style={styles.sidebarItem}>Profile</Text>
+        <Text style={styles.sidebarItem}>Profil</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.sidebarContainer}
         onPress={()=>checkManager('MyRequest')}
       >
-        <Text style={styles.sidebarItem}>My Request</Text>
+        <Text style={styles.sidebarItem}>İzinlerim</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.sidebarContainer}
         onPress={() => checkManager('PerRequest')}
       >
-        <Text style={styles.sidebarItem}>Permission Request</Text>
+        <Text style={styles.sidebarItem}>İzinlilerim</Text>
       </TouchableOpacity>
       {manageName && (
         <TouchableOpacity
           style={styles.sidebarContainer}
           onPress={() => navigation.navigate("Approval")}
         >
-          <Text style={styles.sidebarItem}>Approval</Text>
+          <Text style={styles.sidebarItem}>Onay Bekleyen İşlemler</Text>
         </TouchableOpacity>
       )}
       {manageName && (
@@ -61,9 +61,15 @@ export default function Sidebar() {
           style={styles.sidebarContainer}
           onPress={() => navigation.navigate("OffDuty")}
         >
-          <Text style={styles.sidebarItem}>Off Duty</Text>
+          <Text style={styles.sidebarItem}>İzin Verilenler</Text>
         </TouchableOpacity>
       )}
+        <TouchableOpacity
+          style={styles.sidebarContainer}
+          onPress={() => navigation.navigate("Login")}
+        >
+          <Text style={styles.sidebarItem}>Çıkış Yap</Text>
+        </TouchableOpacity>
     </View>
   );
 }
@@ -71,7 +77,7 @@ export default function Sidebar() {
 const styles = StyleSheet.create({
   sidebar: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "red",
     padding: 20,
     height: "100%",
     marginTop: 100,
