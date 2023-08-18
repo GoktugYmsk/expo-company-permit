@@ -54,9 +54,9 @@ function Home() {
     }
   }
 
-  useEffect(() => {
-    updatePermitsOnCalendar()
-  }, [])
+  // useEffect(() => {
+  //   updatePermitsOnCalendar()
+  // }, [])
 
   // const marked = useMemo(() => ({
   //   [formattedSelectedDate]: {
