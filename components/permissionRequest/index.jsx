@@ -1,21 +1,26 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { Platform } from "react-native";
 
-import { Calendar } from 'react-native-calendars';
+import { Calendar } from "react-native-calendars";
 import { Switch, TextInput, Button } from "@react-native-material/core";
 
-import { setWorkerPerReq, setRegUser } from '../configure';
-import { useEffect } from 'react';
+import { setWorkerPerReq, setRegUser } from "../configure";
 
 function PermissionRequest() {
-  const [error, setError] = useState('');
-  const [sreason, setSreason] = useState('');
+  const [error, setError] = useState("");
+  const [sreason, setSreason] = useState("");
   const [checked, setChecked] = useState(false);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
-
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -25,12 +30,6 @@ function PermissionRequest() {
   const worker = useSelector((state) => state.workerInfoTotal.worker);
   const idControl = useSelector((state) => state.management.idControl);
   const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq) || [];
-
-
-
-  useEffect(() => {
-    console.log('DENEME', workerPerReq)
-  }, [])
 
   const handleStartDate = (e) => {
     setSelectedStartDate(e);
@@ -43,11 +42,13 @@ function PermissionRequest() {
     setSreason(e);
   };
 
-  const signWorkerId = regUser.find(item => item.id === idControl);
+  const signWorkerId = regUser.find((item) => item.id === idControl);
 
   const startDate = new Date(selectedStartDate);
   const endDate = checked ? new Date(selectedEndDate) : startDate;
-  const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+  const daysDifference = Math.ceil(
+    (endDate - startDate) / (1000 * 60 * 60 * 24)
+  );
 
   const initialMarkedDates = {};
 
@@ -63,33 +64,6 @@ function PermissionRequest() {
         const calculate = signWorkerId.perDateTotal - daysDifference - 1;
 
         if (isWorkerId) {
-          if (isWorkerId.accept !== false) {
-            workerPerReq.forEach((user) => {
-              const startDate = new Date(user.startDay);
-              const endDate = user.endDay ? new Date(user.endDay) : startDate;
-              const currentDate = new Date(startDate);
-
-              while (currentDate <= endDate) {
-                const dateString = currentDate.toISOString().split('T')[0];
-                initialMarkedDates[dateString] = { disabled: true, disableTouchEvent: true };
-                currentDate.setDate(currentDate.getDate() + 1);
-              }
-            });
-          }
-          else {
-            workerPerReq.forEach((user) => {
-              const startDate = new Date(user.startDay);
-              const endDate = user.endDay ? new Date(user.endDay) : startDate;
-              const currentDate = new Date(startDate);
-
-              while (currentDate <= endDate) {
-                const dateString = currentDate.toISOString().split('T')[0];
-                initialMarkedDates[dateString] = { disabled: false, disableTouchEvent: false };
-                currentDate.setDate(currentDate.getDate() + 1);
-              }
-            });
-          }
-
           if (calculate < 0) {
             alert('Kullanabileceğiniz max izin 30 gündür');
           } else {
@@ -271,6 +245,33 @@ function PermissionRequest() {
   };
 
 
+  function setMarkedDates(workerPerReq) {
+    const idControl = useSelector((state) => state.management.idControl);
+
+    workerPerReq.forEach((user) => {
+      const startDate = new Date(user.startDay);
+      const endDate = user.endDay ? new Date(user.endDay) : startDate;
+      const currentDate = new Date(startDate);
+
+      if (user.id === idControl && user.accept === false) {
+        while (currentDate <= endDate) {
+          const dateString = currentDate.toISOString().split('T')[0];
+          initialMarkedDates[dateString] = { disabled: false, disableTouchEvent: false };
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+      } else {
+        while (currentDate <= endDate) {
+          const dateString = currentDate.toISOString().split('T')[0];
+          initialMarkedDates[dateString] = { disabled: true, disableTouchEvent: true };
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+      }
+    });
+  }
+
+  // useEffect(() => {
+  //   setMarkedDates(workerPerReq);
+  // }, [workerPerReq]);
 
   return (
     <ScrollView>
@@ -355,10 +356,8 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   header: {
-    backgroundColor: '#8754ce',
-    width: '100%',
-    padding: 10,
-    borderRadius: 4,
+    alignItems: 'center',
+    marginBottom: 20,
   },
   headerText: {
     fontSize: 20,
@@ -372,12 +371,10 @@ const styles = StyleSheet.create({
   },
   middleContent: {
     flexDirection: 'row',
-    backgroundColor: 'white',
+    backgroundColor: '#f1f1f1',
     justifyContent: 'space-around',
     width: '95%',
     borderRadius: 5,
-    borderWidth: 1,
-    borderColor: "#cecece",
   },
   middleContentText: {
     flexDirection: 'row',
@@ -403,8 +400,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
-    marginTop: 10,
-    marginBottom: 60,
   },
   altContent: {
     flexDirection: 'column',
@@ -417,5 +412,3 @@ const styles = StyleSheet.create({
 });
 
 export default PermissionRequest;
-
-
