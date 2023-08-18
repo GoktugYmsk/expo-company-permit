@@ -62,7 +62,7 @@ export default function Sidebar() {
             style={styles.sidebarContainer}
             onPress={() => checkManager("PerRequest")}
           >
-            <Text style={styles.sidebarItem}>İzinlilerim</Text>
+            <Text style={styles.sidebarItem}>İzin Alma Formu</Text>
             <Icon style={styles.sidebarIcon} name="thumb-up" size={23} />
           </TouchableOpacity>
           {manageName && (

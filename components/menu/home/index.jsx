@@ -1,11 +1,10 @@
 import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { StyleSheet, Text, View, ScrollView,Platform } from "react-native";
 
 import Accordion from "../../UI/Accordion";
 import { Calendar } from "react-native-calendars";
 import { Button, ListItem } from "@react-native-material/core";
-
 function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [permitsOnCalendar, setPermitsOnCalendar] = useState([]);
@@ -133,6 +132,7 @@ const styles = StyleSheet.create({
     width: "100%",
     minHeight: 800,
     backgroundColor: "white",
+    paddingLeft: Platform.OS === "web" ? 300 : 0,
   },
   calendar: {
     width: 350,

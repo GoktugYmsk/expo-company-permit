@@ -169,6 +169,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
+    paddingLeft: Platform.OS === "web" ? 300 : 0,
   },
   workerButton: {
     marginRight: 40,
