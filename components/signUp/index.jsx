@@ -1,45 +1,31 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
-import { v4 as uuidv4 } from 'uuid';
-
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from "@react-native-material/core";
-
-import { setRegUser } from '../configure';
 
 function SignUp() {
     const [nameWorker, setNameWorker] = useState('')
     const [emailWorker, setEmailWorker] = useState('');
     const [passwordWorker, setPasswordWorker] = useState('');
 
-    const dispatch = useDispatch()
     const navigation = useNavigation()
 
-    const regUser = useSelector((state) => state.saveRegUser.regUser) || [];
-
-    const handleSignUp = () => {
-        if (nameWorker) {
-            const emailControl = regUser.find(worker => worker.email === emailWorker);
-
-            if (!emailControl) {
-                const newWorker = {
-                    id: uuidv4(),
-                    name: nameWorker,
-                    email: emailWorker,
-                    password: passwordWorker,
-                    perDateTotal: 30,
-                    startDate: new Date().toISOString().split('T')[0],
-                };
-                dispatch(setRegUser([...regUser, newWorker]));
-            }
-            else {
-                alert('Kullanıcı zaten kayıtlı ')
-                navigation.navigate('Login');
-            }
+    const handleSignUp = async () => {
+        try {
+            const response = await axios.post('http://localhost:8080/auth/register', {
+                firstName: nameWorker,
+                lastName: '',
+                email: emailWorker,
+                password: passwordWorker,
+                status: true,
+            });
+            console.log('Response:', response.data);
+        } catch (error) {
+            console.error("Error while signing up:", error);
         }
+        alert('Kullanıcı zaten kayıtlı');
         navigation.navigate('Login');
     };
 

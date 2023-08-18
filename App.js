@@ -43,19 +43,19 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationBar />
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Login">
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="SignUp" component={SignUp} />
-            <Stack.Screen name="Menu" component={Menu} />
-            <Stack.Screen name="Home" component={Home} />
-            <Stack.Screen name="Profile" component={Profile} />
-            <Stack.Screen name="MyRequest" component={MyRequest} />
-            <Stack.Screen name="PerRequest" component={PermissionRequest} />
-            <Stack.Screen name="Approval" component={Approval} />
-            <Stack.Screen name="OffDuty" component={OffDuty} />
-          </Stack.Navigator>
-        </NavigationContainer>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen name="Menu" component={Menu} />
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="MyRequest" component={MyRequest} />
+          <Stack.Screen name="PerRequest" component={PermissionRequest} />
+          <Stack.Screen name="Approval" component={Approval} />
+          <Stack.Screen name="OffDuty" component={OffDuty} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </Provider>
   );
 }
