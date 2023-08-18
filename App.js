@@ -13,27 +13,49 @@ import PermissionRequest from './components/permissionRequest';
 import MyRequest from './components/permissionRequest/myRequest';
 import Approval from './components/menu/approval';
 import OffDuty from './components/menu/off-duty';
+import { Platform } from "react-native";
+
+
+
+
+
 const Stack = createStackNavigator();
+
+
+const NavigationBar = () => {
+  const isWeb = Platform.OS === "web";
+  if (!isWeb) {
+    return null;
+  }
+
+  // Web için gerekli NavigationBar içeriği
+  return (
+    // Burada NavigationBar bileşeninin içeriğini oluşturabilirsiniz
+    <div style={{ background: "lightgrey", padding: "10px", left: 0 }}>
+      Web Navigation Bar
+    </div>
+  );
+};
+
 
 export default function App() {
 
-
-
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="SignUp" component={SignUp} />
-          <Stack.Screen name="Menu" component={Menu} />
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Profile" component={Profile} />
-          <Stack.Screen name="MyRequest" component={MyRequest} />
-          <Stack.Screen name="PerRequest" component={PermissionRequest} />
-          <Stack.Screen name="Approval" component={Approval} />
-          <Stack.Screen name="OffDuty" component={OffDuty} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <NavigationBar />
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Login">
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="Menu" component={Menu} />
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name="MyRequest" component={MyRequest} />
+            <Stack.Screen name="PerRequest" component={PermissionRequest} />
+            <Stack.Screen name="Approval" component={Approval} />
+            <Stack.Screen name="OffDuty" component={OffDuty} />
+          </Stack.Navigator>
+        </NavigationContainer>
     </Provider>
   );
 }

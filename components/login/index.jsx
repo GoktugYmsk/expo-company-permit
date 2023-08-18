@@ -22,8 +22,8 @@ function Login() {
     const validManagement = [
         { name: 'Bora', email: 'bora@example.com', password: '123456' },
         { name: 'Hakan', email: 'hakan@example.com', password: '123456' },
-        { name: 'Aydın', email: 'aydin@example.com', password: '123456' },
-        { name: 'Gökhan', email: 'gökhan@example.com', password: '123456' },
+        { name: 'Aydın', email: 'Aydın', password: '1' },
+        { name: 'Gökhan', email: 'Gökhan', password: '1' },
     ];
 
     const handleClick = () => {
@@ -87,7 +87,7 @@ function Login() {
                 />
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, padding: 0, width: 240, }}>
-                <Icon name="lock" size={25} color="gray" />
+                <Icon name="mail" size={25} color="gray" />
                 <TextInput
                     value={email}
                     autoCapitalize="none"

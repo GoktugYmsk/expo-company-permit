@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
@@ -267,7 +267,7 @@ function PermissionRequest() {
                         <TextInput
                             placeholder="İzin Nedeni"
                             variant="outlined"
-                            style={{ width: 265 }}
+                            style={{ width: 350 }}
                             onChangeText={handleReasonChange}
                         />
                     </View>

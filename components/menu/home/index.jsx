@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 
@@ -51,7 +51,15 @@ function Home() {
         setMarkedDates({});
       }
     }
-  };
+  }
+
+  const marked = useMemo(() => ({
+    [formattedSelectedDate]: {
+      selected: true,
+      selectedColor: '#8754ce',
+      selectedTextColor: 'white',
+    }
+  }), [formattedSelectedDate]);
 
   return (
     <ScrollView>
@@ -62,8 +70,8 @@ function Home() {
           onDayPress={updatePermitsOnCalendar}
           monthFormat={"yyyy MMMM"}
           markingType={"multi-dot"}
-          hideExtraDays={true}
-          markedDates={markedDates}
+          markedDates={marked}
+          hideExtraDays={false}
         />
         <Text style={styles.permitTitle}>
           {formattedSelectedDate} tarihinde izinli olan çalışanlar:
