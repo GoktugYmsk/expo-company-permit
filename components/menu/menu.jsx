@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { StyleSheet, Text, View, TouchableOpacity, StatusBar } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
@@ -68,6 +68,7 @@ function Menu() {
     navigation.navigate("Profile");
   };
 
+  
   return (
     <View style={styles.container}>
       <View style={styles.header}>
