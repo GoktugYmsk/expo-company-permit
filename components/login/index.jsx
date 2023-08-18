@@ -18,6 +18,11 @@ function Login() {
     const navigation = useNavigation();
 
     const regUser = useSelector((state) => state.saveRegUser.regUser) || [];
+    const worker = useSelector((state) => state.workerInfoTotal.worker);
+
+    useEffect(() => {
+        console.log('worker', worker)
+    }, [])
 
     const validManagement = [
         { name: 'Bora', email: 'bora@example.com', password: '123456' },

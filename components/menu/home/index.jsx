@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 
@@ -53,6 +53,10 @@ function Home() {
       setMarkedDates({});
     }
   }
+
+  useEffect(() => {
+    updatePermitsOnCalendar()
+  }, [])
 
   // const marked = useMemo(() => ({
   //   [formattedSelectedDate]: {

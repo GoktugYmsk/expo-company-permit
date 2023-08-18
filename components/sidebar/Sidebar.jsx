@@ -11,57 +11,74 @@ import { useSelector } from "react-redux";
 
 export default function Sidebar() {
   const navigation = useNavigation();
+
   const manager = useSelector((state) => state.management.manager);
+  const worker = useSelector((state) => state.workerInfoTotal.worker);
   const manageName = useSelector((state) => state.management.manageName);
 
+  const isAdmin = manageName !== "";
 
-  function checkManager(page){
-    if(manager){
-      navigation.navigate(page)
-    }else {
-      alert("Profile sayfasından yönetici Seçimi yapınız")
+  const handleApprovalClick = () => {
+    if (manageName && worker) {
+      navigation.navigate("Approval");
+    } else if (!manageName && worker && manager) {
+      navigation.navigate("MyRequest");
+    } else if (!manageName && worker && !manager) {
+      alert("Profile sayfasından yönetici Seçimi yapınız");
     }
-  }
+  };
+
+
+  const handleMainClick = () => {
+    if (manager) {
+      navigation.navigate("Home");
+    } else {
+      alert("Profile sayfasından yönetici Seçimi yapınız");
+    }
+  };
+
+
+  const handleRequestClick = () => {
+    if (manager) {
+      navigation.navigate("PerRequest");
+    } else {
+      alert("Profile sayfasından yönetici Seçimi yapınız");
+    }
+  };
+
   return (
     <View style={styles.sidebar}>
       <TouchableOpacity
         style={styles.sidebarContainer}
-        onPress={()=>checkManager('Home')}
+        onPress={handleMainClick}
       >
         <Text style={styles.sidebarItem}>Home</Text>
       </TouchableOpacity>
+
       <TouchableOpacity
         style={styles.sidebarContainer}
-        onPress={() => navigation.navigate("Profile")}
-      >
+        onPress={() => navigation.navigate("Profile")}>
         <Text style={styles.sidebarItem}>Profile</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.sidebarContainer}
-        onPress={()=>checkManager('MyRequest')}
-      >
-        <Text style={styles.sidebarItem}>My Request</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.sidebarContainer}
-        onPress={() => checkManager('PerRequest')}
-      >
-        <Text style={styles.sidebarItem}>Permission Request</Text>
-      </TouchableOpacity>
-      {manageName && (
+      {!manageName && (
         <TouchableOpacity
           style={styles.sidebarContainer}
-          onPress={() => navigation.navigate("Approval")}
+          onPress={handleRequestClick}
         >
-          <Text style={styles.sidebarItem}>Approval</Text>
+          <Text style={styles.sidebarItem}>İzin talebi</Text>
         </TouchableOpacity>
       )}
-      {manageName && (
+      <TouchableOpacity
+        style={styles.sidebarContainer}
+        onPress={handleApprovalClick}
+      >
+        <Text style={styles.sidebarItem}>Onay Bekleyen İşlemler</Text>
+      </TouchableOpacity>
+      {isAdmin && (
         <TouchableOpacity
           style={styles.sidebarContainer}
-          onPress={() => navigation.navigate("OffDuty")}
-        >
-          <Text style={styles.sidebarItem}>Off Duty</Text>
+          onPress={() => navigation.navigate("OffDuty")}>
+          <Text style={styles.sidebarItem}>İzinlilerim</Text>
         </TouchableOpacity>
       )}
     </View>

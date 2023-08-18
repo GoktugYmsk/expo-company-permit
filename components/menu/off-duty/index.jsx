@@ -19,9 +19,7 @@ function OffDuty() {
   const dispatch = useDispatch();
 
   const manageName = useSelector((state) => state.management.manageName);
-  const workerPerReq = useSelector(
-    (state) => state.workerInfoTotal.workerPerReq
-  );
+  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
 
   const handleWorkerClick = (worker) => {
     if (selectedWorker === worker) {
@@ -127,13 +125,13 @@ function OffDuty() {
                   color="error"
                 />
               </View>
-              
+
             )}
-            
+
           </View>
-          
+
         ))}
-        
+
     </ScrollView>
   );
 }
@@ -155,7 +153,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flexDirection: "row",
     width: "100%",
-    
+
   },
   workerName: {
     fontSize: 19,
