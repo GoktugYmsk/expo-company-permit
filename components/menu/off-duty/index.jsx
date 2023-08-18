@@ -127,9 +127,13 @@ function OffDuty() {
                   color="error"
                 />
               </View>
+              
             )}
+            
           </View>
+          
         ))}
+        
     </ScrollView>
   );
 }
@@ -151,6 +155,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flexDirection: "row",
     width: "100%",
+    
   },
   workerName: {
     fontSize: 19,

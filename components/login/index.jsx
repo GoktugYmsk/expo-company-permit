@@ -51,7 +51,8 @@ function Login() {
 
         } else if (isValidManagement && isValidManagement.password === password) {
             dispatch(setManageName(username));
-            navigation.navigate('Menu');
+            const isWeb = Platform.OS === 'web' ? 'Profile':'Menu'
+            navigation.navigate(isWeb);
         } else {
             alert("Çalışan bulunamadı");
         }

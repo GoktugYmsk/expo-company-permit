@@ -207,6 +207,7 @@ function Approval() {
 const styles = StyleSheet.create({
   mainContainer: {
     padding: 24,
+    marginLeft: 15,
     paddingLeft: Platform.OS === "web" ? 300 : 0,
   },
   container: {
@@ -220,6 +221,7 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 10,
     borderRadius: 4,
+    marginLeft: 10,
   },
   headerText: {
     fontSize: 20,

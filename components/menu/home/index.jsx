@@ -1,4 +1,4 @@
-import React, { useState,useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 
@@ -9,6 +9,7 @@ import { Button, ListItem } from "@react-native-material/core";
 function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [permitsOnCalendar, setPermitsOnCalendar] = useState([]);
+  const [markedDates, setMarkedDates] = useState({});
 
   const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
 
@@ -17,45 +18,52 @@ function Home() {
   const updatePermitsOnCalendar = (selectedDay) => {
     const newSelectedDate = new Date(selectedDay.dateString);
 
-    if (newSelectedDate.getTime() !== selectedDate.getTime()) {
-      setSelectedDate(newSelectedDate);
+    if (workerPerReq) {
+      const permitsOnSelectedDate = workerPerReq.filter((user) => {
+        const startDate = new Date(user.startDay);
 
-      if (workerPerReq) {
-        const permitsOnSelectedDate = workerPerReq.filter((user) => {
-          const startDate = new Date(user.startDay)
+        if (user.endDay) {
+          const endDate = new Date(user.endDay);
+          return startDate <= newSelectedDate && endDate >= newSelectedDate;
+        }
+        return startDate.getTime() === newSelectedDate.getTime();
+      });
+      setPermitsOnCalendar(permitsOnSelectedDate);
 
-          if (user.endDay) {
-            const endDate = new Date(user.endDay)
-            return startDate <= newSelectedDate && endDate >= newSelectedDate
-          }
-          return startDate.getTime() === newSelectedDate.getTime()
-        })
-        setPermitsOnCalendar(permitsOnSelectedDate);
-      } else {
-        setPermitsOnCalendar([]);
-      }
+      
+      const markedDates = {};
+      
+      permitsOnSelectedDate.forEach((user) => {
+        const startDate = new Date(user.startDay);
+        const endDate = user.endDay ? new Date(user.endDay) : startDate;
+        const currentDate = new Date(startDate);
+
+        while (currentDate <= endDate) {
+          const dateString = currentDate.toISOString().split("T")[0];
+          markedDates[dateString] = { 
+              marked: true,
+              dotColor: 'red'
+          };
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+      });
+      setMarkedDates(markedDates);
+    } else {
+      setPermitsOnCalendar([]);
+      setMarkedDates({});
     }
   }
   
-  const marked = useMemo(() => ({
-    [formattedSelectedDate]: {
-      selected: true,
-      selectedColor: '#8754ce',
-      selectedTextColor: 'white',
-    }
-  }), [formattedSelectedDate]);
+  // const marked = useMemo(() => ({
+  //   [formattedSelectedDate]: {
+  //     selected: true,
+  //     selectedColor: '#8754ce',
+  //     selectedTextColor: 'white',
+  //   }
+  // }), [formattedSelectedDate]);
+  
   
 
-
-  const walking = { selected: true, color: 'orange' };
-  const marked2 = {
-    '2023-08-17': {
-      dots: [walking]
-    },
-    '2023-08-18': {
-      dots: [walking]
-    },
-  };
 
   return (
     <ScrollView>
@@ -65,8 +73,8 @@ function Home() {
           current={selectedDate}
           onDayPress={updatePermitsOnCalendar}
           monthFormat={"yyyy MMMM"}
-          markingType="multi-dot"
-          markedDates={{ ...marked, ...marked2 }}
+          // markedDates={{ ...marked, ...markedDates }}
+          markedDates={markedDates}
           hideExtraDays={false}
         />
         <Text style={styles.permitTitle}>
@@ -121,11 +129,10 @@ function Home() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
     width: "100%",
-    backgroundColor: 'white',
-    height:'100%'
+    minHeight: 800,
+    backgroundColor: "white",
   },
   calendar: {
     width: 350,
