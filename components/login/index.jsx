@@ -50,6 +50,9 @@ function Login() {
 
         } else if (isValidManagement && isValidManagement.password === password) {
             dispatch(setManageName(username));
+            setEmail('')
+            setPassword('')
+            setUsername('')
             const isWeb = Platform.OS === 'web' ? 'Profile' : 'Menu'
             navigation.navigate(isWeb);
         } else {
