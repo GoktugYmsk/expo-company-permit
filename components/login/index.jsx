@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from "@react-native-material/core";
@@ -22,8 +22,8 @@ function Login() {
     const validManagement = [
         { name: 'Bora', email: 'bora@example.com', password: '123456' },
         { name: 'Hakan', email: 'hakan@example.com', password: '123456' },
-        { name: 'Aydın', email: 'aydin@example.com', password: '123456' },
-        { name: 'Gökhan', email: 'gökhan@example.com', password: '123456' },
+        { name: 'Aydın', email: 'Aydın', password: '1' },
+        { name: 'Gökhan', email: 'Gökhan', password: '1' },
     ];
 
     const handleClick = () => {
@@ -41,7 +41,8 @@ function Login() {
                 setEmail('')
                 setPassword('')
                 setUsername('')
-                navigation.navigate('Menu');
+                const isWeb = Platform.OS === 'web' ? 'Profile' : 'Menu'
+                navigation.navigate(isWeb);
             }
             else {
                 alert("Giriş Bilgileri Hatalı");
@@ -49,10 +50,8 @@ function Login() {
 
         } else if (isValidManagement && isValidManagement.password === password) {
             dispatch(setManageName(username));
-            setEmail('')
-            setPassword('')
-            setUsername('')
-            navigation.navigate('Menu');
+            const isWeb = Platform.OS === 'web' ? 'Profile' : 'Menu'
+            navigation.navigate(isWeb);
         } else {
             alert("Çalışan bulunamadı");
         }
@@ -87,7 +86,7 @@ function Login() {
                 />
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, padding: 0, width: 240, }}>
-                <Icon name="lock" size={25} color="gray" />
+                <Icon name="mail" size={25} color="gray" />
                 <TextInput
                     value={email}
                     autoCapitalize="none"
