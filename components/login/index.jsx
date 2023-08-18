@@ -5,6 +5,8 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from "@react-native-material/core";
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from 'react';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -13,32 +15,51 @@ function Login() {
 
     const navigation = useNavigation();
 
+    useEffect(() => {
+        checkToken();
+    }, []);
+
     const handleClick = async () => {
         try {
-            const response = await axios.post(
-                'http://localhost:8080/auth/login',
-                { email, password },
-                { headers: { 'Content-Type': 'application/json' } }
-            );
-
-            console.log('DENEME', response)
-
-
-            const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJ1c2VySWQiOiI5NjU3YzU1Ny0zZWNiLTQzODQtYTY4YS0wYTYyOTI3ZjgyOWEiLCJyb2xlIjoiRU1QTE9ZRUUiLCJpYXQiOjE2OTIzNDE1MzIsImV4cCI6MTY5MjM3MDMzMn0.sgm5AlMgb2RXYlPDbfjhwG78OAd9ch0DQHY0ltv4h_k';
-
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-            navigation.navigate('Menu');
-
-            console.log('Token alındı:', token);
+            const response = await axios.post('http://localhost:8080/auth/login', {
+                email,
+                password,
+            });
+            if (response.data.token) {
+                await AsyncStorage.setItem('userToken', response.data.token);
+                navigation.navigate('Home');
+            } else {
+                Alert.alert('Hata', 'Giriş yapılamadı. Kullanıcı adı veya şifre hatalı.');
+            }
         } catch (error) {
             console.error('Giriş hatası:', error);
+            Alert.alert('Hata', 'Giriş yapılırken bir hata oluştu.');
         }
     };
+
+    const getTokenFromStorage = async () => {
+        try {
+            const token = await AsyncStorage.getItem('userToken');
+            return token;
+        } catch (error) {
+            console.error('Token alınamadı:', error);
+            return null;
+        }
+    };
+
+    const checkToken = async () => {
+        const token = await getTokenFromStorage();
+
+        if (token) {
+            navigation.navigate('Home');
+        }
+    };
+
 
     const handleClickSignup = () => {
         navigation.navigate('SignUp');
     };
+
 
     return (
         <View style={styles.container}>
