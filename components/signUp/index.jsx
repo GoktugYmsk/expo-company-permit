@@ -7,6 +7,7 @@ import { TextInput, Button } from "@react-native-material/core";
 
 function SignUp() {
     const [nameWorker, setNameWorker] = useState('')
+    const [lastNameWorker, setLastNameWorker] = useState('')
     const [emailWorker, setEmailWorker] = useState('');
     const [passwordWorker, setPasswordWorker] = useState('');
 
@@ -16,7 +17,7 @@ function SignUp() {
         try {
             const response = await axios.post('http://localhost:8080/auth/register', {
                 firstName: nameWorker,
-                lastName: '',
+                lastName: lastNameWorker,
                 email: emailWorker,
                 password: passwordWorker,
                 status: true,
@@ -25,7 +26,6 @@ function SignUp() {
         } catch (error) {
             console.error("Error while signing up:", error);
         }
-        alert('Kullanıcı zaten kayıtlı');
         navigation.navigate('Login');
     };
 
@@ -39,6 +39,15 @@ function SignUp() {
                     onChangeText={setNameWorker}
                     keyboardType="name"
                     variant="outlined" label="Adınız" style={{ width: 200, flex: 1, marginLeft: 10 }}
+                />
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10, padding: 10, width: 240, }}>
+                <Icon name="account" size={20} color="gray" />
+                <TextInput
+                    value={lastNameWorker}
+                    onChangeText={setLastNameWorker}
+                    keyboardType="name"
+                    variant="outlined" label="Soyadınız" style={{ width: 200, flex: 1, marginLeft: 10 }}
                 />
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10, padding: 10, width: 240, }}>

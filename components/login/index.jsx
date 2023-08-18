@@ -19,6 +19,7 @@ function Login() {
         checkToken();
     }, []);
 
+
     const handleClick = async () => {
         try {
             const response = await axios.post('http://localhost:8080/auth/login', {
@@ -29,11 +30,11 @@ function Login() {
                 await AsyncStorage.setItem('userToken', response.data.token);
                 navigation.navigate('Home');
             } else {
-                Alert.alert('Hata', 'Giriş yapılamadı. Kullanıcı adı veya şifre hatalı.');
+                alert('Hata', 'Giriş yapılamadı. Kullanıcı adı veya şifre hatalı.');
             }
         } catch (error) {
             console.error('Giriş hatası:', error);
-            Alert.alert('Hata', 'Giriş yapılırken bir hata oluştu.');
+            alert('Hata', 'Giriş yapılırken bir hata oluştu.');
         }
     };
 
