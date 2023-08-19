@@ -110,11 +110,7 @@ export default function App() {
         <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="SignUp" component={SignUp} />
-<<<<<<< HEAD
-          <Stack.Screen name="Menu" component={Menu} />
-=======
-          <Stack.Screen name="Menu" component={Menu} options={{ headerShown: false }}/>
->>>>>>> 0d922a50bc9f044cd3d1bfb8b1682b6da3bd8cf6
+          <Stack.Screen name="Menu" component={Menu} options={{ headerShown: false }} />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="MyRequest" component={MyRequest} />
