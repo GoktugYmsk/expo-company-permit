@@ -23,8 +23,236 @@ function PermissionRequest() {
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
 
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
+  const manager = useSelector((state) => state.management.manager);
+  const regUser = useSelector((state) => state.saveRegUser.regUser);
+  const worker = useSelector((state) => state.workerInfoTotal.worker);
+  const idControl = useSelector((state) => state.management.idControl);
+  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq) || [];
 
+  const handleStartDate = (e) => {
+    setSelectedStartDate(e);
+  };
+  const handleEndDate = (e) => {
+    setSelectedEndDate(e);
+  };
+
+  const handleReasonChange = (e) => {
+    setSreason(e);
+  };
+
+  const signWorkerId = regUser.find(item => item.id === idControl);
+
+  const startDate = new Date(selectedStartDate);
+  const endDate = checked ? new Date(selectedEndDate) : startDate;
+  const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+  const initialMarkedDates = {};
+
+  const handleSendRequest = () => {
+
+    console.log(workerPerReq)
+
+    if (manager && selectedStartDate && selectedEndDate) {
+      if (workerPerReq) {
+        const isWorkerId = workerPerReq.find(workerInfo => workerInfo.id === idControl);
+        const signWorkerId = regUser.find(item => item.id === idControl);
+
+        const calculate = signWorkerId.perDateTotal - daysDifference - 1;
+
+        if (isWorkerId) {
+          if (calculate < 0) {
+            alert('Kullanabileceğiniz max izin 30 gündür');
+          } else {
+            const updatedRegUser = regUser.map(user => {
+              if (user.id === idControl) {
+                const calculate = user.perDateTotal - daysDifference - 1;
+                return { ...user, perDateTotal: calculate };
+              }
+              return user;
+            });
+            dispatch(setRegUser(updatedRegUser));
+
+            const newWorkerInfo = {
+              name: worker,
+              startDay: selectedStartDate,
+              endDay: selectedEndDate,
+              reason: sreason,
+              manager: manager,
+              accept: null,
+              id: idControl,
+            };
+            dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+            navigation.navigate("MyRequest");
+          }
+        }
+        else {
+          if (calculate < 0) {
+            alert('Kullanabileceğiniz max izin 30 gündür')
+          }
+          else {
+            const updatedRegUser = regUser.map(user => {
+              if (user.id === idControl) {
+                const calculate = user.perDateTotal - daysDifference - 1;
+                return { ...user, perDateTotal: calculate };
+              }
+              return user;
+            });
+            dispatch(setRegUser(updatedRegUser));
+
+            const newWorkerInfo = {
+              name: worker,
+              startDay: selectedStartDate,
+              endDay: selectedEndDate,
+              reason: sreason,
+              manager: manager,
+              accept: null,
+              id: idControl,
+            };
+            dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+            navigation.navigate("MyRequest");
+          }
+        }
+      }
+      else {
+        const calculate = signWorkerId.perDateTotal - daysDifference - 1
+
+        if (calculate < 0) {
+          alert('Kullanabileceğiniz max izin 30 gündür')
+        }
+        else {
+          const updatedRegUser = regUser.map(user => {
+            if (user.id === idControl) {
+              const calculate = user.perDateTotal - daysDifference - 1;
+              return { ...user, perDateTotal: calculate };
+            }
+            return user;
+          });
+          dispatch(setRegUser(updatedRegUser));
+
+          const newWorkerInfo = {
+            name: worker,
+            startDay: selectedStartDate,
+            endDay: selectedEndDate,
+            reason: sreason,
+            manager: manager,
+            accept: null,
+            id: idControl,
+          };
+          dispatch(setWorkerPerReq([newWorkerInfo]));
+          navigation.navigate("MyRequest");
+        }
+      }
+    }
+    else if (manager && selectedStartDate) {
+      if (workerPerReq) {
+        const isWorkerId = workerPerReq.find(workerInfo => workerInfo.id === idControl);
+        const signWorkerId = regUser.find(item => item.id === idControl);
+
+        const calculate = signWorkerId.perDateTotal - 1
+
+        if (isWorkerId) {
+          if (calculate < 0) {
+            alert('Kullanabileceğiniz max izin 30 gündür')
+          }
+          else {
+            const updatedRegUser = regUser.map(user => {
+              if (user.id === idControl) {
+                const calculate = user.perDateTotal - 1;
+                return { ...user, perDateTotal: calculate };
+              }
+              return user;
+            });
+            dispatch(setRegUser(updatedRegUser));
+
+            const newWorkerInfo = {
+              name: worker,
+              startDay: selectedStartDate,
+              endDay: selectedEndDate,
+              reason: sreason,
+              manager: manager,
+              accept: null,
+              id: idControl,
+            };
+            dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+            navigation.navigate("MyRequest");
+          }
+        }
+        else {
+          if (calculate < 0) {
+            alert('Kullanabileceğiniz max izin 30 gündür')
+          }
+          else {
+            const updatedRegUser = regUser.map(user => {
+              if (user.id === idControl) {
+                const calculate = user.perDateTotal - 1;
+                return { ...user, perDateTotal: calculate };
+              }
+              return user;
+            });
+            dispatch(setRegUser(updatedRegUser));
+
+            const newWorkerInfo = {
+              name: worker,
+              startDay: selectedStartDate,
+              endDay: selectedEndDate,
+              reason: sreason,
+              manager: manager,
+              accept: null,
+              id: idControl,
+            };
+            dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+            navigation.navigate("MyRequest");
+          }
+        }
+      }
+      else {
+        const calculate = signWorkerId.perDateTotal - 1
+
+        if (calculate < 0) {
+          alert('Kullanabileceğiniz max izin 30 gündür')
+        }
+        else {
+          const updatedRegUser = regUser.map(user => {
+            if (user.id === idControl) {
+              const calculate = user.perDateTotal - 1;
+              return { ...user, perDateTotal: calculate };
+            }
+            return user;
+          });
+          dispatch(setRegUser(updatedRegUser));
+
+          const newWorkerInfo = {
+            name: worker,
+            startDay: selectedStartDate,
+            endDay: selectedEndDate,
+            reason: sreason,
+            manager: manager,
+            accept: null,
+            id: idControl,
+          };
+          dispatch(setWorkerPerReq([newWorkerInfo]));
+          navigation.navigate("MyRequest");
+        }
+      }
+    }
+    else if (!manager) {
+      setError('Lütfen profil sayfasından yönetici seçiniz.');
+    }
+  };
+  workerPerReq.forEach((user) => {
+    const startDate = new Date(user.startDay);
+    const endDate = user.endDay ? new Date(user.endDay) : startDate;
+    const currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      const dateString = currentDate.toISOString().split('T')[0];
+      initialMarkedDates[dateString] = { disabled: true, disableTouchEvent: true };
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+  });
 
   return (
     <ScrollView>
