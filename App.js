@@ -1,61 +1,130 @@
 // App.js
-import React, { useEffect } from 'react';
-import { Provider, useDispatch } from 'react-redux';
-import { store } from './app/store';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Login from './components/login';
-import SignUp from './components/signUp';
-import Menu from './components/menu/menu';
-import Home from './components/menu/home';
-import Profile from './components/menu/profile';
-import PermissionRequest from './components/permissionRequest';
-import MyRequest from './components/permissionRequest/myRequest';
-import Approval from './components/menu/approval';
-import OffDuty from './components/menu/off-duty';
-import { Platform } from "react-native";
+import React, { useEffect } from "react";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import { store } from "./app/store";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import Login from "./components/login";
+import SignUp from "./components/signUp";
+import Menu from "./components/menu/menu";
+import Home from "./components/menu/home";
+import Profile from "./components/menu/profile";
+import PermissionRequest from "./components/permissionRequest";
+import MyRequest from "./components/permissionRequest/myRequest";
+import Approval from "./components/menu/approval";
+import OffDuty from "./components/menu/off-duty";
+import {
+  Platform,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 
-
-
-
+import Sidebar from "./components/sidebar/Sidebar";
 
 const Stack = createStackNavigator();
 
 
-const NavigationBar = () => {
-  const isWeb = Platform.OS === "web";
-  if (!isWeb) {
-    return null;
-  }
-
-  // Web için gerekli NavigationBar içeriği
-  return (
-    // Burada NavigationBar bileşeninin içeriğini oluşturabilirsiniz
-    <div style={{ background: "lightgrey", padding: "10px", left: 0 }}>
-      Web Navigation Bar
-    </div>
-  );
-};
-
 
 export default function App() {
-
+  if (Platform.OS === "web") {
+    return (
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Login">
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="SignUp"
+              component={SignUp}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Menu"
+              component={Menu}
+              options={({ navigation }) => ({
+                headerTitle: "Menu",
+                headerLeft: () => <Sidebar />,
+              })}
+            />
+            <Stack.Screen
+              name="Home"
+              component={Home}
+              options={({ navigation }) => ({
+                headerTitle: "Home",
+                headerLeft: () => <Sidebar />,
+              })}
+            />
+            <Stack.Screen
+              name="Profile"
+              component={Profile}
+              options={({ navigation }) => ({
+                headerTitle: "Profile",
+                headerLeft: () => <Sidebar />,
+              })}
+            />
+            <Stack.Screen
+              name="MyRequest"
+              component={MyRequest}
+              options={({ navigation }) => ({
+                headerTitle: "My Request",
+                headerLeft: () => <Sidebar />,
+              })}
+            />
+            <Stack.Screen
+              name="PerRequest"
+              component={PermissionRequest}
+              options={({ navigation }) => ({
+                headerTitle: "Permission Request",
+                headerLeft: () => <Sidebar />,
+              })}
+            />
+            <Stack.Screen
+              name="Approval"
+              component={Approval}
+              options={({ navigation }) => ({
+                headerTitle: "Approval",
+                headerLeft: () => <Sidebar />,
+              })}
+            />
+            <Stack.Screen
+              name="OffDuty"
+              component={OffDuty}
+              options={({ navigation }) => ({
+                headerTitle: "Off Duty",
+                headerLeft: () => <Sidebar />,
+              })}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
+    );
+  }
   return (
     <Provider store={store}>
-      <NavigationBar />
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="SignUp" component={SignUp} />
+<<<<<<< HEAD
           <Stack.Screen name="Menu" component={Menu} />
+=======
+          <Stack.Screen name="Menu" component={Menu} options={{ headerShown: false }}/>
+>>>>>>> 0d922a50bc9f044cd3d1bfb8b1682b6da3bd8cf6
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="MyRequest" component={MyRequest} />
           <Stack.Screen name="PerRequest" component={PermissionRequest} />
           <Stack.Screen name="Approval" component={Approval} />
           <Stack.Screen name="OffDuty" component={OffDuty} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </Provider>
+        </Stack.Navigator >
+      </NavigationContainer >
+    </Provider >
   );
 }
+
+

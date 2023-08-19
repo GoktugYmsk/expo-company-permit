@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
+<<<<<<< HEAD
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+=======
+import { StyleSheet, Text, View, TouchableOpacity , Platform } from 'react-native';
+
+>>>>>>> 0d922a50bc9f044cd3d1bfb8b1682b6da3bd8cf6
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from "@react-native-material/core";
 import axios from 'axios';
