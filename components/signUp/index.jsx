@@ -22,9 +22,7 @@ function SignUp() {
                 password: passwordWorker,
                 status: true,
             });
-            console.log('Response:', response.data);
         } catch (error) {
-            console.error("Error while signing up:", error);
         }
         navigation.navigate('Login');
     };

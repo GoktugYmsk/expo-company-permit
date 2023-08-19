@@ -53,8 +53,6 @@ function PermissionRequest() {
 
   const handleSendRequest = () => {
 
-    console.log(workerPerReq)
-
     if (manager && selectedStartDate && selectedEndDate) {
       if (workerPerReq) {
         const isWorkerId = workerPerReq.find(workerInfo => workerInfo.id === idControl);

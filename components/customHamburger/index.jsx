@@ -12,8 +12,6 @@ function CustomHamburger() {
     const navigation = useNavigation();
     const hamburgerActive = useSelector((state) => state.management.hamburgerActive);
 
-    // console.log('hamburgerActive Denem', hamburgerActive)
-
     const handleHamburgerClick = () => {
         dispatch(setHamburgerActive(!hamburgerActive));
     };

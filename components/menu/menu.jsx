@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
@@ -10,16 +11,14 @@ import { setIsWorkerPermit } from "../configure";
 function Menu() {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
   const manageName = useSelector((state) => state.management.manageName);
   const manager = useSelector((state) => state.management.manager);
   const worker = useSelector((state) => state.workerInfoTotal.worker);
-  const workerPerReq = useSelector(
-    (state) => state.workerInfoTotal.workerPerReq
-  );
+  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
   const regUser = useSelector((state) => state.saveRegUser.regUser);
   const idControl = useSelector((state) => state.management.idControl);
 
-  console.log(regUser);
 
   const isAdmin = manageName !== "";
 
@@ -48,9 +47,20 @@ function Menu() {
       alert("Profile sayfasından yönetici Seçimi yapınız");
     }
   };
-  const handleLoginClick = (navigation) => {
-    navigation.navigate("Login");
+
+  const handleLogoutClick = async () => {
+
+    localStorage.removeItem('userToken')
+    navigation.navigate('Login')
+
+    // try {
+    //   await AsyncStorage.removeItem('userToken'); // Tokenı sil
+    //   navigation.navigate('Login'); // Login sayfasına yönlendir
+    // } catch (error) {
+    //   console.error('Token silinirken bir hata oluştu:', error);
+    // }
   };
+
 
 
   const handleProfileClick = () => {
@@ -68,7 +78,7 @@ function Menu() {
     navigation.navigate("Profile");
   };
 
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -107,7 +117,7 @@ function Menu() {
           <Text style={styles.buttonText}>Onay Bekleyen İşlemler</Text>
           <Icon name="arrow-right" size={23} color="#6d6e70" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}onPress={() => handleLoginClick(navigation)}>
+        <TouchableOpacity style={styles.button} onPress={handleLogoutClick}>
           <Icon name="door" size={30} color="#8754ce" />
           <Text style={styles.buttonText}>Çıkış yap</Text>
         </TouchableOpacity>

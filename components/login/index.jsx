@@ -16,9 +16,9 @@ function Login() {
 
     const navigation = useNavigation();
 
-    useEffect(() => {
-        checkToken();
-    }, []);
+    // useEffect(() => {
+    //     checkToken();
+    // }, []);
 
 
     const handleClick = async () => {
@@ -28,34 +28,39 @@ function Login() {
                 password,
             });
             if (response.data.token) {
-                await AsyncStorage.setItem('userToken', response.data.token);
-                navigation.navigate('Home');
+                localStorage.setItem('userToken', response.data.token);
+
+                if (localStorage.getItem('userToken')) {
+                    navigation.navigate('Home');
+                }
             } else {
                 alert('Hata', 'Giriş yapılamadı. Kullanıcı adı veya şifre hatalı.');
             }
         } catch (error) {
-            console.error('Giriş hatası:', error);
             alert('Hata', 'Giriş yapılırken bir hata oluştu.');
         }
     };
 
-    const getTokenFromStorage = async () => {
-        try {
-            const token = await AsyncStorage.getItem('userToken');
-            return token;
-        } catch (error) {
-            console.error('Token alınamadı:', error);
-            return null;
-        }
-    };
+    // const getTokenFromStorage = async () => {
+    //     try {
+    //         const token = await AsyncStorage.getItem('userToken');
+    //         return token;
+    //     } catch (error) {
+    //         return null;
+    //     }
+    // };
 
-    const checkToken = async () => {
-        const token = await getTokenFromStorage();
 
-        if (token) {
-            navigation.navigate('Home');
-        }
-    };
+    // const checkToken = async () => {
+    //     const token = await getTokenFromStorage();
+
+    //     if (token) {
+    //         navigation.navigate('Home');
+    //     } else {
+    //         navigation.navigate('Login');
+    //     }
+    // };
+
 
 
     const handleClickSignup = () => {
@@ -75,14 +80,6 @@ function Login() {
                     width: 240,
                 }}
             >
-                <Icon name="account" size={25} color="gray" />
-                <TextInput
-                    value={username}
-                    onChangeText={setUsername}
-                    variant="outlined"
-                    label="Kullanıcı Adı"
-                    style={{ width: 200, flex: 1, marginLeft: 5 }}
-                />
             </View>
             <View
                 style={{
