@@ -3,6 +3,10 @@ import { Platform, StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
+import api from "../../../intercepter";
+
+import axios from 'axios';
+
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import {
   Provider,
@@ -16,6 +20,7 @@ import {
 } from "@react-native-material/core";
 
 import { setManager } from "../../configure";
+import { useEffect } from "react";
 
 function Profile() {
   const [visible, setVisible] = useState(false);
@@ -31,10 +36,41 @@ function Profile() {
   const manageName = useSelector((state) => state.management.manageName);
   const isWorkerPermit = useSelector((state) => state.isWorker.isWorkerPermit);
 
+
   const isAdmin = manageName !== "";
 
+
+
+  api.get('/users')
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
+
+
+
+  // const ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJ1c2VySWQiOiI5NjU3YzU1Ny0zZWNiLTQzODQtYTY4YS0wYTYyOTI3ZjgyOWEiLCJyb2xlIjoiRU1QTE9ZRUUiLCJpYXQiOjE2OTI0Njg1MzYsImV4cCI6MTY5MjQ5NzMzNn0.nHN0xzaWuQ4H27oS2cP4Rf3yeGzTQ6uak0oJLkNEY0Y';
+
+  // const headers = {
+  //   Authorization: `Bearer ${ACCESS_TOKEN}`,
+  // };
+
+  // axios.get('http://localhost:8080/users', { headers })
+  //   .then(response => {
+
+  //     console.log('API Yanıtı:', response.data);
+  //   })
+  //   .catch(error => {
+
+  //     console.error('API Hatası:', error);
+  //   });
+
+
   const handleRequestClick = () => {
-    if(manager){
+    if (manager) {
       navigation.navigate("PerRequest");
     }
   };
@@ -209,7 +245,7 @@ const styles = StyleSheet.create({
     padding: 0,
     backgroundColor: "white",
     height: "100%",
-    paddingLeft: Platform.OS === 'web' ? 300:0
+    paddingLeft: Platform.OS === 'web' ? 300 : 0
   },
   profile: {
     flexDirection: "row",

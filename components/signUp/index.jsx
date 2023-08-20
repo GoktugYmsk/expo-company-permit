@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import axios from 'axios';
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from "@react-native-material/core";
@@ -22,10 +23,17 @@ function SignUp() {
                 password: passwordWorker,
                 status: true,
             });
+
+            if (response.status === 200) {
+                navigation.navigate('Login');
+            } else {
+                console.error('Kayıt işlemi başarısız oldu');
+            }
         } catch (error) {
+            console.error('Kayıt işlemi sırasında bir hata oluştu:', error);
         }
-        navigation.navigate('Login');
     };
+
 
     return (
         <View style={styles.container}>

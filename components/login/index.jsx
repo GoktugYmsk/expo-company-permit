@@ -8,18 +8,19 @@ import { TextInput, Button } from "@react-native-material/core";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 function Login() {
     const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq) || [];
+
+    useEffect(() => {
+        console.log('DENEME', workerPerReq)
+    }, [])
+
     const navigation = useNavigation();
-
-    // useEffect(() => {
-    //     checkToken();
-    // }, []);
-
 
     const handleClick = async () => {
         try {

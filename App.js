@@ -28,6 +28,16 @@ const Stack = createStackNavigator();
 
 
 export default function App() {
+
+  // useEffect(() => {
+  //   if (localStorage.getItem('userToken')) {
+  //     navigation.navigate('Home');
+  //   } else {
+  //     navigation.navigate('Login');
+  //   }
+  // }, [])
+
+
   if (Platform.OS === "web") {
     return (
       <Provider store={store}>
