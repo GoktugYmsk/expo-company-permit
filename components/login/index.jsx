@@ -8,21 +8,17 @@ import { TextInput, Button } from "@react-native-material/core";
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setManageName, setManager, setWorker, setIdControl, setReason, setStartDay, setEndDay, setWorkerInfo, setWorkerPerReq, setRegUser } from '../configure';
+import { db } from '../../firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 function Login() {
     const [email, setEmail] = useState('')
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [regUserList, setRegUserList] = useState([]);
 
     const dispatch = useDispatch()
     const navigation = useNavigation();
-
-    const regUser = useSelector((state) => state.saveRegUser.regUser) || [];
-    const worker = useSelector((state) => state.workerInfoTotal.worker);
-
-    useEffect(() => {
-        console.log('worker', worker)
-    }, [])
 
     const validManagement = [
         { name: 'Bora', email: 'bora@example.com', password: '123456' },
@@ -31,12 +27,33 @@ function Login() {
         { name: 'Gökhan', email: 'Gökhan', password: '1' },
     ];
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const regUserCollection = collection(db, 'regUser');
+                const snapshot = await getDocs(regUserCollection);
+                const regUserListData = snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+
+                console.log('ANKARA', regUserListData);
+
+                setRegUserList(regUserListData);
+            } catch (error) {
+                console.error('Hatalı veri alınırken: ', error);
+            }
+        };
+
+        fetchData();
+    }, [username || email]);
+
     const handleClick = () => {
-        const isValidWorker = regUser.find(worker => worker.name === username);
+        const isValidWorker = regUserList.find(worker => worker.name === username);
         const isValidManagement = validManagement.find(manager => manager.name === username);
 
         if (isValidWorker) {
-            const matchedUser = regUser.find(worker => worker.name === username && worker.email === email);
+            const matchedUser = regUserList.find(worker => worker.name === username && worker.email === email);
 
             if (matchedUser && matchedUser.password === password) {
                 dispatch(setWorker(username));

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { addDoc, collection } from "firebase/firestore";
+import { db } from '../../firebase';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -9,20 +11,43 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from "@react-native-material/core";
 
 import { setRegUser } from '../configure';
+import { useEffect } from 'react';
 
 function SignUp() {
     const [nameWorker, setNameWorker] = useState('')
     const [emailWorker, setEmailWorker] = useState('');
     const [passwordWorker, setPasswordWorker] = useState('');
+    const [fireRegUser, setFireRegUSer] = useState([])
 
     const dispatch = useDispatch()
     const navigation = useNavigation()
 
-    const regUser = useSelector((state) => state.saveRegUser.regUser) || [];
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const regUserCollection = collection(db, 'regUser');
+                const snapshot = await getDocs(regUserCollection);
+                const regUserListData = snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+
+                console.log('ANKARA', regUserListData);
+
+                setFireRegUSer(regUserListData); // regUserList durumunu güncelleyin
+            } catch (error) {
+                console.error('Hatalı veri alınırken: ', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
 
     const handleSignUp = () => {
         if (nameWorker) {
-            const emailControl = regUser.find(worker => worker.email === emailWorker);
+            const emailControl = fireRegUser.find(worker => worker.email === emailWorker);
 
             if (!emailControl) {
                 const newWorker = {
@@ -32,13 +57,25 @@ function SignUp() {
                     password: passwordWorker,
                     perDateTotal: 30,
                     startDate: new Date().toISOString().split('T')[0],
+
+
                 };
-                dispatch(setRegUser([...regUser, newWorker]));
+                const workersSaved = collection(db, "regUser");
+                addDoc(workersSaved, newWorker)
+                    .then(() => {
+                        console.log("Veri başarıyla Firestore'a eklendi.");
+                    })
+                    .catch((error) => {
+                        console.error("Veri eklenirken hata oluştu: ", error);
+                    });
+                // dispatch(setRegUser([...regUser, newWorker]));
             }
             else {
                 alert('Kullanıcı zaten kayıtlı ')
                 navigation.navigate('Login');
             }
+
+
         }
         navigation.navigate('Login');
     };

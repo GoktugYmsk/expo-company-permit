@@ -5,7 +5,10 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
-import { setIsWorkerPermit } from "../configure";
+import { setIsWorkerPermit, setWorkerPerReq } from "../configure";
+import { useEffect } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebase";
 
 function Menu() {
   const dispatch = useDispatch();
@@ -14,9 +17,7 @@ function Menu() {
   const manageName = useSelector((state) => state.management.manageName);
   const manager = useSelector((state) => state.management.manager);
   const worker = useSelector((state) => state.workerInfoTotal.worker);
-  const workerPerReq = useSelector(
-    (state) => state.workerInfoTotal.workerPerReq
-  );
+  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
   const regUser = useSelector((state) => state.saveRegUser.regUser);
   const idControl = useSelector((state) => state.management.idControl);
 
@@ -50,6 +51,8 @@ function Menu() {
     }
   };
 
+
+
   const handleProfileClick = () => {
     if (worker && workerPerReq) {
       const isWorkerHavePerm = regUser.find((item) => item.id === idControl);
@@ -64,6 +67,27 @@ function Menu() {
     }
     navigation.navigate("Profile");
   };
+
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const regUserCollection = collection(db, 'workerPerReq');
+        const snapshot = await getDocs(regUserCollection);
+        const regUserListData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        console.log('ANKARA', regUserListData);
+        dispatch(setWorkerPerReq(regUserListData))
+      } catch (error) {
+        console.error('Hatalı veri alınırken: ', error);
+      }
+    };
+    fetchData();
+  }, []);
+
 
   return (
     <View style={styles.container}>
