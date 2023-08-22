@@ -19,12 +19,14 @@ import {
   ListItem,
 } from "@react-native-material/core";
 
-import { setManager } from "../../configure";
+import { setIdControl, setManager } from "../../configure";
 import { useEffect } from "react";
 
 function Profile() {
   const [visible, setVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [deneme, setDeneme] = useState({});
+  const [denemeTime, setDenemeTime] = useState({});
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -39,35 +41,30 @@ function Profile() {
 
   const isAdmin = manageName !== "";
 
+  useEffect(() => {
+    api.get('/users')
+      .then((response) => {
+        console.log('ANKARA', response.data);
+        setDeneme(response.data);
+        console.log('Göktuğ');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    dispatch(setIdControl(deneme.id))
+
+    api.get('/time-off')
+      .then((response) => {
+        console.log(response.data);
+        setDenemeTime(response.data);
+        console.log('Göktuğ');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
 
-  api.get('/users')
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-
-
-
-
-  // const ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJ1c2VySWQiOiI5NjU3YzU1Ny0zZWNiLTQzODQtYTY4YS0wYTYyOTI3ZjgyOWEiLCJyb2xlIjoiRU1QTE9ZRUUiLCJpYXQiOjE2OTI0Njg1MzYsImV4cCI6MTY5MjQ5NzMzNn0.nHN0xzaWuQ4H27oS2cP4Rf3yeGzTQ6uak0oJLkNEY0Y';
-
-  // const headers = {
-  //   Authorization: `Bearer ${ACCESS_TOKEN}`,
-  // };
-
-  // axios.get('http://localhost:8080/users', { headers })
-  //   .then(response => {
-
-  //     console.log('API Yanıtı:', response.data);
-  //   })
-  //   .catch(error => {
-
-  //     console.error('API Hatası:', error);
-  //   });
-
+  }, [])
 
   const handleRequestClick = () => {
     if (manager) {
@@ -140,6 +137,18 @@ function Profile() {
               ))}
             </View>
           </View>
+          {deneme &&
+            <View>
+              {deneme.firstName}
+              {deneme.role}
+            </View>
+          }
+          {denemeTime &&
+
+            <View>
+              <Text>Burada yazacak</Text> {denemeTime.description}
+            </View>
+          }
           <Text
             style={{
               marginTop: 30,

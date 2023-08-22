@@ -30,6 +30,7 @@ function Login() {
             });
             if (response.data.token) {
                 localStorage.setItem('userToken', response.data.token);
+                console.log('userToken', response.data.token);
 
                 if (localStorage.getItem('userToken')) {
                     navigation.navigate('Home');

@@ -28,16 +28,6 @@ const Stack = createStackNavigator();
 
 
 export default function App() {
-
-  // useEffect(() => {
-  //   if (localStorage.getItem('userToken')) {
-  //     navigation.navigate('Home');
-  //   } else {
-  //     navigation.navigate('Login');
-  //   }
-  // }, [])
-
-
   if (Platform.OS === "web") {
     return (
       <Provider store={store}>
@@ -114,23 +104,25 @@ export default function App() {
       </Provider>
     );
   }
-  return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="SignUp" component={SignUp} />
-          <Stack.Screen name="Menu" component={Menu} options={{ headerShown: false }} />
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Profile" component={Profile} />
-          <Stack.Screen name="MyRequest" component={MyRequest} />
-          <Stack.Screen name="PerRequest" component={PermissionRequest} />
-          <Stack.Screen name="Approval" component={Approval} />
-          <Stack.Screen name="OffDuty" component={OffDuty} />
-        </Stack.Navigator >
-      </NavigationContainer >
-    </Provider >
-  );
+  else {
+    return (
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Login">
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="Menu" component={Menu} />
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name="MyRequest" component={MyRequest} />
+            <Stack.Screen name="PerRequest" component={PermissionRequest} />
+            <Stack.Screen name="Approval" component={Approval} />
+            <Stack.Screen name="OffDuty" component={OffDuty} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
+    );
+  }
 }
 
 
