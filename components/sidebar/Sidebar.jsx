@@ -12,7 +12,9 @@ import { useSelector } from "react-redux";
 
 export default function Sidebar() {
   const navigation = useNavigation();
+
   const manager = useSelector((state) => state.management.manager);
+  const worker = useSelector((state) => state.workerInfoTotal.worker);
   const manageName = useSelector((state) => state.management.manageName);
 
   function checkManager(page) {
@@ -34,7 +36,7 @@ export default function Sidebar() {
             <Text style={styles.profileTextTop}>Profil</Text>
             <Text style={styles.profileText}>{manageName}</Text>
           </View>
-          
+
         </View>
         <View style={styles.profileContainerContent}>
           <TouchableOpacity
@@ -83,16 +85,16 @@ export default function Sidebar() {
               <Icon style={styles.sidebarIcon} name="sunglasses" size={23} />
             </TouchableOpacity>
           )}
-            <TouchableOpacity
-              style={styles.sidebarContainer}
-              onPress={() => navigation.navigate("Login")}
-            >
-              <Text style={styles.sidebarItem}>Çıkış Yap</Text>
-              <Icon style={styles.sidebarIcon} name="door" size={23} />
-            </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.sidebarContainer}
+            onPress={() => navigation.navigate("Login")}
+          >
+            <Text style={styles.sidebarItem}>Çıkış Yap</Text>
+            <Icon style={styles.sidebarIcon} name="door" size={23} />
+          </TouchableOpacity>
         </View>
       </View>
-      
+
     </View>
   );
 }
@@ -104,7 +106,7 @@ const styles = StyleSheet.create({
     height: 1000,
     width: 275,
     marginTop: 0,
-   
+
   },
   sidebarItem: {
     fontSize: 18,

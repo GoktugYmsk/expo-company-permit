@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { StyleSheet, Text, View, ScrollView, Platform } from "react-native";
 
@@ -29,7 +29,9 @@ function Home() {
       });
       setPermitsOnCalendar(permitsOnSelectedDate);
 
+
       const markedDates = {};
+
       permitsOnSelectedDate.forEach((user) => {
         const startDate = new Date(user.startDay);
         const endDate = user.endDay ? new Date(user.endDay) : startDate;

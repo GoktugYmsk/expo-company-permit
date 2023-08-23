@@ -7,12 +7,38 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Button, ListItem } from "@react-native-material/core";
 
 import { StyleSheet, Text, View } from "react-native";
+import { useEffect } from "react";
+import { useState } from "react";
+import { collection, getDocs } from "@firebase/firestore";
+import { db } from "../../../firebase";
 
 function MyRequest() {
-  const worker = useSelector((state) => state.workerInfoTotal.worker);
-  const workerPerReq = useSelector(
-    (state) => state.workerInfoTotal.workerPerReq
-  );
+  const idControl = useSelector((state) => state.management.idControl);
+  const [fireWorkerPer, setFireWorkerPer] = useState([])
+
+  useEffect(() => {
+    console.log("idControl", idControl)
+  }, [])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const regUserCollection = collection(db, 'workerPerReq');
+        const snapshot = await getDocs(regUserCollection);
+        const regUserListData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        console.log('ANKARA', regUserListData);
+        setFireWorkerPer(regUserListData);
+      } catch (error) {
+        console.error('Hatalı veri alınırken: ', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+
 
   return (
     <ScrollView>
@@ -20,10 +46,10 @@ function MyRequest() {
         <View style={styles.header}>
           <Text style={styles.headerText}>İzinlerim</Text>
         </View>
-        {workerPerReq &&
-          workerPerReq.map((item, index) => (
+        {fireWorkerPer &&
+          fireWorkerPer.map((item, index) => (
             <View key={index}>
-              {item.name === worker && (
+              {item.id === idControl && (
                 <View>
                   {item.accept === null && (
                     <View>

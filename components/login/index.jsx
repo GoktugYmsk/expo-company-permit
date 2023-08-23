@@ -5,14 +5,16 @@ import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from "@react-native-material/core";
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { setManageName, setManager, setWorker, setIdControl, setReason, setStartDay, setEndDay, setWorkerInfo, setWorkerPerReq, setRegUser } from '../configure';
+import { db } from '../../firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [regUserList, setRegUserList] = useState([]);
 
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq) || [];
 
@@ -22,24 +24,85 @@ function Login() {
 
     const navigation = useNavigation();
 
-    const handleClick = async () => {
-        try {
-            const response = await axios.post('http://time-off-tracker-production.up.railway.app/auth/login', {
-                email,
-                password,
-            });
-            if (response.data.token) {
-                localStorage.setItem('userToken', response.data.token);
-                console.log('userToken', response.data.token);
+    const validManagement = [
+        { name: 'Bora', email: 'bora@example.com', password: '123456' },
+        { name: 'Hakan', email: 'hakan@example.com', password: '123456' },
+        { name: 'Aydın', email: 'Aydın', password: '1' },
+        { name: 'Gökhan', email: 'Gökhan', password: '1' },
+    ];
 
-                if (localStorage.getItem('userToken')) {
-                    navigation.navigate('Home');
-                }
-            } else {
-                alert('Hata', 'Giriş yapılamadı. Kullanıcı adı veya şifre hatalı.');
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const regUserCollection = collection(db, 'regUser');
+                const snapshot = await getDocs(regUserCollection);
+                const regUserListData = snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+                console.log('ANKARA', regUserListData);
+
+                setRegUserList(regUserListData);
+                dispatch(setRegUser(regUserListData))
+            } catch (error) {
+                console.error('Hatalı veri alınırken: ', error);
             }
-        } catch (error) {
-            alert('Hata', 'Giriş yapılırken bir hata oluştu.');
+        };
+
+        fetchData();
+    }, [username || email]);
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const regUserCollection = collection(db, 'workerPerReq');
+                const snapshot = await getDocs(regUserCollection);
+                const regUserListData = snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+                console.log('ANKARA', regUserListData);
+                dispatch(setWorkerPerReq(regUserListData))
+            } catch (error) {
+                console.error('Hatalı veri alınırken: ', error);
+            }
+        };
+        fetchData();
+    }, []);
+
+
+    const handleClick = () => {
+        const isValidWorker = regUserList.find(worker => worker.name === username);
+        const isValidManagement = validManagement.find(manager => manager.name === username);
+
+        if (isValidWorker) {
+            const matchedUser = regUserList.find(worker => worker.name === username && worker.email === email);
+
+            if (matchedUser && matchedUser.password === password) {
+                dispatch(setWorker(username));
+                dispatch(setManageName(''));
+                dispatch(setManager(''));
+                dispatch(setIdControl(isValidWorker.id))
+                setEmail('')
+                setPassword('')
+                setUsername('')
+                const isWeb = Platform.OS === 'web' ? 'Profile' : 'Menu'
+                navigation.navigate(isWeb);
+            }
+            else {
+                alert("Giriş Bilgileri Hatalı");
+            }
+
+        } else if (isValidManagement && isValidManagement.password === password) {
+            dispatch(setManageName(username));
+            setEmail('')
+            setPassword('')
+            setUsername('')
+            const isWeb = Platform.OS === 'web' ? 'Profile' : 'Menu'
+            navigation.navigate(isWeb);
+        } else {
+            alert("Çalışan bulunamadı");
         }
     };
 

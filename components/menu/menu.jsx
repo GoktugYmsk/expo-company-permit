@@ -6,7 +6,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
-import { setIsWorkerPermit } from "../configure";
+import { setIsWorkerPermit, setWorkerPerReq } from "../configure";
+import { useEffect } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebase";
 
 function Menu() {
   const dispatch = useDispatch();
@@ -46,18 +49,6 @@ function Menu() {
     } else if (!manageName && worker && !manager) {
       alert("Profile sayfasından yönetici Seçimi yapınız");
     }
-  };
-
-  const handleLogoutClick = async () => {
-
-    localStorage.removeItem('userToken')
-    navigation.navigate('Login')
-
-    // try {
-    //   await AsyncStorage.removeItem('userToken'); // Tokenı sil
-    //   navigation.navigate('Login'); // Login sayfasına yönlendir
-    // } catch (error) {
-    // }
   };
 
 

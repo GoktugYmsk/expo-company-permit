@@ -1,34 +1,78 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import axios from 'axios';
+import { addDoc, collection } from "firebase/firestore";
+import { db } from '../../firebase';
+
+import { v4 as uuidv4 } from 'uuid';
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import app from "../../firebase"
 import { TextInput, Button } from "@react-native-material/core";
+
+import { setRegUser } from '../configure';
+import { useEffect } from 'react';
 
 function SignUp() {
     const [nameWorker, setNameWorker] = useState('')
     const [lastNameWorker, setLastNameWorker] = useState('')
     const [emailWorker, setEmailWorker] = useState('');
     const [passwordWorker, setPasswordWorker] = useState('');
+    const [fireRegUser, setFireRegUSer] = useState([])
 
     const navigation = useNavigation()
 
-    const handleSignUp = async () => {
-        try {
-            const response = await axios.post('http://time-off-tracker-production.up.railway.app/auth/register', {
-                firstName: nameWorker,
-                lastName: lastNameWorker,
-                email: emailWorker,
-                password: passwordWorker,
-                status: true,
-            });
 
-            if (response.status === 200) {
-                navigation.navigate('Login');
-            } else {
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const regUserCollection = collection(db, 'regUser');
+                const snapshot = await getDocs(regUserCollection);
+                const regUserListData = snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+                console.log('ANKARA', regUserListData);
+
+                setFireRegUSer(regUserListData); // regUserList durumunu güncelleyin
+            } catch (error) {
+                console.error('Hatalı veri alınırken: ', error);
             }
-        } catch (error) {
+        };
+
+        fetchData();
+    }, []);
+
+
+    const handleSignUp = () => {
+        if (nameWorker) {
+            const emailControl = fireRegUser.find(worker => worker.email === emailWorker);
+
+            if (!emailControl) {
+                const newWorker = {
+                    id: uuidv4(),
+                    name: nameWorker,
+                    email: emailWorker,
+                    password: passwordWorker,
+                    perDateTotal: 30,
+                    startDate: new Date().toISOString().split('T')[0],
+
+                };
+                const workersSaved = collection(db, "regUser");
+                addDoc(workersSaved, newWorker)
+                    .then(() => {
+                        console.log("Veri başarıyla Firestore'a eklendi.");
+                    })
+                    .catch((error) => {
+                        console.error("Veri eklenirken hata oluştu: ", error);
+                    });
+                // dispatch(setRegUser([...regUser, newWorker]));
+            }
+            else {
+                alert('Kullanıcı zaten kayıtlı ')
+                navigation.navigate('Login');
+            }
+
         }
     };
 
