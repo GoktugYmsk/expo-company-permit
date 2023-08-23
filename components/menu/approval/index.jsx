@@ -6,6 +6,8 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { Button, ListItem } from "@react-native-material/core";
 
 import { setWorkerPerReq, setRegUser } from "../../configure";
+import { doc, updateDoc } from "@firebase/firestore";
+import { db } from "../../../firebase";
 
 function Approval() {
   const dispatch = useDispatch();
@@ -19,7 +21,8 @@ function Approval() {
 
   const isAdmin = manageName !== "";
 
-  const handleApprovalClick = (index) => {
+
+  const handleApprovalClick = async (index) => {
     if (isAdmin && index >= 0 && index < workerPerReq.length) {
       const approvedWorker = workerPerReq[index];
 
@@ -37,18 +40,24 @@ function Approval() {
           id: idControl,
           accept: true,
         };
-        dispatch(
-          setWorkerPerReq(
-            workerPerReq.map((worker, i) =>
-              i === index ? newWorkerInfo : worker
+
+        try {
+          await updateDoc(doc(db, "workerPerReq", approvedWorker.id), newWorkerInfo);
+          dispatch(
+            setWorkerPerReq(
+              workerPerReq.map((worker, i) =>
+                i === index ? newWorkerInfo : worker
+              )
             )
-          )
-        );
+          );
+        } catch (error) {
+          console.error("Veri güncellenirken hata oluştu: ", error);
+        }
       }
     }
   };
 
-  const handleRejectClick = (index) => {
+  const handleRejectClick = async (index) => {
     if (isAdmin && index >= 0 && index < workerPerReq.length) {
       const approvedWorker = workerPerReq[index];
 
@@ -84,14 +93,20 @@ function Approval() {
             }
             return user;
           });
-          dispatch(
-            setWorkerPerReq(
-              workerPerReq.map((worker, i) =>
-                i === index ? newWorkerInfo : worker
+
+          try {
+            await updateDoc(doc(db, "workerPerReq", approvedWorker.id), newWorkerInfo);
+            dispatch(
+              setWorkerPerReq(
+                workerPerReq.map((worker, i) =>
+                  i === index ? newWorkerInfo : worker
+                )
               )
-            )
-          );
-          dispatch(setRegUser(updatedRegUser));
+            );
+            dispatch(setRegUser(updatedRegUser));
+          } catch (error) {
+            console.error("Veri güncellenirken hata oluştu: ", error);
+          }
         } else if (starttDay) {
           const updatedRegUser = regUser.map((user) => {
             if (user.id === idControl) {
@@ -100,14 +115,20 @@ function Approval() {
             }
             return user;
           });
-          dispatch(
-            setWorkerPerReq(
-              workerPerReq.map((worker, i) =>
-                i === index ? newWorkerInfo : worker
+
+          try {
+            await updateDoc(doc(db, "workerPerReq", approvedWorker.id), newWorkerInfo);
+            dispatch(
+              setWorkerPerReq(
+                workerPerReq.map((worker, i) =>
+                  i === index ? newWorkerInfo : worker
+                )
               )
-            )
-          );
-          dispatch(setRegUser(updatedRegUser));
+            );
+            dispatch(setRegUser(updatedRegUser));
+          } catch (error) {
+            console.error("Veri güncellenirken hata oluştu: ", error);
+          }
         }
       }
     }
@@ -122,7 +143,7 @@ function Approval() {
               <Text style={styles.headerText}>Onay Bekleyen İzinler</Text>
             </View>
             {workerPerReq &&
-            workerPerReq.some((item) => item.accept === null) ? (
+              workerPerReq.some((item) => item.accept === null) ? (
               workerPerReq.map((item, index) => (
                 <View key={index}>
                   {item.manager === manageName && (

@@ -36,10 +36,10 @@ function Login() {
                     id: doc.id,
                     ...doc.data(),
                 }));
-
                 console.log('ANKARA', regUserListData);
 
                 setRegUserList(regUserListData);
+                dispatch(setRegUser(regUserListData))
             } catch (error) {
                 console.error('Hatalı veri alınırken: ', error);
             }
@@ -47,6 +47,26 @@ function Login() {
 
         fetchData();
     }, [username || email]);
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const regUserCollection = collection(db, 'workerPerReq');
+                const snapshot = await getDocs(regUserCollection);
+                const regUserListData = snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+                console.log('ANKARA', regUserListData);
+                dispatch(setWorkerPerReq(regUserListData))
+            } catch (error) {
+                console.error('Hatalı veri alınırken: ', error);
+            }
+        };
+        fetchData();
+    }, []);
+
 
     const handleClick = () => {
         const isValidWorker = regUserList.find(worker => worker.name === username);

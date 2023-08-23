@@ -14,7 +14,7 @@ import { Calendar } from "react-native-calendars";
 import { Switch, TextInput, Button } from "@react-native-material/core";
 
 import { setWorkerPerReq, setRegUser } from "../configure";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useEffect } from "react";
 
@@ -26,15 +26,16 @@ function PermissionRequest() {
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [fireWorkerPer, setFireWorkerPer] = useState([])
   const [regUserList, setRegUserList] = useState([]);
+  const [fiteCalculate, setFireCalculate] = useState()
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
   const manager = useSelector((state) => state.management.manager);
-  // const regUser = useSelector((state) => state.saveRegUser.regUser);
   const worker = useSelector((state) => state.workerInfoTotal.worker);
   const idControl = useSelector((state) => state.management.idControl);
-  // const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+
+
 
   const handleStartDate = (e) => {
     setSelectedStartDate(e);
@@ -46,6 +47,9 @@ function PermissionRequest() {
   const handleReasonChange = (e) => {
     setSreason(e);
   };
+
+  console.log('Göktuğ', idControl)
+
 
 
   useEffect(() => {
@@ -89,8 +93,6 @@ function PermissionRequest() {
   }, []);
 
 
-
-
   const signWorkerId = regUserList.find((item) => item.id === idControl);
 
   const startDate = new Date(selectedStartDate);
@@ -113,14 +115,7 @@ function PermissionRequest() {
           if (calculate < 0) {
             alert("Kullanabileceğiniz max izin 30 gündür");
           } else {
-            const updatedRegUser = regUserList.map((user) => {
-              if (user.id === idControl) {
-                const calculate = user.perDateTotal - daysDifference - 1;
-                return { ...user, perDateTotal: calculate };
-              }
-              return user;
-            });
-            dispatch(setRegUser(updatedRegUser));
+            setFireCalculate(calculate)
 
             const newWorkerInfo = {
               name: worker,
@@ -147,14 +142,7 @@ function PermissionRequest() {
           if (calculate < 0) {
             alert("Kullanabileceğiniz max izin 30 gündür");
           } else {
-            const updatedRegUser = regUserList.map((user) => {
-              if (user.id === idControl) {
-                const calculate = user.perDateTotal - daysDifference - 1;
-                return { ...user, perDateTotal: calculate };
-              }
-              return user;
-            });
-            dispatch(setRegUser(updatedRegUser));
+            setFireCalculate(calculate)
 
             const newWorkerInfo = {
               name: worker,
@@ -185,13 +173,7 @@ function PermissionRequest() {
         if (calculate < 0) {
           alert("Kullanabileceğiniz max izin 30 gündür");
         } else {
-          const updatedRegUser = regUserList.map((user) => {
-            if (user.id === idControl) {
-              const calculate = user.perDateTotal - daysDifference - 1;
-              return { ...user, perDateTotal: calculate };
-            }
-            return user;
-          });
+          setFireCalculate(calculate)
 
           dispatch(setRegUser(updatedRegUser));
 
@@ -231,14 +213,7 @@ function PermissionRequest() {
           if (calculate < 0) {
             alert("Kullanabileceğiniz max izin 30 gündür");
           } else {
-            const updatedRegUser = regUserList.map((user) => {
-              if (user.id === idControl) {
-                const calculate = user.perDateTotal - 1;
-                return { ...user, perDateTotal: calculate };
-              }
-              return user;
-            });
-            dispatch(setRegUser(updatedRegUser));
+            setFireCalculate(calculate)
 
             const newWorkerInfo = {
               name: worker,
@@ -265,14 +240,7 @@ function PermissionRequest() {
           if (calculate < 0) {
             alert("Kullanabileceğiniz max izin 30 gündür");
           } else {
-            const updatedRegUser = regUserList.map((user) => {
-              if (user.id === idControl) {
-                const calculate = user.perDateTotal - 1;
-                return { ...user, perDateTotal: calculate };
-              }
-              return user;
-            });
-            dispatch(setRegUser(updatedRegUser));
+            setFireCalculate(calculate)
 
             const newWorkerInfo = {
               name: worker,
@@ -302,14 +270,7 @@ function PermissionRequest() {
         if (calculate < 0) {
           alert("Kullanabileceğiniz max izin 30 gündür");
         } else {
-          const updatedRegUser = regUserList.map((user) => {
-            if (user.id === idControl) {
-              const calculate = user.perDateTotal - 1;
-              return { ...user, perDateTotal: calculate };
-            }
-            return user;
-          });
-          dispatch(setRegUser(updatedRegUser));
+          setFireCalculate(calculate)
 
           const newWorkerInfo = {
             name: worker,

@@ -16,10 +16,14 @@ import {
 } from "@react-native-material/core";
 
 import { setManager } from "../../configure";
+import { collection, getDocs } from "@firebase/firestore";
+import { db } from "../../../firebase";
+import { useEffect } from "react";
 
 function Profile() {
   const [visible, setVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [regUserList, setRegUserList] = useState([]);
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -31,10 +35,34 @@ function Profile() {
   const manageName = useSelector((state) => state.management.manageName);
   const isWorkerPermit = useSelector((state) => state.isWorker.isWorkerPermit);
 
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const regUserCollection = collection(db, 'regUser');
+        const snapshot = await getDocs(regUserCollection);
+        const regUserListData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        console.log('ANKARA', regUserListData);
+
+        setRegUserList(regUserListData);
+      } catch (error) {
+        console.error('Hatalı veri alınırken: ', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+
   const isAdmin = manageName !== "";
 
   const handleRequestClick = () => {
-    if(manager){
+    if (manager) {
       navigation.navigate("PerRequest");
     }
   };
@@ -64,7 +92,7 @@ function Profile() {
                 </Text>
                 {manageName ? <Text>{manageName}</Text> : <Text>{worker}</Text>}
               </View>
-              {regUser.map((item, key) => (
+              {regUserList.map((item, key) => (
                 <View key={key}>
                   {item.id === idControl && (
                     <View style={styles.profileContent}>
@@ -83,7 +111,7 @@ function Profile() {
                               {item.startDate}
                             </Text>
                           </Text>
-                          <Text style={{ color: "gray", fontSize: 14 }}>
+                          {/* <Text style={{ color: "gray", fontSize: 14 }}>
                             Kalan izin hakkı :
                             <Text
                               style={{
@@ -95,7 +123,7 @@ function Profile() {
                               {" "}
                               {item.perDateTotal}
                             </Text>
-                          </Text>
+                          </Text> */}
                         </View>
                       )}
                     </View>
@@ -209,7 +237,7 @@ const styles = StyleSheet.create({
     padding: 0,
     backgroundColor: "white",
     height: "100%",
-    paddingLeft: Platform.OS === 'web' ? 300:0
+    paddingLeft: Platform.OS === 'web' ? 300 : 0
   },
   profile: {
     flexDirection: "row",

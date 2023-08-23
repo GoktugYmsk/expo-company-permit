@@ -8,6 +8,7 @@ import { db } from '../../firebase';
 import { v4 as uuidv4 } from 'uuid';
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import app from "../../firebase"
 import { TextInput, Button } from "@react-native-material/core";
 
 import { setRegUser } from '../configure';
@@ -32,7 +33,6 @@ function SignUp() {
                     id: doc.id,
                     ...doc.data(),
                 }));
-
                 console.log('ANKARA', regUserListData);
 
                 setFireRegUSer(regUserListData); // regUserList durumunu güncelleyin
@@ -57,7 +57,6 @@ function SignUp() {
                     password: passwordWorker,
                     perDateTotal: 30,
                     startDate: new Date().toISOString().split('T')[0],
-
 
                 };
                 const workersSaved = collection(db, "regUser");

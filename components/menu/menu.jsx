@@ -70,25 +70,6 @@ function Menu() {
 
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const regUserCollection = collection(db, 'workerPerReq');
-        const snapshot = await getDocs(regUserCollection);
-        const regUserListData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        console.log('ANKARA', regUserListData);
-        dispatch(setWorkerPerReq(regUserListData))
-      } catch (error) {
-        console.error('Hatalı veri alınırken: ', error);
-      }
-    };
-    fetchData();
-  }, []);
-
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
