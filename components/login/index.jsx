@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setManageName, setManager, setWorker, setIdControl, setReason, setStartDay, setEndDay, setWorkerInfo, setWorkerPerReq, setRegUser } from '../configure';
 import { db } from '../../firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import { useEffect } from 'react';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -50,7 +51,7 @@ function Login() {
         };
 
         fetchData();
-    }, [username || email]);
+    }, [email]);
 
 
     useEffect(() => {

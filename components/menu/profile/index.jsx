@@ -33,7 +33,6 @@ function Profile() {
   const navigation = useNavigation();
 
   const manager = useSelector((state) => state.management.manager);
-  const regUser = useSelector((state) => state.saveRegUser.regUser);
   const worker = useSelector((state) => state.workerInfoTotal.worker);
   const idControl = useSelector((state) => state.management.idControl);
   const manageName = useSelector((state) => state.management.manageName);
@@ -142,7 +141,7 @@ function Profile() {
                               {item.startDate}
                             </Text>
                           </Text>
-                          {/* <Text style={{ color: "gray", fontSize: 14 }}>
+                          <Text style={{ color: "gray", fontSize: 14 }}>
                             Kalan izin hakkı :
                             <Text
                               style={{
@@ -154,7 +153,7 @@ function Profile() {
                               {" "}
                               {item.perDateTotal}
                             </Text>
-                          </Text> */}
+                          </Text>
                         </View>
                       )}
                     </View>

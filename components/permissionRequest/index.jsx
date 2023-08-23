@@ -13,29 +13,24 @@ import { Platform } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { Switch, TextInput, Button } from "@react-native-material/core";
 
-import { setWorkerPerReq, setRegUser } from "../configure";
-import { addDoc, collection, doc, getDocs, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase";
-import { useEffect } from "react";
+import { setWorkerPerReq, setRegUser } from '../configure';
+import { useEffect } from 'react';
 
 function PermissionRequest() {
-  const [error, setError] = useState("");
-  const [sreason, setSreason] = useState("");
+  const [error, setError] = useState('');
+  const [sreason, setSreason] = useState('');
   const [checked, setChecked] = useState(false);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
-  const [fireWorkerPer, setFireWorkerPer] = useState([])
-  const [regUserList, setRegUserList] = useState([]);
-  const [fiteCalculate, setFireCalculate] = useState()
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
   const manager = useSelector((state) => state.management.manager);
+  const regUser = useSelector((state) => state.saveRegUser.regUser);
   const worker = useSelector((state) => state.workerInfoTotal.worker);
   const idControl = useSelector((state) => state.management.idControl);
-
-
+  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq) || [];
 
   const handleStartDate = (e) => {
     setSelectedStartDate(e);
@@ -48,56 +43,12 @@ function PermissionRequest() {
     setSreason(e);
   };
 
-  console.log('Göktuğ', idControl)
-
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const regUserCollection = collection(db, 'regUser');
-        const snapshot = await getDocs(regUserCollection);
-        const regUserListData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        console.log('ANKARA', regUserListData);
-
-        setRegUserList(regUserListData);
-      } catch (error) {
-        console.error('Hatalı veri alınırken: ', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const regUserCollection = collection(db, 'workerPerReq');
-        const snapshot = await getDocs(regUserCollection);
-        const regUserListData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        console.log('ANKARA', regUserListData);
-        setFireWorkerPer(regUserListData);
-      } catch (error) {
-        console.error('Hatalı veri alınırken: ', error);
-      }
-    };
-    fetchData();
-  }, []);
-
-
-  const signWorkerId = regUserList.find((item) => item.id === idControl);
+  const signWorkerId = regUser.find(item => item.id === idControl);
 
   const startDate = new Date(selectedStartDate);
   const endDate = checked ? new Date(selectedEndDate) : startDate;
   const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+
 
   const handleSendRequest = () => {
 
@@ -324,103 +275,90 @@ function PermissionRequest() {
     }
   }
 
-};
-// workerPerReq.forEach((user) => {
-//   const startDate = new Date(user.startDay);
-//   const endDate = user.endDay ? new Date(user.endDay) : startDate;
-//   const currentDate = new Date(startDate);
 
-//   while (currentDate <= endDate) {
-//     const dateString = currentDate.toISOString().split('T')[0];
-//     initialMarkedDates[dateString] = { disabled: true, disableTouchEvent: true };
-//     currentDate.setDate(currentDate.getDate() + 1);
-//   }
-
-
-
-return (
-  <ScrollView>
-    <>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>İZİN ALMA FORMU</Text>
-        </View>
-        {error && <Text>{error}</Text>}
-        <View style={styles.topContent}>
-          <TextInput
-            placeholder="İzin Nedeni"
-            variant="outlined"
-            style={{ width: 350 }}
-            onChangeText={handleReasonChange}
-          />
-        </View>
-        <View style={styles.middleContent}>
-          <View style={styles.middleContentText}>
-            <Text style={styles.inlineText}>Tek gün izin</Text>
-            {checked && (
-              <Text style={styles.inlineText}>/ Çoklu gün izin</Text>
-            )}
+  return (
+    <ScrollView>
+      <>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.headerText}>İZİN ALMA FORMU</Text>
           </View>
-          <Switch
-            style={{ marginTop: 5 }}
-            trackColor="#8754ce"
-            thumbColor="white"
-            value={checked}
-            onValueChange={() => setChecked(!checked)}
-          />
-        </View>
-        <View style={styles.altContent}>
-          <View style={styles.datePicker}>
-            <Button
-              title="İZİN BAŞLANGIÇ TARİHİ SEÇİN"
+          {error && <Text>{error}</Text>}
+          <View style={styles.topContent}>
+            <TextInput
+              placeholder="İzin Nedeni"
               variant="outlined"
-              disabled
-              color="#8754ce"
-              tintColor="white"
-              style={{ marginTop: 20 }}
-            />
-            <Calendar
-              style={styles.calendar}
-              onDayPress={(day) => handleStartDate(day.dateString)}
-              selected={selectedStartDate}
-              monthFormat={"yyyy MMMM"}
-              markingType={"multi-dot"}
-              markedDates={marked1}
+              style={{ width: 350 }}
+              onChangeText={handleReasonChange}
             />
           </View>
-          {checked && (
+          <View style={styles.middleContent}>
+            <View style={styles.middleContentText}>
+              <Text style={styles.inlineText}>Tek gün izin</Text>
+              {checked && (
+                <Text style={styles.inlineText}>/ Çoklu gün izin</Text>
+              )}
+            </View>
+            <Switch
+              style={{ marginTop: 5 }}
+              trackColor="#8754ce"
+              thumbColor="white"
+              value={checked}
+              onValueChange={() => setChecked(!checked)}
+            />
+          </View>
+          <View style={styles.altContent}>
             <View style={styles.datePicker}>
               <Button
-                title="İZİN BİTİŞ TARİHİ SEÇİN"
+                title="İZİN BAŞLANGIÇ TARİHİ SEÇİN"
                 variant="outlined"
                 disabled
                 color="#8754ce"
                 tintColor="white"
-                style={{ marginTop: 20, paddingHorizontal: 23 }}
+                style={{ marginTop: 20 }}
               />
               <Calendar
                 style={styles.calendar}
-                onDayPress={(day) => handleEndDate(day.dateString)}
-                selected={selectedEndDate}
-                markedDates={marked2}
+                onDayPress={(day) => handleStartDate(day.dateString)}
+                selected={selectedStartDate}
+                monthFormat={"yyyy MMMM"}
+                markingType={"multi-dot"}
+                markedDates={marked1}
               />
             </View>
-          )}
+            {checked && (
+              <View style={styles.datePicker}>
+                <Button
+                  title="İZİN BİTİŞ TARİHİ SEÇİN"
+                  variant="outlined"
+                  disabled
+                  color="#8754ce"
+                  tintColor="white"
+                  style={{ marginTop: 20, paddingHorizontal: 23 }}
+                />
+                <Calendar
+                  style={styles.calendar}
+                  onDayPress={(day) => handleEndDate(day.dateString)}
+                  selected={selectedEndDate}
+                  markedDates={marked2}
+                />
+              </View>
+            )}
+          </View>
+          <TouchableOpacity style={styles.button}>
+            <Button
+              onPress={handleSendRequest}
+              title="İZİNİ ONAYA GÖNDER"
+              uppercase={false}
+              color="#8754ce"
+              tintColor="white"
+            />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.button}>
-          <Button
-            onPress={handleSendRequest}
-            title="İZİNİ ONAYA GÖNDER"
-            uppercase={false}
-            color="#8754ce"
-            tintColor="white"
-          />
-        </TouchableOpacity>
-      </View>
-    </>
-  </ScrollView>
-);
-
+      </>
+    </ScrollView>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
