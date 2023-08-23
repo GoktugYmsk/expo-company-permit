@@ -17,6 +17,8 @@ function Login() {
     const [password, setPassword] = useState('');
     const [regUserList, setRegUserList] = useState([]);
 
+    const dispatch = useDispatch()
+
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq) || [];
 
     useEffect(() => {
@@ -78,7 +80,7 @@ function Login() {
         const isValidManagement = validManagement.find(manager => manager.name === username);
 
         if (isValidWorker) {
-            const matchedUser = regUserList.find(worker => worker.name === username && worker.email === email);
+            const matchedUser = regUser.find(worker => worker.name === username && worker.email === email);
 
             if (matchedUser && matchedUser.password === password) {
                 dispatch(setWorker(username));
@@ -88,8 +90,7 @@ function Login() {
                 setEmail('')
                 setPassword('')
                 setUsername('')
-                const isWeb = Platform.OS === 'web' ? 'Profile' : 'Menu'
-                navigation.navigate(isWeb);
+                navigation.navigate('Menu');
             }
             else {
                 alert("Giriş Bilgileri Hatalı");
@@ -100,12 +101,12 @@ function Login() {
             setEmail('')
             setPassword('')
             setUsername('')
-            const isWeb = Platform.OS === 'web' ? 'Profile' : 'Menu'
-            navigation.navigate(isWeb);
+            navigation.navigate('Menu');
         } else {
             alert("Çalışan bulunamadı");
         }
     };
+
 
     // const getTokenFromStorage = async () => {
     //     try {

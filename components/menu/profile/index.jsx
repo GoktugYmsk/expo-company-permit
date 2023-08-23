@@ -3,7 +3,6 @@ import { Platform, StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
-import api from "../../../intercepter";
 
 import axios from 'axios';
 
@@ -64,31 +63,7 @@ function Profile() {
 
   const isAdmin = manageName !== "";
 
-  useEffect(() => {
-    api.get('/users')
-      .then((response) => {
 
-        setDeneme(response.data);
-
-      })
-      .catch((error) => {
-      });
-    dispatch(setIdControl(deneme.id))
-
-  }, [])
-
-  useEffect(() => {
-    api.get('/time-off')
-      .then((response) => {
-        console.log('Response Data:', response.data); // Verileri yazdır
-        console.log('Response Status:', response.status); // Yanıt durumunu yazdır
-        setDenemeTime(response.data);
-        console.log('Göktuğ');
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  }, []);
 
 
   const handleRequestClick = () => {

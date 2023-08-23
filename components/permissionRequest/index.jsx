@@ -15,6 +15,8 @@ import { Switch, TextInput, Button } from "@react-native-material/core";
 
 import { setWorkerPerReq, setRegUser } from '../configure';
 import { useEffect } from 'react';
+import { collection, getDocs } from "@firebase/firestore";
+import { db } from "../../firebase";
 
 function PermissionRequest() {
   const [error, setError] = useState('');
@@ -48,6 +50,46 @@ function PermissionRequest() {
   const startDate = new Date(selectedStartDate);
   const endDate = checked ? new Date(selectedEndDate) : startDate;
   const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const regUserCollection = collection(db, 'regUser');
+        const snapshot = await getDocs(regUserCollection);
+        const regUserListData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        console.log('ANKARA', regUserListData);
+
+        setRegUserList(regUserListData);
+      } catch (error) {
+        console.error('Hatalı veri alınırken: ', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const regUserCollection = collection(db, 'workerPerReq');
+        const snapshot = await getDocs(regUserCollection);
+        const regUserListData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        console.log('ANKARA', regUserListData);
+        setFireWorkerPer(regUserListData);
+      } catch (error) {
+        console.error('Hatalı veri alınırken: ', error);
+      }
+    };
+    fetchData();
+  }, []);
 
 
   const handleSendRequest = () => {
