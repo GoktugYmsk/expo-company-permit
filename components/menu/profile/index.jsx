@@ -44,27 +44,29 @@ function Profile() {
   useEffect(() => {
     api.get('/users')
       .then((response) => {
-        console.log('ANKARA', response.data);
+
         setDeneme(response.data);
-        console.log('Göktuğ');
+
       })
       .catch((error) => {
-        console.error(error);
       });
     dispatch(setIdControl(deneme.id))
 
+  }, [])
+
+  useEffect(() => {
     api.get('/time-off')
       .then((response) => {
-        console.log(response.data);
+        console.log('Response Data:', response.data); // Verileri yazdır
+        console.log('Response Status:', response.status); // Yanıt durumunu yazdır
         setDenemeTime(response.data);
         console.log('Göktuğ');
       })
       .catch((error) => {
-        console.error(error);
+        console.error('Error:', error);
       });
+  }, []);
 
-
-  }, [])
 
   const handleRequestClick = () => {
     if (manager) {

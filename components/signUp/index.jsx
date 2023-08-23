@@ -16,7 +16,7 @@ function SignUp() {
 
     const handleSignUp = async () => {
         try {
-            const response = await axios.post('http://localhost:8080/auth/register', {
+            const response = await axios.post('http://time-off-tracker-production.up.railway.app/auth/register', {
                 firstName: nameWorker,
                 lastName: lastNameWorker,
                 email: emailWorker,
@@ -27,10 +27,8 @@ function SignUp() {
             if (response.status === 200) {
                 navigation.navigate('Login');
             } else {
-                console.error('Kayıt işlemi başarısız oldu');
             }
         } catch (error) {
-            console.error('Kayıt işlemi sırasında bir hata oluştu:', error);
         }
     };
 

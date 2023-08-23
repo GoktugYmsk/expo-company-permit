@@ -57,7 +57,6 @@ function Menu() {
     //   await AsyncStorage.removeItem('userToken'); // Tokenı sil
     //   navigation.navigate('Login'); // Login sayfasına yönlendir
     // } catch (error) {
-    //   console.error('Token silinirken bir hata oluştu:', error);
     // }
   };
 

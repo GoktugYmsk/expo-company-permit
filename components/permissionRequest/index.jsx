@@ -250,6 +250,8 @@ function PermissionRequest() {
       initialMarkedDates[dateString] = { disabled: true, disableTouchEvent: true };
       currentDate.setDate(currentDate.getDate() + 1);
     }
+
+
   });
 
   return (

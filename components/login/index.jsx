@@ -24,7 +24,7 @@ function Login() {
 
     const handleClick = async () => {
         try {
-            const response = await axios.post('http://localhost:8080/auth/login', {
+            const response = await axios.post('http://time-off-tracker-production.up.railway.app/auth/login', {
                 email,
                 password,
             });
