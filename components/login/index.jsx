@@ -1,115 +1,145 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from "@react-native-material/core";
-
-import { useDispatch, useSelector } from 'react-redux';
-import { setManageName, setManager, setWorker, setIdControl, setReason, setStartDay, setEndDay, setWorkerInfo, setWorkerPerReq, setRegUser } from '../configure';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 function Login() {
-    const [email, setEmail] = useState('')
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const dispatch = useDispatch()
+    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq) || [];
+
+    useEffect(() => {
+        console.log('DENEME', workerPerReq)
+    }, [])
+
     const navigation = useNavigation();
 
-    const regUser = useSelector((state) => state.saveRegUser.regUser) || [];
+    const handleClick = async () => {
+        try {
+            const response = await axios.post('http://time-off-tracker-production.up.railway.app/auth/login', {
+                email,
+                password,
+            });
+            if (response.data.token) {
+                localStorage.setItem('userToken', response.data.token);
+                console.log('userToken', response.data.token);
 
-    const validManagement = [
-        { name: 'Bora', email: 'bora@example.com', password: '123456' },
-        { name: 'Hakan', email: 'hakan@example.com', password: '123456' },
-        { name: 'Aydın', email: 'aydin@example.com', password: '123456' },
-        { name: 'Gökhan', email: 'gökhan@example.com', password: '123456' },
-    ];
-
-    const handleClick = () => {
-        const isValidWorker = regUser.find(worker => worker.name === username);
-        const isValidManagement = validManagement.find(manager => manager.name === username);
-
-        if (isValidWorker) {
-            const matchedUser = regUser.find(worker => worker.name === username && worker.email === email);
-
-            if (matchedUser && matchedUser.password === password) {
-                dispatch(setWorker(username));
-                dispatch(setManageName(''));
-                dispatch(setManager(''));
-                dispatch(setIdControl(isValidWorker.id))
-                setEmail('')
-                setPassword('')
-                setUsername('')
-                navigation.navigate('Menu');
+                if (localStorage.getItem('userToken')) {
+                    navigation.navigate('Home');
+                }
+            } else {
+                alert('Hata', 'Giriş yapılamadı. Kullanıcı adı veya şifre hatalı.');
             }
-            else {
-                alert("Giriş Bilgileri Hatalı");
-            }
-
-        } else if (isValidManagement && isValidManagement.password === password) {
-            dispatch(setManageName(username));
-            setEmail('')
-            setPassword('')
-            setUsername('')
-            navigation.navigate('Menu');
-        } else {
-            alert("Çalışan bulunamadı");
+        } catch (error) {
+            alert('Hata', 'Giriş yapılırken bir hata oluştu.');
         }
     };
 
-    const handleClickSignup = () => {
-        navigation.navigate('SignUp')
-    }
+    // const getTokenFromStorage = async () => {
+    //     try {
+    //         const token = await AsyncStorage.getItem('userToken');
+    //         return token;
+    //     } catch (error) {
+    //         return null;
+    //     }
+    // };
 
-    // useEffect(() => {
-    //     dispatch(setReason(''))
-    //     dispatch(setStartDay(''))
-    //     dispatch(setEndDay(''))
-    //     dispatch(setManager(''))
-    //     dispatch(setManageName(''))
-    //     dispatch(setWorker(''))
-    //     dispatch(setWorkerInfo(''))
-    //     dispatch(setWorkerPerReq(''))
-    //     dispatch(setIdControl(''))
-    //     dispatch(setRegUser(''))
-    // }, [])
+
+    // const checkToken = async () => {
+    //     const token = await getTokenFromStorage();
+
+    //     if (token) {
+    //         navigation.navigate('Home');
+    //     } else {
+    //         navigation.navigate('Login');
+    //     }
+    // };
+
+
+
+    const handleClickSignup = () => {
+        navigation.navigate('SignUp');
+    };
+
 
     return (
-        <View style={styles.container} >
+        <View style={styles.container}>
             <Text style={styles.title}>Giriş Yap</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, padding: 0, width: 240, }}>
-                <Icon name="account" size={25} color="gray" />
-                <TextInput
-                    value={username}
-                    onChangeText={setUsername}
-                    variant="outlined" label="Kullanıcı Adı" style={{ width: 200, flex: 1, marginLeft: 5 }}
-                />
+            <View
+                style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: 20,
+                    padding: 0,
+                    width: 240,
+                }}
+            >
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, padding: 0, width: 240, }}>
-                <Icon name="lock" size={25} color="gray" />
+            <View
+                style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: 20,
+                    padding: 0,
+                    width: 240,
+                }}
+            >
+                <Icon name="mail" size={25} color="gray" />
                 <TextInput
                     value={email}
                     autoCapitalize="none"
                     onChangeText={setEmail}
-                    variant="outlined" label="E-Mail" style={{ width: 200, flex: 1, marginLeft: 5 }}
+                    variant="outlined"
+                    label="E-Mail"
+                    style={{ width: 200, flex: 1, marginLeft: 5 }}
                 />
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, padding: 0, width: 240, }}>
+            <View
+                style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: 20,
+                    padding: 0,
+                    width: 240,
+                }}
+            >
                 <Icon name="lock" size={25} color="gray" />
                 <TextInput
                     secureTextEntry={true}
                     value={password}
                     onChangeText={setPassword}
-                    variant="outlined" label="Şifre" style={{ width: 200, flex: 1, marginLeft: 5 }}
+                    variant="outlined"
+                    label="Şifre"
+                    style={{ width: 200, flex: 1, marginLeft: 5 }}
                 />
             </View>
-            <TouchableOpacity  >
-                <Button title="Giriş Yap" onPress={handleClick} uppercase={false} color="#8754ce" tintColor="white" />
+            <TouchableOpacity>
+                <Button
+                    title="Giriş Yap"
+                    onPress={handleClick}
+                    uppercase={false}
+                    color="#8754ce"
+                    tintColor="white"
+                />
             </TouchableOpacity>
             <Text style={styles.titleDown}>Hesabınız mı yok mu ?</Text>
-            <TouchableOpacity  >
-                <Button title="Kayıt Ol" variant="outlined" onPress={handleClickSignup} uppercase={false} color="#8754ce" tintColor="white" />
+            <TouchableOpacity>
+                <Button
+                    title="Kayıt Ol"
+                    variant="outlined"
+                    onPress={handleClickSignup}
+                    uppercase={false}
+                    color="#8754ce"
+                    tintColor="white"
+                />
             </TouchableOpacity>
             <StatusBar style="auto" />
         </View>
@@ -131,16 +161,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginTop: 10,
         marginBottom: 10,
-    },
-    buttonTextDownDiv: {
-        backgroundColor: "white",
-        padding: 10,
-        borderWidth: 1,
-        borderColor: "#8754ce",
-        borderRadius: 5,
-    },
-    buttonTextDown: {
-        color: "#8754ce",
     },
 });
 

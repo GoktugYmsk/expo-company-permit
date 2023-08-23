@@ -1,47 +1,37 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-
-import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from "@react-native-material/core";
 
-import { setRegUser } from '../configure';
-
 function SignUp() {
     const [nameWorker, setNameWorker] = useState('')
+    const [lastNameWorker, setLastNameWorker] = useState('')
     const [emailWorker, setEmailWorker] = useState('');
     const [passwordWorker, setPasswordWorker] = useState('');
 
-    const dispatch = useDispatch()
     const navigation = useNavigation()
 
-    const regUser = useSelector((state) => state.saveRegUser.regUser) || [];
+    const handleSignUp = async () => {
+        try {
+            const response = await axios.post('http://time-off-tracker-production.up.railway.app/auth/register', {
+                firstName: nameWorker,
+                lastName: lastNameWorker,
+                email: emailWorker,
+                password: passwordWorker,
+                status: true,
+            });
 
-    const handleSignUp = () => {
-        if (nameWorker) {
-            const emailControl = regUser.find(worker => worker.email === emailWorker);
-
-            if (!emailControl) {
-                const newWorker = {
-                    id: uuidv4(),
-                    name: nameWorker,
-                    email: emailWorker,
-                    password: passwordWorker,
-                    perDateTotal: 30,
-                    startDate: new Date().toISOString().split('T')[0],
-                };
-                dispatch(setRegUser([...regUser, newWorker]));
-            }
-            else {
-                alert('Kullanıcı zaten kayıtlı ')
+            if (response.status === 200) {
                 navigation.navigate('Login');
+            } else {
             }
+        } catch (error) {
         }
-        navigation.navigate('Login');
     };
+
 
     return (
         <View style={styles.container}>
@@ -53,6 +43,15 @@ function SignUp() {
                     onChangeText={setNameWorker}
                     keyboardType="name"
                     variant="outlined" label="Adınız" style={{ width: 200, flex: 1, marginLeft: 10 }}
+                />
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10, padding: 10, width: 240, }}>
+                <Icon name="account" size={20} color="gray" />
+                <TextInput
+                    value={lastNameWorker}
+                    onChangeText={setLastNameWorker}
+                    keyboardType="name"
+                    variant="outlined" label="Soyadınız" style={{ width: 200, flex: 1, marginLeft: 10 }}
                 />
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10, padding: 10, width: 240, }}>

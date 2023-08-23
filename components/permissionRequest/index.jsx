@@ -16,8 +16,8 @@ import { Switch, TextInput, Button } from "@react-native-material/core";
 import { setWorkerPerReq, setRegUser } from "../configure";
 
 function PermissionRequest() {
-  const [error, setError] = useState("");
-  const [sreason, setSreason] = useState("");
+  const [error, setError] = useState('');
+  const [sreason, setSreason] = useState('');
   const [checked, setChecked] = useState(false);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
@@ -42,19 +42,15 @@ function PermissionRequest() {
     setSreason(e);
   };
 
-  const signWorkerId = regUser.find((item) => item.id === idControl);
+  const signWorkerId = regUser.find(item => item.id === idControl);
 
   const startDate = new Date(selectedStartDate);
   const endDate = checked ? new Date(selectedEndDate) : startDate;
-  const daysDifference = Math.ceil(
-    (endDate - startDate) / (1000 * 60 * 60 * 24)
-  );
+  const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
 
   const initialMarkedDates = {};
 
   const handleSendRequest = () => {
-
-    console.log(workerPerReq)
 
     if (manager && selectedStartDate && selectedEndDate) {
       if (workerPerReq) {
@@ -243,35 +239,19 @@ function PermissionRequest() {
       setError('Lütfen profil sayfasından yönetici seçiniz.');
     }
   };
+  workerPerReq.forEach((user) => {
+    const startDate = new Date(user.startDay);
+    const endDate = user.endDay ? new Date(user.endDay) : startDate;
+    const currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      const dateString = currentDate.toISOString().split('T')[0];
+      initialMarkedDates[dateString] = { disabled: true, disableTouchEvent: true };
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
 
 
-  function setMarkedDates(workerPerReq) {
-    const idControl = useSelector((state) => state.management.idControl);
-
-    workerPerReq.forEach((user) => {
-      const startDate = new Date(user.startDay);
-      const endDate = user.endDay ? new Date(user.endDay) : startDate;
-      const currentDate = new Date(startDate);
-
-      if (user.id === idControl && user.accept === false) {
-        while (currentDate <= endDate) {
-          const dateString = currentDate.toISOString().split('T')[0];
-          initialMarkedDates[dateString] = { disabled: false, disableTouchEvent: false };
-          currentDate.setDate(currentDate.getDate() + 1);
-        }
-      } else {
-        while (currentDate <= endDate) {
-          const dateString = currentDate.toISOString().split('T')[0];
-          initialMarkedDates[dateString] = { disabled: true, disableTouchEvent: true };
-          currentDate.setDate(currentDate.getDate() + 1);
-        }
-      }
-    });
-  }
-
-  // useEffect(() => {
-  //   setMarkedDates(workerPerReq);
-  // }, [workerPerReq]);
+  });
 
   return (
     <ScrollView>
@@ -285,16 +265,24 @@ function PermissionRequest() {
             <TextInput
               placeholder="İzin Nedeni"
               variant="outlined"
-              style={{ width: 265 }}
+              style={{ width: 350 }}
               onChangeText={handleReasonChange}
             />
           </View>
           <View style={styles.middleContent}>
             <View style={styles.middleContentText}>
               <Text style={styles.inlineText}>Tek gün izin</Text>
-              {checked && <Text style={styles.inlineText}>/ Çoklu gün izin</Text>}
+              {checked && (
+                <Text style={styles.inlineText}>/ Çoklu gün izin</Text>
+              )}
             </View>
-            <Switch style={{ marginTop: 5, }} trackColor="#8754ce" thumbColor="white" value={checked} onValueChange={() => setChecked(!checked)} />
+            <Switch
+              style={{ marginTop: 5 }}
+              trackColor="#8754ce"
+              thumbColor="white"
+              value={checked}
+              onValueChange={() => setChecked(!checked)}
+            />
           </View>
           <View style={styles.altContent}>
             <View style={styles.datePicker}>
@@ -304,13 +292,15 @@ function PermissionRequest() {
                 disabled
                 color="#8754ce"
                 tintColor="white"
-                style={{ marginTop: 20, }}
+                style={{ marginTop: 20 }}
               />
               <Calendar
                 style={styles.calendar}
                 onDayPress={(day) => handleStartDate(day.dateString)}
                 selected={selectedStartDate}
-                markedDates={{ ...initialMarkedDates }}
+                monthFormat={"yyyy MMMM"}
+                markingType={"multi-dot"}
+                markedDates={marked1}
               />
             </View>
             {checked && (
@@ -321,13 +311,13 @@ function PermissionRequest() {
                   disabled
                   color="#8754ce"
                   tintColor="white"
-                  style={{ marginTop: 20, paddingHorizontal: 23, }}
+                  style={{ marginTop: 20, paddingHorizontal: 23 }}
                 />
                 <Calendar
                   style={styles.calendar}
                   onDayPress={(day) => handleEndDate(day.dateString)}
                   selected={selectedEndDate}
-                  markedDates={{ ...initialMarkedDates }}
+                  markedDates={marked2}
                 />
               </View>
             )}
@@ -343,43 +333,48 @@ function PermissionRequest() {
           </TouchableOpacity>
         </View>
       </>
-    </ScrollView >
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: 'white',
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: "white",
     padding: 20,
-    height: '100%',
+    height: "100%",
+    paddingLeft: Platform.OS === "web" ? 300 : 0,
   },
   header: {
-    alignItems: 'center',
-    marginBottom: 20,
+    backgroundColor: "#8754ce",
+    width: "100%",
+    padding: 10,
+    borderRadius: 4,
   },
   headerText: {
     fontSize: 20,
-    width: '100%',
+    width: "100%",
     textAlign: "center",
     fontWeight: "bold",
-    color: 'white',
+    color: "white",
   },
   topContent: {
     margin: 20,
   },
   middleContent: {
-    flexDirection: 'row',
-    backgroundColor: '#f1f1f1',
-    justifyContent: 'space-around',
-    width: '95%',
+    flexDirection: "row",
+    backgroundColor: "white",
+    justifyContent: "space-around",
+    width: "95%",
     borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#cecece",
   },
   middleContentText: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '70%',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "70%",
     borderRadius: 5,
     paddingTop: 3,
   },
@@ -396,18 +391,20 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   button: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
+    marginTop: 10,
+    marginBottom: 60,
   },
   altContent: {
-    flexDirection: 'column',
-    alignItems: 'center',
+    flexDirection: "column",
+    alignItems: "center",
   },
   datePicker: {
-    flexDirection: 'column',
-    alignItems: 'center',
+    flexDirection: "column",
+    alignItems: "center",
   },
 });
 
