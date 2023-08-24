@@ -24,13 +24,12 @@ function Login() {
 
     const handleClick = async () => {
         try {
-            const response = await axios.post('http://time-off-tracker-production.up.railway.app/auth/login', {
+            const response = await axios.post('https://time-off-tracker-api-4a95404d0134.herokuapp.com/auth/login', {
                 email,
                 password,
             });
             if (response.data.token) {
                 localStorage.setItem('userToken', response.data.token);
-                console.log('userToken', response.data.token);
 
                 if (localStorage.getItem('userToken')) {
                     navigation.navigate('Home');
@@ -42,6 +41,7 @@ function Login() {
             alert('Hata', 'Giriş yapılırken bir hata oluştu.');
         }
     };
+
 
     // const getTokenFromStorage = async () => {
     //     try {

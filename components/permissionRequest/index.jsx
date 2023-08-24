@@ -13,7 +13,10 @@ import { Platform } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { Switch, TextInput, Button } from "@react-native-material/core";
 
+import api from "../../intercepter";
+
 import { setWorkerPerReq, setRegUser } from "../configure";
+import { useEffect } from "react";
 
 function PermissionRequest() {
   const [error, setError] = useState('');
@@ -41,6 +44,20 @@ function PermissionRequest() {
   const handleReasonChange = (e) => {
     setSreason(e);
   };
+
+
+  useEffect(() => {
+    api.post('/endpoint')
+      .then((response) => {
+
+        console.log(response.data);
+      })
+      .catch((error) => {
+
+        console.error(error);
+      });
+  }, [])
+
 
   const signWorkerId = regUser.find(item => item.id === idControl);
 

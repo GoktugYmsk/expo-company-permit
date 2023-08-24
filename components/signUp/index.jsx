@@ -16,12 +16,11 @@ function SignUp() {
 
     const handleSignUp = async () => {
         try {
-            const response = await axios.post('http://time-off-tracker-production.up.railway.app/auth/register', {
+            const response = await axios.post('https://time-off-tracker-api-4a95404d0134.herokuapp.com/auth/register', {
                 firstName: nameWorker,
                 lastName: lastNameWorker,
                 email: emailWorker,
                 password: passwordWorker,
-                status: true,
             });
 
             if (response.status === 200) {
