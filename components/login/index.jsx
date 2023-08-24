@@ -6,7 +6,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from "@react-native-material/core";
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../../intercepter';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIdControl } from '../configure';
@@ -14,37 +14,63 @@ import { setIdControl } from '../configure';
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq) || [];
+    const [user, setUser] = useState([])
 
     const dispatch = useDispatch()
 
+
+    // useEffect(() => {
+    //     api.get('/users')
+    //         .then((response) => {
+    //             setUser(response.data);
+    //             console.log(response)
+    //             console.log('id:', response.data[0].id);
+    //         })
+    //         .catch((error) => {
+    //             console.error(error);
+    //         });
+    // }, [email]);
+
+
+
     useEffect(() => {
-        console.log('DENEME', workerPerReq)
-    }, [])
+
+        axios.get('https://time-off-tracker-api-4a95404d0134.herokuapp.com/users')
+            .then((response) => {
+                setUser(response.data);
+                console.log('GÖKTUĞ', response)
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, [email]);
+
+
+
 
     const navigation = useNavigation();
 
     const handleClick = async () => {
         try {
-            const response = await axios.post('https://time-off-tracker-api-4a95404d0134.herokuapp.com/auth/login', {
-                email,
-                password,
-            });
+            const response = await axios.post('https://time-off-tracker-api-4a95404d0134.herokuapp.com/auth/login',
+                { email, password, });
             if (response.data.token) {
                 localStorage.setItem('userToken', response.data.token);
-
                 if (localStorage.getItem('userToken')) {
-                    // dispatch(setIdControl(response.data.id))
-                    navigation.navigate('Home');
+
+                    const isUser = user.find(u => u.userEmail === email);
+                    // Email eşleşen kullanıcıyı bulma
+                    if (isUser) {
+                        dispatch(setIdControl(isUser.id));
+                        // Redux store'a id'yi gönderme 
+                        console.log('STATİK', isUser.id)
+                        navigation.navigate('Home');
+                    }
                 }
-            } else {
-                alert('Hata', 'Giriş yapılamadı. Kullanıcı adı veya şifre hatalı.');
-            }
-        } catch (error) {
-            alert('Hata', 'Giriş yapılırken bir hata oluştu.');
-        }
+            } else { alert('Hata Giriş yapılamadı. Kullanıcı adı veya şifre hatalı.'); }
+        } catch (error) { alert('Hata Giriş yapılırken bir hata oluştu.'); }
     };
+
 
 
     // const getTokenFromStorage = async () => {

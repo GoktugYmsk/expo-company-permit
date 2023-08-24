@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-
-import api from "../../../intercepter";
-
-import axios from 'axios';
+import axios from "axios";
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import {
@@ -18,6 +15,7 @@ import {
   Text,
   ListItem,
 } from "@react-native-material/core";
+import api from "../../../intercepter";
 
 import { setIdControl, setManager } from "../../configure";
 import { useEffect } from "react";
@@ -27,12 +25,12 @@ function Profile() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [deneme, setDeneme] = useState({});
   const [denemeTime, setDenemeTime] = useState({});
+  const [regUserList, setRegUserList] = useState([])
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
   const manager = useSelector((state) => state.management.manager);
-  const regUser = useSelector((state) => state.saveRegUser.regUser);
   const worker = useSelector((state) => state.workerInfoTotal.worker);
   const idControl = useSelector((state) => state.management.idControl);
   const manageName = useSelector((state) => state.management.manageName);
@@ -42,30 +40,17 @@ function Profile() {
   const isAdmin = manageName !== "";
 
   useEffect(() => {
-    api.get('/users')
+    axios.get('https://time-off-tracker-api-4a95404d0134.herokuapp.com/users')
       .then((response) => {
-
-        setDeneme(response.data);
-
+        setRegUserList(response.data);
+        console.log('GÖKTUĞ', response)
       })
       .catch((error) => {
-      });
-    dispatch(setIdControl(deneme.id))
-
-  }, [])
-
-  useEffect(() => {
-    api.get('/time-off')
-      .then((response) => {
-        console.log('Response Data:', response.data); // Verileri yazdır
-        console.log('Response Status:', response.status); // Yanıt durumunu yazdır
-        setDenemeTime(response.data);
-        console.log('Göktuğ');
-      })
-      .catch((error) => {
-        console.error('Error:', error);
+        console.error(error);
       });
   }, []);
+
+
 
 
   const handleRequestClick = () => {
@@ -97,14 +82,15 @@ function Profile() {
                 <Text style={{ fontSize: 25 }} variant="h6">
                   Adı Soyadı
                 </Text>
-                {manageName ? <Text>{manageName}</Text> : <Text>{worker}</Text>}
+                {/* {manageName ? <Text>{manageName}</Text> : <Text>{regUserList.userName}</Text>} */}
               </View>
-              {regUser.map((item, key) => (
+              {regUserList.map((item, key) => (
                 <View key={key}>
                   {item.id === idControl && (
                     <View style={styles.profileContent}>
                       {!manageName && (
                         <View>
+                          <Text>{item.userName}</Text>
                           <Text style={{ color: "gray", fontSize: 14 }}>
                             İşe Başlama Tarihi :
                             <Text
@@ -115,7 +101,7 @@ function Profile() {
                               }}
                             >
                               {" "}
-                              {item.startDate}
+                              {new Date(item.userCreateDate).toLocaleDateString('tr-TR')}
                             </Text>
                           </Text>
                           <Text style={{ color: "gray", fontSize: 14 }}>

@@ -14,9 +14,8 @@ import { Calendar } from "react-native-calendars";
 import { Switch, TextInput, Button } from "@react-native-material/core";
 
 import { setWorkerPerReq, setRegUser } from '../configure';
+import api from "../../intercepter";
 import { useEffect } from 'react';
-import { collection, getDocs } from "@firebase/firestore";
-import { db } from "../../firebase";
 
 function PermissionRequest() {
   const [error, setError] = useState('');
@@ -25,6 +24,9 @@ function PermissionRequest() {
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [data, setData] = useState([])
+  const [addRequest, setAddRequest] = useState([])
+
+  const [regUserList, setRegUserList] = useState([])
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -33,7 +35,6 @@ function PermissionRequest() {
   const regUser = useSelector((state) => state.saveRegUser.regUser);
   const worker = useSelector((state) => state.workerInfoTotal.worker);
   const idControl = useSelector((state) => state.management.idControl);
-  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq) || [];
 
   const handleStartDate = (e) => {
     setSelectedStartDate(e);
@@ -52,30 +53,62 @@ function PermissionRequest() {
   const endDate = checked ? new Date(selectedEndDate) : startDate;
   const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
 
+
+  useEffect(() => {
+    api.post('/add', addRequest)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [addRequest]);
+
+
   useEffect(() => {
 
-    useEffect(() => {
-      api.post('/getall')
-        .then((response) => {
-          setData(response)
-          console.log(response.data);
-        })
-        .catch((error) => {
-
-          console.error(error);
-        });
-    }, [])
+    axios.get('https://time-off-tracker-api-4a95404d0134.herokuapp.com/users')
+      .then((response) => {
+        setRegUserList(response.data);
+        console.log('GÖKTUĞ', response)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [sreason]);
 
 
+
+  useEffect(() => {
+    api.get('/getall')
+      .then((response) => {
+        setData(response)
+        console.log(response.data);
+      })
+      .catch((error) => {
+
+        console.error(error);
+      });
+  }, [])
+
+
+  useEffect(() => {
+    api.get('/getall')
+      .then((response) => {
+        setData(response)
+        console.log(response.data);
+      })
+      .catch((error) => {
+
+        console.error(error);
+      });
   }, [])
 
   const handleSendRequest = () => {
 
     if (manager && selectedStartDate && selectedEndDate) {
       if (data) {
-        const isWorkerId = data.find(
-          (workerInfo) => workerInfo.id === idControl
-        );
+        const isWorkerId = data.find((workerInfo) => workerInfo.id === idControl);
         const signWorkerId = regUserList.find((item) => item.id === idControl);
 
         const calculate = signWorkerId.perDateTotal - daysDifference - 1;
@@ -95,6 +128,7 @@ function PermissionRequest() {
               accept: null,
               id: idControl,
             };
+            setAddRequest(newWorkerInfo)
             navigation.navigate("MyRequest");
           }
 
@@ -113,7 +147,7 @@ function PermissionRequest() {
               accept: null,
               id: idControl,
             };
-
+            setAddRequest(newWorkerInfo)
 
             navigation.navigate("MyRequest");
           }
@@ -138,16 +172,14 @@ function PermissionRequest() {
             accept: null,
             id: idControl,
           };
-
+          setAddRequest(newWorkerInfo)
 
           navigation.navigate("MyRequest");
         }
       }
     } else if (manager && selectedStartDate) {
-      if (fireWorkerPer) {
-        const isWorkerId = data.find(
-          (workerInfo) => workerInfo.id === idControl
-        );
+      if (data) {
+        const isWorkerId = data.find((workerInfo) => workerInfo.id === idControl);
         const signWorkerId = regUserList.find((item) => item.id === idControl);
 
         const calculate = signWorkerId.perDateTotal - 1
@@ -168,7 +200,7 @@ function PermissionRequest() {
               id: idControl,
             };
 
-
+            setAddRequest(newWorkerInfo)
 
             navigation.navigate("MyRequest");
           }
@@ -215,7 +247,8 @@ function PermissionRequest() {
             accept: null,
             id: idControl,
           };
-          dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+
+          setAddRequest(newWorkerInfo)
           navigation.navigate("MyRequest");
         }
       }
@@ -237,17 +270,8 @@ function PermissionRequest() {
           accept: null,
           id: idControl,
         };
+        setAddRequest(newWorkerInfo)
 
-        const workersCollectionRef = collection(db, "workerPerReq");
-        addDoc(workersCollectionRef, newWorkerInfo)
-          .then(() => {
-            console.log("Veri başarıyla Firestore'a eklendi.");
-          })
-          .catch((error) => {
-            console.error("Veri eklenirken hata oluştu: ", error);
-          });
-
-        // dispatch(setWorkerPerReq([newWorkerInfo]));
         navigation.navigate("MyRequest");
       }
     }
@@ -301,7 +325,6 @@ function PermissionRequest() {
                 selected={selectedStartDate}
                 monthFormat={"yyyy MMMM"}
                 markingType={"multi-dot"}
-                markedDates={marked1}
               />
             </View>
             {checked && (
@@ -318,7 +341,6 @@ function PermissionRequest() {
                   style={styles.calendar}
                   onDayPress={(day) => handleEndDate(day.dateString)}
                   selected={selectedEndDate}
-                  markedDates={marked2}
                 />
               </View>
             )}
