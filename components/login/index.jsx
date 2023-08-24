@@ -8,13 +8,16 @@ import { TextInput, Button } from "@react-native-material/core";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIdControl } from '../configure';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq) || [];
+
+    const dispatch = useDispatch()
 
     useEffect(() => {
         console.log('DENEME', workerPerReq)
@@ -32,6 +35,7 @@ function Login() {
                 localStorage.setItem('userToken', response.data.token);
 
                 if (localStorage.getItem('userToken')) {
+                    // dispatch(setIdControl(response.data.id))
                     navigation.navigate('Home');
                 }
             } else {
