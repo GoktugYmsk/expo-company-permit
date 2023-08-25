@@ -17,31 +17,43 @@ function MyRequest() {
   const idControl = useSelector((state) => state.management.idControl);
   const [managerName, setManagerName] = useState()
 
-  useEffect(() => {
-    console.log('Adana', idControl)
-  }, [])
+
+  console.log(idControl)
 
   useEffect(() => {
-    api.get(`time-off/getallemployee/${idControl}`)
-      .then((response) => {
+    async function fetchData() {
+      try {
+        const response = await api.get(`time-off/getallemployee/${idControl}`);
+        console.log('DENEME', response.data);
         setRegUserList(response.data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(error);
-      });
+      }
+    }
+
+    fetchData();
   }, []);
 
-  const managerId = regUserList.find(item => item.managerID);
+  console.log('regUserList', regUserList);
 
-  useEffect(() => {
-    api.get(`/users/${managerId}`)
-      .then((response) => {
-        setManagerName(response.data.userName);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
+
+  // const managerId = regUserList.find(item => item.managerID);
+
+  // useEffect(() => {
+  //   api.get(`/users/${managerId}`)
+  //     .then((response) => {
+  //       setManagerName(response.data.userName);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // }, []);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    return formattedDate;
+  };
 
 
   return (
@@ -53,41 +65,45 @@ function MyRequest() {
         {regUserList &&
           regUserList.map((item, index) => (
             <View key={index}>
-              {item.id === idControl && (
-                <View>
-                  {item.timeOffType === 'Pending' && (
-                    <View>
-                      <View style={styles.circleTick}>
-                        <Button
-                          title="Beklenen İstek"
-                          variant="outlined"
-                          disabled
-                          color="#8754ce"
-                          tintColor="white"
-                          style={{ marginTop: 20, paddingHorizontal: 23 }}
-                        />
-                        <Icon
-                          style={styles.workerIcon}
-                          name="clock-outline"
-                          size={28}
-                          color="orange"
-                        />
-                      </View>
-                      <ListItem title={item.name} secondaryText="İsim" />
-                      <ListItem
-                        title={item.startDate}
-                        secondaryText="başlangıç tarihi"
-                      />
-                      {item.endDay && (
+              {console.log('regUserListItem', item)}
+              {item.employeID === idControl && (
+
+                < View key={index} >
+                  {
+                    item.timeOffType === 'Pending' && (
+                      <View>
+                        <View style={styles.circleTick}>
+                          <Button
+                            title="Beklenen İstek"
+                            variant="outlined"
+                            disabled
+                            color="#8754ce"
+                            tintColor="white"
+                            style={{ marginTop: 20, paddingHorizontal: 23 }}
+                          />
+                          <Icon
+                            style={styles.workerIcon}
+                            name="clock-outline"
+                            size={28}
+                            color="orange"
+                          />
+                        </View>
+                        {/* <ListItem title={item.name} secondaryText="İsim" /> */}
                         <ListItem
-                          title={item.endDate}
-                          secondaryText="bitiş tarihi"
+                          title={formatDate(item.startDate)}
+                          secondaryText="başlangıç tarihi"
                         />
-                      )}
-                      <ListItem title={item.description} secondaryText="sebep" />
-                      <ListItem title={managerName} secondaryText="yönetici" />
-                    </View>
-                  )}
+                        {item.endDate && (
+                          <ListItem
+                            title={formatDate(item.endDate)}
+                            secondaryText="bitiş tarihi"
+                          />
+                        )}
+                        <ListItem title={item.description} secondaryText="sebep" />
+                        <ListItem title={managerName} secondaryText="yönetici" />
+                      </View>
+                    )
+                  }
                   {item.accept === 'ACCEPT' && (
                     <View>
                       <View style={styles.circleTick}>
@@ -155,7 +171,7 @@ function MyRequest() {
             </View>
           ))}
       </View>
-    </ScrollView>
+    </ScrollView >
   );
 }
 
