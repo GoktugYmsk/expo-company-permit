@@ -65,8 +65,8 @@ function Profile() {
       case 'Bora':
         dispatch(setManager(0));
         break;
-      case 'Göhan':
-        dispatch(setManager(1));
+      case 'Tolga':
+        dispatch(setManager(7));
         break;
       case 'Aydın':
         dispatch(setManager(2));
@@ -79,7 +79,7 @@ function Profile() {
     }
   };
 
-  const managers = ["Bora", "Gökhan", "Aydın", "Hakan"];
+  const managers = ["Bora", "Tolga", "Aydın", "Hakan"];
 
   return (
     <View>

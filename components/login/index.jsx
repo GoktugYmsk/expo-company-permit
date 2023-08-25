@@ -24,7 +24,6 @@ function Login() {
             .then((response) => {
                 setUser(response.data);
                 console.log('UsersArray', response)
-                console.log('id:', response.data[0].id);
             })
             .catch((error) => {
                 console.error(error);

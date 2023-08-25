@@ -5,7 +5,7 @@ import { Platform } from "react-native";
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Button, ListItem } from "@react-native-material/core";
-
+import api from "../../../intercepter";
 import { StyleSheet, Text, View } from "react-native";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -15,11 +15,28 @@ function MyRequest() {
   const worker = useSelector((state) => state.workerInfoTotal.worker);
   const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
   const idControl = useSelector((state) => state.management.idControl);
+  const [managerName, setManagerName] = useState()
 
   useEffect(() => {
-    api.get('/users')
+    console.log('Adana', idControl)
+  }, [])
+
+  useEffect(() => {
+    api.get(`time-off/getallemployee/${idControl}`)
       .then((response) => {
         setRegUserList(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const managerId = regUserList.find(item => item.managerID);
+
+  useEffect(() => {
+    api.get(`/users/${managerId}`)
+      .then((response) => {
+        setManagerName(response.data.userName);
       })
       .catch((error) => {
         console.error(error);
@@ -38,7 +55,7 @@ function MyRequest() {
             <View key={index}>
               {item.id === idControl && (
                 <View>
-                  {item.accept === 'PENDING' && (
+                  {item.timeOffType === 'Pending' && (
                     <View>
                       <View style={styles.circleTick}>
                         <Button
@@ -58,17 +75,17 @@ function MyRequest() {
                       </View>
                       <ListItem title={item.name} secondaryText="İsim" />
                       <ListItem
-                        title={item.startDay}
+                        title={item.startDate}
                         secondaryText="başlangıç tarihi"
                       />
                       {item.endDay && (
                         <ListItem
-                          title={item.endDay}
+                          title={item.endDate}
                           secondaryText="bitiş tarihi"
                         />
                       )}
-                      <ListItem title={item.reason} secondaryText="sebep" />
-                      <ListItem title={item.manager} secondaryText="yönetici" />
+                      <ListItem title={item.description} secondaryText="sebep" />
+                      <ListItem title={managerName} secondaryText="yönetici" />
                     </View>
                   )}
                   {item.accept === 'ACCEPT' && (
@@ -98,8 +115,8 @@ function MyRequest() {
                         title={item.endDay}
                         secondaryText="bitiş tarihi"
                       />
-                      <ListItem title={item.reason} secondaryText="sebep" />
-                      <ListItem title={item.manager} secondaryText="yönetici" />
+                      <ListItem title={item.description} secondaryText="sebep" />
+                      <ListItem title={managerName} secondaryText="yönetici" />
                     </View>
                   )}
                   {item.accept === 'REJECTED' && (
@@ -129,8 +146,8 @@ function MyRequest() {
                         title={item.endDay}
                         secondaryText="bitiş tarihi"
                       />
-                      <ListItem title={item.reason} secondaryText="sebep" />
-                      <ListItem title={item.manager} secondaryText="yönetici" />
+                      <ListItem title={item.description} secondaryText="sebep" />
+                      <ListItem title={managerName} secondaryText="yönetici" />
                     </View>
                   )}
                 </View>
