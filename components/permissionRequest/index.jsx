@@ -56,7 +56,7 @@ function PermissionRequest() {
 
   useEffect(() => {
 
-    console.log('', addRequest)
+    console.log('deneme', addRequest)
 
     api.post('/time-off/add', addRequest)
       .then((response) => {
@@ -66,6 +66,8 @@ function PermissionRequest() {
         console.error(error);
       });
   }, [addRequest]);
+
+
 
   useEffect(() => {
     api.get('/users')

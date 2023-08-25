@@ -27,8 +27,6 @@ function MyRequest() {
   }, []);
 
 
-
-
   return (
     <ScrollView>
       <View style={styles.container}>
