@@ -25,8 +25,8 @@ function PermissionRequest() {
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [data, setData] = useState([])
   const [addRequest, setAddRequest] = useState([])
+  const [putUsers, setPutUsers] = useState()
 
-  const [regUserList, setRegUserList] = useState([])
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -47,7 +47,9 @@ function PermissionRequest() {
     setSreason(e);
   };
 
-  const signWorkerId = regUser.find(item => item.id === idControl);
+
+
+  const signWorkerId = data.find(item => item.id === idControl);
 
   const startDate = new Date(selectedStartDate);
   const endDate = checked ? new Date(selectedEndDate) : startDate;
@@ -70,6 +72,29 @@ function PermissionRequest() {
 
 
   useEffect(() => {
+    console.log('İzmir', putUsers);
+
+    const updateUserRemainingDayOff = async () => {
+      try {
+        const response = await api.put('/users/update', {
+          remainingDayOff: putUsers,
+        });
+
+        console.log('İzmir', response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    updateUserRemainingDayOff();
+
+  }, [putUsers]);
+
+
+
+
+
+  useEffect(() => {
     api.get('/users')
       .then((response) => {
         setData(response.data)
@@ -88,8 +113,7 @@ function PermissionRequest() {
         const isWorkerId = data.find((workerInfo) => workerInfo.id === idControl);
         // const signWorkerId = regUserList.find((item) => item.id === idControl);
 
-        // const calculate = signWorkerId.perDateTotal - daysDifference - 1;
-        const calculate = 30
+        const calculate = signWorkerId.ramainingDayOff - daysDifference - 1;
 
         if (isWorkerId) {
           if (calculate < 0) {
@@ -103,6 +127,7 @@ function PermissionRequest() {
               description: sreason,
               managerId: manager,
             };
+            setPutUsers(calculate)
             setAddRequest(newWorkerInfo)
             navigation.navigate("MyRequest");
           }
@@ -119,6 +144,7 @@ function PermissionRequest() {
               description: sreason,
               managerId: manager,
             };
+            setPutUsers(calculate)
             setAddRequest(newWorkerInfo)
 
             navigation.navigate("MyRequest");
@@ -126,14 +152,14 @@ function PermissionRequest() {
         }
       } else {
 
-        // const calculate = signWorkerId.perDateTotal - daysDifference - 1;
-        const calculate = 30
+        const calculate = signWorkerId.ramainingDayOff - daysDifference - 1;
+
 
         if (calculate < 0) {
           alert("Kullanabileceğiniz max izin 30 gündür");
         } else {
 
-          dispatch(setRegUser(updatedRegUser));
+          // dispatch(setRegUser(updatedRegUser));
 
           const newWorkerInfo = {
             employeeId: idControl,
@@ -142,6 +168,7 @@ function PermissionRequest() {
             description: sreason,
             managerId: manager,
           };
+          setPutUsers(calculate)
           setAddRequest(newWorkerInfo)
 
           navigation.navigate("MyRequest");
@@ -152,8 +179,7 @@ function PermissionRequest() {
         const isWorkerId = data.find((workerInfo) => workerInfo.id === idControl);
         // const signWorkerId = regUserList.find((item) => item.id === idControl);
 
-        // const calculate = signWorkerId.perDateTotal - 1
-        const calculate = 30
+        const calculate = signWorkerId.ramainingDayOff - 1
 
         if (isWorkerId) {
           if (calculate < 0) {
@@ -167,6 +193,7 @@ function PermissionRequest() {
               description: sreason,
               managerId: manager,
             };
+            setPutUsers(calculate)
 
             setAddRequest(newWorkerInfo)
 
@@ -184,7 +211,7 @@ function PermissionRequest() {
               description: sreason,
               managerId: manager,
             };
-
+            setPutUsers(calculate)
             setAddRequest(newWorkerInfo)
             navigation.navigate("MyRequest");
           }
@@ -194,14 +221,6 @@ function PermissionRequest() {
           alert('Kullanabileceğiniz max izin 30 gündür')
         }
         else {
-          const updatedRegUser = regUser.map(user => {
-            if (user.id === idControl) {
-              const calculate = user.perDateTotal - 1;
-              return { ...user, perDateTotal: calculate };
-            }
-            return user;
-          });
-          dispatch(setRegUser(updatedRegUser));
 
           const newWorkerInfo = {
             employeeId: idControl,
@@ -210,15 +229,14 @@ function PermissionRequest() {
             description: sreason,
             managerId: manager,
           };
-
+          setPutUsers(calculate)
           setAddRequest(newWorkerInfo)
           navigation.navigate("MyRequest");
         }
       }
     }
     else {
-      // const calculate = signWorkerId.perDateTotal - 1
-      const calculate = 30
+      const calculate = signWorkerId.ramainingDayOff - 1
 
       if (calculate < 0) {
         alert("Kullanabileceğiniz max izin 30 gündür");
@@ -231,6 +249,8 @@ function PermissionRequest() {
           description: sreason,
           managerId: manager,
         };
+
+        setPutUsers(calculate)
         setAddRequest(newWorkerInfo)
 
         navigation.navigate("MyRequest");
