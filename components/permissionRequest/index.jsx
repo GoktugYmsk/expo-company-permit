@@ -55,7 +55,10 @@ function PermissionRequest() {
 
 
   useEffect(() => {
-    api.post('/add', addRequest)
+
+    console.log('', addRequest)
+
+    api.post('/time-off/add', addRequest)
       .then((response) => {
         console.log(response.data);
       })
@@ -64,38 +67,10 @@ function PermissionRequest() {
       });
   }, [addRequest]);
 
-
   useEffect(() => {
-
-    axios.get('https://time-off-tracker-api-4a95404d0134.herokuapp.com/users')
+    api.get('/users')
       .then((response) => {
-        setRegUserList(response.data);
-        console.log('GÖKTUĞ', response)
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [sreason]);
-
-
-
-  useEffect(() => {
-    api.get('/getall')
-      .then((response) => {
-        setData(response)
-        console.log(response.data);
-      })
-      .catch((error) => {
-
-        console.error(error);
-      });
-  }, [])
-
-
-  useEffect(() => {
-    api.get('/getall')
-      .then((response) => {
-        setData(response)
+        setData(response.data)
         console.log(response.data);
       })
       .catch((error) => {
@@ -109,24 +84,22 @@ function PermissionRequest() {
     if (manager && selectedStartDate && selectedEndDate) {
       if (data) {
         const isWorkerId = data.find((workerInfo) => workerInfo.id === idControl);
-        const signWorkerId = regUserList.find((item) => item.id === idControl);
+        // const signWorkerId = regUserList.find((item) => item.id === idControl);
 
-        const calculate = signWorkerId.perDateTotal - daysDifference - 1;
+        // const calculate = signWorkerId.perDateTotal - daysDifference - 1;
+        const calculate = 30
 
         if (isWorkerId) {
           if (calculate < 0) {
             alert('Kullanabileceğiniz max izin 30 gündür');
           } else {
-            setFireCalculate(calculate)
 
             const newWorkerInfo = {
-              name: worker,
-              startDay: selectedStartDate,
-              endDay: selectedEndDate,
-              reason: sreason,
-              manager: manager,
-              accept: null,
-              id: idControl,
+              employeeId: idControl,
+              startDate: selectedStartDate,
+              endDate: selectedEndDate,
+              description: sreason,
+              managerId: manager,
             };
             setAddRequest(newWorkerInfo)
             navigation.navigate("MyRequest");
@@ -136,16 +109,13 @@ function PermissionRequest() {
           if (calculate < 0) {
             alert("Kullanabileceğiniz max izin 30 gündür");
           } else {
-            setFireCalculate(calculate)
 
             const newWorkerInfo = {
-              name: worker,
-              startDay: selectedStartDate,
-              endDay: selectedEndDate,
-              reason: sreason,
-              manager: manager,
-              accept: null,
-              id: idControl,
+              employeeId: idControl,
+              startDate: selectedStartDate,
+              endDate: selectedEndDate,
+              description: sreason,
+              managerId: manager,
             };
             setAddRequest(newWorkerInfo)
 
@@ -154,23 +124,21 @@ function PermissionRequest() {
         }
       } else {
 
-        const calculate = signWorkerId.perDateTotal - daysDifference - 1;
+        // const calculate = signWorkerId.perDateTotal - daysDifference - 1;
+        const calculate = 30
 
         if (calculate < 0) {
           alert("Kullanabileceğiniz max izin 30 gündür");
         } else {
-          setFireCalculate(calculate)
 
           dispatch(setRegUser(updatedRegUser));
 
           const newWorkerInfo = {
-            name: worker,
-            startDay: selectedStartDate,
-            endDay: selectedEndDate,
-            reason: sreason,
-            manager: manager,
-            accept: null,
-            id: idControl,
+            employeeId: idControl,
+            startDate: selectedStartDate,
+            endDate: selectedEndDate,
+            description: sreason,
+            managerId: manager,
           };
           setAddRequest(newWorkerInfo)
 
@@ -180,24 +148,22 @@ function PermissionRequest() {
     } else if (manager && selectedStartDate) {
       if (data) {
         const isWorkerId = data.find((workerInfo) => workerInfo.id === idControl);
-        const signWorkerId = regUserList.find((item) => item.id === idControl);
+        // const signWorkerId = regUserList.find((item) => item.id === idControl);
 
-        const calculate = signWorkerId.perDateTotal - 1
+        // const calculate = signWorkerId.perDateTotal - 1
+        const calculate = 30
 
         if (isWorkerId) {
           if (calculate < 0) {
             alert("Kullanabileceğiniz max izin 30 gündür");
           } else {
-            setFireCalculate(calculate)
 
             const newWorkerInfo = {
-              name: worker,
-              startDay: selectedStartDate,
-              endDay: selectedEndDate,
-              reason: sreason,
-              manager: manager,
-              accept: null,
-              id: idControl,
+              employeeId: idControl,
+              startDate: selectedStartDate,
+              endDate: selectedEndDate,
+              description: sreason,
+              managerId: manager,
             };
 
             setAddRequest(newWorkerInfo)
@@ -208,19 +174,16 @@ function PermissionRequest() {
           if (calculate < 0) {
             alert("Kullanabileceğiniz max izin 30 gündür");
           } else {
-            setFireCalculate(calculate)
 
             const newWorkerInfo = {
-              name: worker,
-              startDay: selectedStartDate,
-              endDay: selectedEndDate,
-              reason: sreason,
-              manager: manager,
-              accept: null,
-              id: idControl,
+              employeeId: idControl,
+              startDate: selectedStartDate,
+              endDate: selectedEndDate,
+              description: sreason,
+              managerId: manager,
             };
 
-
+            setAddRequest(newWorkerInfo)
             navigation.navigate("MyRequest");
           }
         }
@@ -239,13 +202,11 @@ function PermissionRequest() {
           dispatch(setRegUser(updatedRegUser));
 
           const newWorkerInfo = {
-            name: worker,
-            startDay: selectedStartDate,
-            endDay: selectedEndDate,
-            reason: sreason,
-            manager: manager,
-            accept: null,
-            id: idControl,
+            employeeId: idControl,
+            startDate: selectedStartDate,
+            endDate: selectedEndDate,
+            description: sreason,
+            managerId: manager,
           };
 
           setAddRequest(newWorkerInfo)
@@ -254,21 +215,19 @@ function PermissionRequest() {
       }
     }
     else {
-      const calculate = signWorkerId.perDateTotal - 1
+      // const calculate = signWorkerId.perDateTotal - 1
+      const calculate = 30
 
       if (calculate < 0) {
         alert("Kullanabileceğiniz max izin 30 gündür");
       } else {
-        setFireCalculate(calculate)
 
         const newWorkerInfo = {
-          name: worker,
-          startDay: selectedStartDate,
-          endDay: selectedEndDate,
-          reason: sreason,
-          manager: manager,
-          accept: null,
-          id: idControl,
+          employeeId: idControl,
+          startDate: selectedStartDate,
+          endDate: selectedEndDate,
+          description: sreason,
+          managerId: manager,
         };
         setAddRequest(newWorkerInfo)
 

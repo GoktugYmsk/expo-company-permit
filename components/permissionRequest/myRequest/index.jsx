@@ -7,12 +7,27 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Button, ListItem } from "@react-native-material/core";
 
 import { StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { useEffect } from "react";
 
 function MyRequest() {
+  const [regUserList, setRegUserList] = useState([])
   const worker = useSelector((state) => state.workerInfoTotal.worker);
-  const workerPerReq = useSelector(
-    (state) => state.workerInfoTotal.workerPerReq
-  );
+  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+  const idControl = useSelector((state) => state.management.idControl);
+
+  useEffect(() => {
+    api.get('/users')
+      .then((response) => {
+        setRegUserList(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+
+
 
   return (
     <ScrollView>
@@ -20,12 +35,12 @@ function MyRequest() {
         <View style={styles.header}>
           <Text style={styles.headerText}>İzinlerim</Text>
         </View>
-        {workerPerReq &&
-          workerPerReq.map((item, index) => (
+        {regUserList &&
+          regUserList.map((item, index) => (
             <View key={index}>
-              {item.name === worker && (
+              {item.id === idControl && (
                 <View>
-                  {item.accept === null && (
+                  {item.accept === 'PENDING' && (
                     <View>
                       <View style={styles.circleTick}>
                         <Button
@@ -58,7 +73,7 @@ function MyRequest() {
                       <ListItem title={item.manager} secondaryText="yönetici" />
                     </View>
                   )}
-                  {item.accept === true && (
+                  {item.accept === 'ACCEPT' && (
                     <View>
                       <View style={styles.circleTick}>
                         <Button
@@ -89,7 +104,7 @@ function MyRequest() {
                       <ListItem title={item.manager} secondaryText="yönetici" />
                     </View>
                   )}
-                  {item.accept === false && (
+                  {item.accept === 'REJECTED' && (
                     <View>
                       <View style={styles.circleTick}>
                         <Button

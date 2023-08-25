@@ -40,18 +40,14 @@ function Profile() {
   const isAdmin = manageName !== "";
 
   useEffect(() => {
-    axios.get('https://time-off-tracker-api-4a95404d0134.herokuapp.com/users')
+    api.get('/users')
       .then((response) => {
         setRegUserList(response.data);
-        console.log('GÖKTUĞ', response)
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
-
-
-
 
   const handleRequestClick = () => {
     if (manager) {
@@ -63,8 +59,24 @@ function Profile() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+
   const handleSelectManager = (managerName) => {
-    dispatch(setManager(managerName));
+    switch (managerName) {
+      case 'Bora':
+        dispatch(setManager(0));
+        break;
+      case 'Göhan':
+        dispatch(setManager(1));
+        break;
+      case 'Aydın':
+        dispatch(setManager(2));
+        break;
+      case 'Hakan':
+        dispatch(setManager(3));
+        break;
+      default:
+        break;
+    }
   };
 
   const managers = ["Bora", "Gökhan", "Aydın", "Hakan"];

@@ -19,12 +19,26 @@ function Login() {
     const dispatch = useDispatch()
 
 
+    useEffect(() => {
+        api.get('/users')
+            .then((response) => {
+                setUser(response.data);
+                console.log('UsersArray', response)
+                console.log('id:', response.data[0].id);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+
+
+
     // useEffect(() => {
-    //     api.get('/users')
+
+    //     axios.get('https://time-off-tracker-api-4a95404d0134.herokuapp.com/users')
     //         .then((response) => {
     //             setUser(response.data);
-    //             console.log(response)
-    //             console.log('id:', response.data[0].id);
+    //             console.log('GÖKTUĞ', response)
     //         })
     //         .catch((error) => {
     //             console.error(error);
@@ -33,36 +47,24 @@ function Login() {
 
 
 
-    useEffect(() => {
-
-        axios.get('https://time-off-tracker-api-4a95404d0134.herokuapp.com/users')
-            .then((response) => {
-                setUser(response.data);
-                console.log('GÖKTUĞ', response)
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }, [email]);
-
-
-
-
     const navigation = useNavigation();
 
     const handleClick = async () => {
         try {
             const response = await axios.post('https://time-off-tracker-api-4a95404d0134.herokuapp.com/auth/login',
-                { email, password, });
+                {
+                    userEmail: email,
+                    userPassword: password,
+                });
             if (response.data.token) {
                 localStorage.setItem('userToken', response.data.token);
                 if (localStorage.getItem('userToken')) {
 
                     const isUser = user.find(u => u.userEmail === email);
-                    // Email eşleşen kullanıcıyı bulma
+
                     if (isUser) {
                         dispatch(setIdControl(isUser.id));
-                        // Redux store'a id'yi gönderme 
+
                         console.log('STATİK', isUser.id)
                         navigation.navigate('Home');
                     }
