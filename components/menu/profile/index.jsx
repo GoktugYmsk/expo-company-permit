@@ -126,7 +126,7 @@ function Profile() {
                               }}
                             >
                               {" "}
-                              {item.perDateTotal}
+                              {item.ramainingDayOff}
                             </Text>
                           </Text>
                         </View>
