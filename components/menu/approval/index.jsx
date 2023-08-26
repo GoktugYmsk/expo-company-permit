@@ -20,6 +20,7 @@ function Approval() {
   const [managerName, setManagerName] = useState('')
   const [workerName, setWorkerName] = useState('')
   const [user, setUser] = useState([])
+  const [update, setUpdate] = useState(false)
 
 
   useEffect(() => {
@@ -72,7 +73,28 @@ function Approval() {
       setManagerName(isManagerName.userName)
       setWorkerName(isWorkerName.userName)
     }
-  }, [isManagerName || isWorkerName])
+  }, [isManagerName || regUserList])
+
+
+
+  // useEffect(() => {
+  //   const veriID = workerId.employeID;
+  //   const updatedTimeOff = {
+  //     timeOffType: "Rejected",
+  //   };
+
+  //   api.put(`/time-off/update/${veriID}`, updatedTimeOff) // Veri ID'sini URL'ye ekliyoruz
+  //     .then((response) => {
+  //       console.log('Veri güncellendi:', response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Hata:', error);
+  //     });
+
+  //   // setUpdate(true)
+
+  // }, [update]);
+
 
 
 
@@ -107,6 +129,7 @@ function Approval() {
   };
 
   const handleRejectClick = (index) => {
+    setUpdate
     if (isManager && index >= 0 && index < workerPerReq.length) {
       const approvedWorker = workerPerReq[index];
 
@@ -171,6 +194,13 @@ function Approval() {
     }
   };
 
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    return formattedDate;
+  };
+
   return (
     <ScrollView>
       <View>
@@ -192,13 +222,13 @@ function Approval() {
                           </View>
                           <View style={styles.permitTextContainer}>
                             <ListItem
-                              title={item.startDate}
+                              title={formatDate(item.startDate)}
                               secondaryText="Başlangıç Tarihi"
                             />
                           </View>
                           <View style={styles.permitTextContainer}>
                             <ListItem
-                              title={item.endDate}
+                              title={formatDate(item.endDate)}
                               secondaryText="Bitiş Tarihi"
                             />
                           </View>
