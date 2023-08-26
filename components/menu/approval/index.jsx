@@ -44,10 +44,10 @@ function Approval() {
       });
   }, []);
 
+
+
+
   const workerId = regUserList.find(item => item.employeID)
-
-
-
   const isWorkerName = user.find(u => u.id === workerId.employeID)
 
 
@@ -56,8 +56,13 @@ function Approval() {
   }, [isWorkerName])
 
   useEffect(() => {
-    console.log('workerId', workerId)
-  }, [workerId])
+
+    if (workerId && workerId.employeID) {
+      console.log('workerId', workerId.employeID);
+    }
+
+  }, [workerId]);
+
 
   const isManagerName = user.find(item => item.id === isManager)
 
@@ -77,23 +82,27 @@ function Approval() {
 
 
 
-  // useEffect(() => {
-  //   const veriID = workerId.employeID;
-  //   const updatedTimeOff = {
-  //     timeOffType: "Rejected",
-  //   };
 
-  //   api.put(`/time-off/update/${veriID}`, updatedTimeOff) // Veri ID'sini URL'ye ekliyoruz
-  //     .then((response) => {
-  //       console.log('Veri güncellendi:', response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Hata:', error);
-  //     });
 
-  //   // setUpdate(true)
+  useEffect(() => {
 
-  // }, [update]);
+    if (workerId && workerId.employeID) {
+      const updatedTimeOff = {
+        timeOffType: "Rejected",
+      };
+
+      api.put('/time-off/update', updatedTimeOff)
+        .then((response) => {
+          console.log('Veri güncellendi:', response.data);
+        })
+        .catch((error) => {
+          console.error('Hata:', error);
+        });
+
+      console.log('workerId', workerId.employeID);
+    }
+
+  }, [update]);
 
 
 
@@ -129,7 +138,7 @@ function Approval() {
   };
 
   const handleRejectClick = (index) => {
-    setUpdate
+    setUpdate(true)
     if (isManager && index >= 0 && index < workerPerReq.length) {
       const approvedWorker = workerPerReq[index];
 
