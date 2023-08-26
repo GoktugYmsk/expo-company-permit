@@ -9,7 +9,7 @@ import axios from 'axios';
 import api from '../../intercepter';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIdControl } from '../configure';
+import { setIdControl, setIsManager } from '../configure';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -49,22 +49,28 @@ function Login() {
     const navigation = useNavigation();
 
     const handleClick = async () => {
+
         try {
             const response = await axios.post('https://time-off-tracker-api-4a95404d0134.herokuapp.com/auth/login',
                 {
                     userEmail: email,
                     userPassword: password,
                 });
+
             if (response.data.token) {
                 localStorage.setItem('userToken', response.data.token);
                 if (localStorage.getItem('userToken')) {
 
                     const isUser = user.find(u => u.userEmail === email);
 
-                    if (isUser) {
+                    if (isUser.userRole === 'Manager') {
+                        dispatch(setIsManager(isUser.id))
                         dispatch(setIdControl(isUser.id));
-
-                        console.log('STATİK', isUser.id)
+                        navigation.navigate('Home');
+                    }
+                    else if (isUser.userRole === 'Employee') {
+                        dispatch(setIsManager(''))
+                        dispatch(setIdControl(isUser.id));
                         navigation.navigate('Home');
                     }
                 }

@@ -28,6 +28,9 @@ function PermissionRequest() {
   const [putUsers, setPutUsers] = useState()
 
 
+  console.log('DATA', data.id)
+
+
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -71,26 +74,6 @@ function PermissionRequest() {
 
 
 
-  useEffect(() => {
-    console.log('İzmir', putUsers);
-
-    const updateUserRemainingDayOff = async () => {
-      try {
-        const response = await api.put('/users/update', {
-          remainingDayOff: putUsers,
-        });
-
-        console.log('İzmir', response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    updateUserRemainingDayOff();
-
-  }, [putUsers]);
-
-
 
 
 
@@ -105,6 +88,35 @@ function PermissionRequest() {
         console.error(error);
       });
   }, [])
+
+
+
+  const writeData = data.find(item => item.id === idControl)
+
+  console.log('writeData', writeData)
+
+  useEffect(() => {
+
+
+    if (writeData) {
+      const updateUserRemainingDayOff = async () => {
+        console.log('İzmir', putUsers);
+        try {
+          const response = await api.put('/users/update ', {
+            ramainingDayOff: putUsers,
+          });
+
+          console.log('İzmir', response.data);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      updateUserRemainingDayOff();
+    }
+
+  }, [putUsers]);
+
+
 
   const handleSendRequest = () => {
 

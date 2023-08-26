@@ -1,26 +1,84 @@
-import React from "react";
+import React, { useState } from "react";
 import { Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 
 import { Button, ListItem } from "@react-native-material/core";
 
+import api from "../../../intercepter";
 import { setWorkerPerReq, setRegUser } from "../../configure";
+import { useEffect } from "react";
 
 function Approval() {
   const dispatch = useDispatch();
 
   const regUser = useSelector((state) => state.saveRegUser.regUser);
   const idControl = useSelector((state) => state.management.idControl);
-  const manageName = useSelector((state) => state.management.manageName);
-  const workerPerReq = useSelector(
-    (state) => state.workerInfoTotal.workerPerReq
-  );
+  const isManager = useSelector((state) => state.management.isManager);
+  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+  const [regUserList, setRegUserList] = useState([])
+  const [managerName, setManagerName] = useState('')
+  const [workerName, setWorkerName] = useState('')
+  const [user, setUser] = useState([])
 
-  const isAdmin = manageName !== "";
+
+  useEffect(() => {
+    api.get(`time-off/getallmanager/${isManager}`)
+      .then((response) => {
+        setRegUserList(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    api.get('/users')
+      .then((response) => {
+        setUser(response.data);
+        console.log('UsersArray', response.data)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const workerId = regUserList.find(item => item.employeID)
+
+
+
+  const isWorkerName = user.find(u => u.id === workerId.employeID)
+
+
+  useEffect(() => {
+    console.log('isWorkerName', isWorkerName)
+  }, [isWorkerName])
+
+  useEffect(() => {
+    console.log('workerId', workerId)
+  }, [workerId])
+
+  const isManagerName = user.find(item => item.id === isManager)
+
+
+  useEffect(() => {
+    console.log('isManagerName', isManagerName)
+  }, [isManagerName])
+
+
+  useEffect(() => {
+    if (isManagerName || isWorkerName) {
+
+      setManagerName(isManagerName.userName)
+      setWorkerName(isWorkerName.userName)
+    }
+  }, [isManagerName || isWorkerName])
+
+
+
 
   const handleApprovalClick = (index) => {
-    if (isAdmin && index >= 0 && index < workerPerReq.length) {
+    if (isManager && index >= 0 && index < workerPerReq.length) {
       const approvedWorker = workerPerReq[index];
 
       const isWorkerAlreadyExists = workerPerReq.includes(
@@ -49,7 +107,7 @@ function Approval() {
   };
 
   const handleRejectClick = (index) => {
-    if (isAdmin && index >= 0 && index < workerPerReq.length) {
+    if (isManager && index >= 0 && index < workerPerReq.length) {
       const approvedWorker = workerPerReq[index];
 
       const starttDay = approvedWorker.startDay;
@@ -116,43 +174,43 @@ function Approval() {
   return (
     <ScrollView>
       <View>
-        {isAdmin && (
+        {isManager && (
           <View style={styles.mainContainer}>
             <View style={styles.header}>
               <Text style={styles.headerText}>Onay Bekleyen İzinler</Text>
             </View>
-            {workerPerReq &&
-            workerPerReq.some((item) => item.accept === null) ? (
-              workerPerReq.map((item, index) => (
+            {regUserList &&
+              regUserList.some((item) => item.timeOffType === 'Pending') ? (
+              regUserList.map((item, index) => (
                 <View key={index}>
-                  {item.manager === manageName && (
+                  {item.managerID === isManager && (
                     <View>
-                      {item.accept === null ? (
+                      {item.timeOffType === 'Pending' ? (
                         <View style={styles.container} key={index}>
                           <View style={styles.permitTextContainer}>
-                            <ListItem title={item.name} secondaryText="İsim" />
+                            <ListItem title={workerName} secondaryText="İsim" />
                           </View>
                           <View style={styles.permitTextContainer}>
                             <ListItem
-                              title={item.startDay}
+                              title={item.startDate}
                               secondaryText="Başlangıç Tarihi"
                             />
                           </View>
                           <View style={styles.permitTextContainer}>
                             <ListItem
-                              title={item.endDay}
+                              title={item.endDate}
                               secondaryText="Bitiş Tarihi"
                             />
                           </View>
                           <View style={styles.permitTextContainer}>
                             <ListItem
-                              title={item.reason}
+                              title={item.description}
                               secondaryText="Sebep"
                             />
                           </View>
                           <View style={styles.permitTextContainer}>
                             <ListItem
-                              title={item.manager}
+                              title={managerName}
                               secondaryText="Yönetici"
                             />
                           </View>
@@ -189,7 +247,7 @@ function Approval() {
             )}
           </View>
         )}
-        {!isAdmin && (
+        {!isManager && (
           <Button
             title="İzinleri onaylama yetkiniz yok."
             variant="outlined"

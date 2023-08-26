@@ -62,8 +62,8 @@ function Profile() {
 
   const handleSelectManager = (managerName) => {
     switch (managerName) {
-      case 'Bora':
-        dispatch(setManager(0));
+      case 'Selin':
+        dispatch(setManager(11));
         break;
       case 'Tolga':
         dispatch(setManager(7));
@@ -79,7 +79,7 @@ function Profile() {
     }
   };
 
-  const managers = ["Bora", "Tolga", "Aydın", "Hakan"];
+  const managers = ["Selin", "Tolga", "Aydın", "Hakan"];
 
   return (
     <View>
@@ -116,6 +116,7 @@ function Profile() {
                               {new Date(item.userCreateDate).toLocaleDateString('tr-TR')}
                             </Text>
                           </Text>
+                          {console.log('Demeem01', regUserList)}
                           <Text style={{ color: "gray", fontSize: 14 }}>
                             Kalan izin hakkı :
                             <Text
