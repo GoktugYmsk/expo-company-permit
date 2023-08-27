@@ -12,11 +12,10 @@ import { useEffect } from "react";
 
 function MyRequest() {
   const [regUserList, setRegUserList] = useState([])
-  const worker = useSelector((state) => state.workerInfoTotal.worker);
-  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+
   const idControl = useSelector((state) => state.management.idControl);
-  const [managerName, setManagerName] = useState()
   const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState([])
 
 
   console.log(idControl)
@@ -27,22 +26,38 @@ function MyRequest() {
         const response = await api.get(`time-off/getallemployee/${idControl}`);
         console.log('DENEME', response.data);
         setRegUserList(response.data);
-        setIsLoading(false); // Veriler geldiğinde loading durumunu kapat
+        setIsLoading(false);
       } catch (error) {
         console.error(error);
-        setIsLoading(false); // Hata durumunda da loading durumunu kapat
+        setIsLoading(false);
       }
     }
 
+
     const timeout = setTimeout(() => {
       fetchData();
-    }, 3000); // 3 saniye gecikme
+    }, 3000);
 
-    return () => clearTimeout(timeout); // Komponent yeniden render edildiğinde timeout'u temizle
+    return () => clearTimeout(timeout);
 
   }, []);
 
-  console.log('regUserList', regUserList);
+  useEffect(() => {
+    api.get('/users')
+      .then((response) => {
+        setUser(response.data);
+        console.log('UsersArray', response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    const deneme = regUserList.find((item) => item.managerID)
+
+    console.log('denemeGöktuğ', deneme)
+
+    const isManagerName = user.find((item) => item.id === deneme.managerID);
+    console.log('isManagerName', isManagerName);
+  }, [isLoading, regUserList]);
 
 
   const formatDate = (dateString) => {
@@ -51,6 +66,8 @@ function MyRequest() {
     return formattedDate;
   };
 
+
+  const isManagerName = user.find((item) => item.id === regUserList.managerID)
 
   return (
     <ScrollView>
@@ -86,7 +103,6 @@ function MyRequest() {
                                 color="orange"
                               />
                             </View>
-                            {/* <ListItem title={item.name} secondaryText="İsim" /> */}
                             <ListItem
                               title={formatDate(item.startDate)}
                               secondaryText="başlangıç tarihi"
@@ -98,7 +114,7 @@ function MyRequest() {
                               />
                             )}
                             <ListItem title={item.description} secondaryText="sebep" />
-                            <ListItem title={managerName} secondaryText="yönetici" />
+                            {/* <ListItem title={isManagerName.userName} secondaryText="yönetici" /> */}
                           </View>
                         )
                       }
@@ -130,7 +146,7 @@ function MyRequest() {
                             secondaryText="bitiş tarihi"
                           />
                           <ListItem title={item.description} secondaryText="sebep" />
-                          <ListItem title={managerName} secondaryText="yönetici" />
+                          <ListItem title={isManagerName} secondaryText="yönetici" />
                         </View>
                       )}
                       {item.accept === 'Rejected' && (
@@ -161,7 +177,7 @@ function MyRequest() {
                             secondaryText="bitiş tarihi"
                           />
                           <ListItem title={item.description} secondaryText="sebep" />
-                          <ListItem title={managerName} secondaryText="yönetici" />
+                          <ListItem title={isManagerName} secondaryText="yönetici" />
                         </View>
                       )}
                     </View>
@@ -174,8 +190,6 @@ function MyRequest() {
         )}
 
       </View>
-
-
     </ScrollView >
   );
 }

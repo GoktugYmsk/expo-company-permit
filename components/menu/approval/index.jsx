@@ -167,6 +167,7 @@ function Approval() {
     return formattedDate;
   };
 
+
   return (
     <ScrollView>
       <View>
@@ -184,7 +185,7 @@ function Approval() {
                       {item.timeOffType === 'Pending' ? (
                         <View style={styles.container} key={index}>
                           <View style={styles.permitTextContainer}>
-                            <ListItem title={workerName} secondaryText="İsim" />
+                            <ListItem title={item.employeeName} secondaryText="İsim" />
                           </View>
                           <View style={styles.permitTextContainer}>
                             <ListItem

@@ -52,7 +52,6 @@ function PermissionRequest() {
 
 
 
-  const signWorkerId = data.find(item => item.id === idControl);
 
   const startDate = new Date(selectedStartDate);
   const endDate = checked ? new Date(selectedEndDate) : startDate;
@@ -75,8 +74,6 @@ function PermissionRequest() {
 
 
 
-
-
   useEffect(() => {
     api.get('/users')
       .then((response) => {
@@ -89,6 +86,9 @@ function PermissionRequest() {
       });
   }, [])
 
+  const signWorkerId = data.find(item => item.id === idControl);
+  // ramainingDayOff
+  console.log('signWorkerId', signWorkerId)
 
 
   const writeData = data.find(item => item.id === idControl)
