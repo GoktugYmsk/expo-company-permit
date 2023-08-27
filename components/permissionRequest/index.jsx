@@ -201,7 +201,7 @@ function PermissionRequest() {
             const newWorkerInfo = {
               employeeId: idControl,
               startDate: selectedStartDate,
-              endDate: selectedEndDate,
+              endDate: selectedStartDate,
               description: sreason,
               managerId: manager,
             };
@@ -219,7 +219,7 @@ function PermissionRequest() {
             const newWorkerInfo = {
               employeeId: idControl,
               startDate: selectedStartDate,
-              endDate: selectedEndDate,
+              endDate: selectedStartDate,
               description: sreason,
               managerId: manager,
             };
@@ -237,7 +237,7 @@ function PermissionRequest() {
           const newWorkerInfo = {
             employeeId: idControl,
             startDate: selectedStartDate,
-            endDate: selectedEndDate,
+            endDate: selectedStartDate,
             description: sreason,
             managerId: manager,
           };

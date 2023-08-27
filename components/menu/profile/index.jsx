@@ -23,8 +23,7 @@ import { useEffect } from "react";
 function Profile() {
   const [visible, setVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [deneme, setDeneme] = useState({});
-  const [denemeTime, setDenemeTime] = useState({});
+  const [selectedManager, setSelectedManager] = useState('')
   const [regUserList, setRegUserList] = useState([])
 
   const dispatch = useDispatch();
@@ -63,15 +62,19 @@ function Profile() {
   const handleSelectManager = (managerName) => {
     switch (managerName) {
       case 'Selin':
+        setSelectedManager(managerName)
         dispatch(setManager(11));
         break;
       case 'Tolga':
+        setSelectedManager(managerName)
         dispatch(setManager(7));
         break;
       case 'Aydın':
+        setSelectedManager(managerName)
         dispatch(setManager(2));
         break;
       case 'Hakan':
+        setSelectedManager(managerName)
         dispatch(setManager(3));
         break;
       default:
@@ -116,7 +119,6 @@ function Profile() {
                               {new Date(item.userCreateDate).toLocaleDateString('tr-TR')}
                             </Text>
                           </Text>
-                          {console.log('Demeem01', regUserList)}
                           <Text style={{ color: "gray", fontSize: 14 }}>
                             Kalan izin hakkı :
                             <Text
@@ -138,18 +140,6 @@ function Profile() {
               ))}
             </View>
           </View>
-          {deneme &&
-            <View>
-              {deneme.firstName}
-              {deneme.role}
-            </View>
-          }
-          {denemeTime &&
-
-            <View>
-              <Text>Burada yazacak</Text> {denemeTime.description}
-            </View>
-          }
           <Text
             style={{
               marginTop: 30,
@@ -222,7 +212,7 @@ function Profile() {
               <Button
                 style={{ marginLeft: 36, marginRight: 36 }}
                 variant="outlined"
-                title={`${manager}`}
+                title={`${selectedManager}`}
               />
             </View>
           </Provider>

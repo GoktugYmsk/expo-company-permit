@@ -30,6 +30,15 @@ function Login() {
             });
     }, []);
 
+    api.put('/users')
+        .then((response) => {
+            setUser(response.data);
+            console.log('UsersArray', response)
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
 
 
     // useEffect(() => {
@@ -62,6 +71,9 @@ function Login() {
                 if (localStorage.getItem('userToken')) {
 
                     const isUser = user.find(u => u.userEmail === email);
+
+                    setEmail('')
+                    setPassword('')
 
                     if (isUser.userRole === 'Manager') {
                         dispatch(setIsManager(isUser.id))

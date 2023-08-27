@@ -20,7 +20,7 @@ function Approval() {
   const [managerName, setManagerName] = useState('')
   const [workerName, setWorkerName] = useState('')
   const [user, setUser] = useState([])
-  const [update, setUpdate] = useState(false)
+  const [update, setUpdate] = useState('')
 
 
   useEffect(() => {
@@ -32,6 +32,17 @@ function Approval() {
         console.error(error);
       });
   }, []);
+
+  useEffect(() => {
+    api.get(`time-off/getallmanager/${isManager}`)
+      .then((response) => {
+        setRegUserList(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+  }, [update]);
 
   useEffect(() => {
     api.get('/users')
@@ -47,18 +58,39 @@ function Approval() {
 
 
 
-  const workerId = regUserList.find(item => item.employeID)
-  const isWorkerName = user.find(u => u.id === workerId.employeID)
+  const workerId = regUserList.map(item => item.employeID)
+
+  const workerData = regUserList.map(item => {
+    const userWithSameId = user.find(u => u.id === item.employeID);
+    return userWithSameId;
+  });
+
+  console.log('workerData', workerData);
+
+
+
+  const isWorkerName = user.find(item => item.id === workerId)
+
+
+
+
+  const deneme = user.map((item) => item.id)
+  console.log('deneme', deneme)
+  console.log('USER', user)
 
 
   useEffect(() => {
     console.log('isWorkerName', isWorkerName)
+    console.log('regUserList', regUserList)
   }, [isWorkerName])
+
+
 
   useEffect(() => {
 
-    if (workerId && workerId.employeID) {
-      console.log('workerId', workerId.employeID);
+    if (workerId) {
+      console.log('workerId', workerId);
+      console.log('isWorkerName', isWorkerName)
     }
 
   }, [workerId]);
@@ -76,132 +108,57 @@ function Approval() {
     if (isManagerName || isWorkerName) {
 
       setManagerName(isManagerName.userName)
-      setWorkerName(isWorkerName.userName)
+      // setWorkerName(isWorkerName.userName)
     }
   }, [isManagerName || regUserList])
 
 
 
-
-
-  useEffect(() => {
-
-    if (workerId && workerId.employeID) {
-      const updatedTimeOff = {
-        timeOffType: "Rejected",
-      };
-
-      api.put('/time-off/update', updatedTimeOff)
-        .then((response) => {
-          console.log('Veri güncellendi:', response.data);
-        })
-        .catch((error) => {
-          console.error('Hata:', error);
-        });
-
-      console.log('workerId', workerId.employeID);
-    }
-
-  }, [update]);
-
-
-
-
-
   const handleApprovalClick = (index) => {
-    if (isManager && index >= 0 && index < workerPerReq.length) {
-      const approvedWorker = workerPerReq[index];
+    const item = regUserList[index];
+    const itemID = item.id
 
-      const isWorkerAlreadyExists = workerPerReq.includes(
-        (worker) => worker.id === approvedWorker.id
-      );
+    api.put(`/time-off/updateTimeOff-Accept/${itemID}`)
+      .then((response) => {
+        setUpdate(response)
+        console.log('UsersArray', response)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-      if (!isWorkerAlreadyExists) {
-        const newWorkerInfo = {
-          name: approvedWorker.name,
-          startDay: approvedWorker.startDay,
-          endDay: approvedWorker.endDay,
-          reason: approvedWorker.reason,
-          manager: approvedWorker.manager,
-          id: idControl,
-          accept: true,
-        };
-        dispatch(
-          setWorkerPerReq(
-            workerPerReq.map((worker, i) =>
-              i === index ? newWorkerInfo : worker
-            )
-          )
-        );
-      }
-    }
   };
 
   const handleRejectClick = (index) => {
-    setUpdate(true)
-    if (isManager && index >= 0 && index < workerPerReq.length) {
-      const approvedWorker = workerPerReq[index];
 
-      const starttDay = approvedWorker.startDay;
-      const enddDay = approvedWorker.endDay;
+    console.log('INDEX', index)
+    const item = regUserList[index];
 
-      const isWorkerAlreadyExists = workerPerReq.includes(
-        (worker) => worker.id === approvedWorker.id
-      );
+    // const denemeID = item.map((u) => u.id)
+    console.log('ITEM', item)
+    console.log('ITEMID', item.id)
+    const itemID = item.id
+    // console.log('denemeID', denemeID)
 
-      if (!isWorkerAlreadyExists) {
-        const newWorkerInfo = {
-          name: approvedWorker.name,
-          startDay: approvedWorker.startDay,
-          endDay: approvedWorker.endDay,
-          reason: approvedWorker.reason,
-          manager: approvedWorker.manager,
-          accept: false,
-        };
 
-        const startDate = new Date(newWorkerInfo.startDay);
-        const endDate = new Date(newWorkerInfo.endDay);
+    api.put(`/time-off/updateTimeOff-Rejected/${itemID}`)
+      .then((response) => {
+        setUpdate(response)
+        console.log('UsersArray', response)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-        if (starttDay && enddDay) {
-          const daysDifference = Math.ceil(
-            (endDate - startDate) / (1000 * 60 * 60 * 24)
-          );
-
-          const updatedRegUser = regUser.map((user) => {
-            if (user.id === idControl) {
-              const calculate = user.perDateTotal + daysDifference;
-              return { ...user, perDateTotal: calculate };
-            }
-            return user;
-          });
-          dispatch(
-            setWorkerPerReq(
-              workerPerReq.map((worker, i) =>
-                i === index ? newWorkerInfo : worker
-              )
-            )
-          );
-          dispatch(setRegUser(updatedRegUser));
-        } else if (starttDay) {
-          const updatedRegUser = regUser.map((user) => {
-            if (user.id === idControl) {
-              const calculate = user.perDateTotal + 1;
-              return { ...user, perDateTotal: calculate };
-            }
-            return user;
-          });
-          dispatch(
-            setWorkerPerReq(
-              workerPerReq.map((worker, i) =>
-                i === index ? newWorkerInfo : worker
-              )
-            )
-          );
-          dispatch(setRegUser(updatedRegUser));
-        }
-      }
-    }
+    api.get(`time-off/getallmanager/${isManager}`)
+      .then((response) => {
+        setRegUserList(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
+
 
 
   const formatDate = (dateString) => {
