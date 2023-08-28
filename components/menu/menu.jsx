@@ -50,7 +50,7 @@ function Menu() {
 
   const handleLogoutClick = async () => {
 
-    localStorage.removeItem('userToken')
+    sessionStorage.removeItem('userToken')
     navigation.navigate('Login')
 
     // try {
