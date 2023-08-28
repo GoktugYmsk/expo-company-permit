@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import {
