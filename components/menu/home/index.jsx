@@ -9,13 +9,36 @@ function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [permitsOnCalendar, setPermitsOnCalendar] = useState([]);
   const [markedDates, setMarkedDates] = useState({});
+  const [optionDate, setOptionDate] = useState()
+  const [regUserList, setRegUserList] = useState([])
+
+  useEffect(() => {
+    api.get(`/time-off/getallaccept ?${optionDate} `)
+      .then((response) => {
+        setRegUserList(response.data);
+        console.log('UsersArray', response)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [optionDate]);
 
   const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
 
   const formattedSelectedDate = selectedDate.toISOString().split("T")[0];
 
   const updatePermitsOnCalendar = (selectedDay) => {
+
+    const desiredTime = '00:00:00'; // Hedef saat
+    const formattedDateTime = `${selectedDay.dateString}T${desiredTime}`;
+
+
+    console.log('Formatted Date and Time:', formattedDateTime);
+    setOptionDate(formattedDateTime)
+
     const newSelectedDate = new Date(selectedDay.dateString);
+
+    console.log('markedDates', markedDates)
 
     if (workerPerReq) {
       const permitsOnSelectedDate = workerPerReq.filter((user) => {
@@ -48,13 +71,13 @@ function Home() {
     }
   }
 
-  const marked = useMemo(() => ({
-    [formattedSelectedDate]: {
-      selected: true,
-      selectedColor: '#8754ce',
-      selectedTextColor: 'white',
-    }
-  }), [formattedSelectedDate]);
+  // const marked = useMemo(() => ({
+  //   [formattedSelectedDate]: {
+  //     selected: true,
+  //     selectedColor: '#8754ce',
+  //     selectedTextColor: 'white',
+  //   }
+  // }), [formattedSelectedDate]);
 
   return (
     <ScrollView>

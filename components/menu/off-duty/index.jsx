@@ -12,16 +12,30 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Button, ListItem } from "@react-native-material/core";
 
 import { setWorkerInfo, setWorkerPerReq } from "../../configure";
+import api from "../../../intercepter";
+import { useEffect } from "react";
 
 function OffDuty() {
   const [selectedWorker, setSelectedWorker] = useState(null);
+  const [regUserList, setRegUserList] = useState([])
+
+  const isManager = useSelector((state) => state.management.isManager);
 
   const dispatch = useDispatch();
 
-  const manageName = useSelector((state) => state.management.manageName);
-  const workerPerReq = useSelector(
-    (state) => state.workerInfoTotal.workerPerReq
-  );
+
+  useEffect(() => {
+    api.get(`time-off/getallmanager/${isManager}`)
+      .then((response) => {
+        setRegUserList(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+
+  // const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
 
   const handleWorkerClick = (worker) => {
     if (selectedWorker === worker) {
@@ -31,116 +45,118 @@ function OffDuty() {
     }
   };
 
-  const handleDelete = () => {
-    if (selectedWorker) {
-      const updatedWorkerInfo = workerPerReq.filter(
-        (worker) => worker !== selectedWorker
-      );
-      dispatch(setWorkerInfo(updatedWorkerInfo));
-      dispatch(setWorkerPerReq(updatedWorkerInfo));
-    }
-  };
+  // const handleDelete = () => {
+  //   if (selectedWorker) {
+  //     const updatedWorkerInfo = workerPerReq.filter(
+  //       (worker) => worker !== selectedWorker
+  //     );
+  //     dispatch(setWorkerInfo(updatedWorkerInfo));
+  //     dispatch(setWorkerPerReq(updatedWorkerInfo));
+  //   }
+  // };
 
   return (
     <ScrollView>
-      {workerPerReq &&
-        workerPerReq.map((worker) => (
-          <View style={styles.box}>
-            {worker.accept === true && (
-              <View>
-                {manageName === worker.manager && (
-                  <View key={worker.name} style={styles.container}>
-                    <TouchableOpacity
-                      style={styles.containerOpa}
-                      onPress={() => handleWorkerClick(worker)}
-                    >
-                      <Text style={styles.workerName}>{worker.name}</Text>
-                      <Icon
-                        style={styles.workerIcon}
-                        name="check-circle"
-                        size={28}
-                        color="green"
-                      />
-                    </TouchableOpacity>
+      {regUserList &&
+        <View style={styles.mainContainer}>
+          {
+            regUserList.map((worker) => (
+              <View style={styles.box}>
+                {worker.timeOffType === 'Accept' && (
+                  <View>
+                    <View key={worker.employeeName} style={styles.container}>
+                      <TouchableOpacity
+                        style={styles.containerOpa}
+                        onPress={() => handleWorkerClick(worker)}
+                      >
+                        <Text style={styles.workerName}>{worker.employeeName}</Text>
+                        <Icon
+                          style={styles.workerIcon}
+                          name="check-circle"
+                          size={28}
+                          color="green"
+                        />
+                      </TouchableOpacity>
+                    </View>
+
                   </View>
                 )}
-              </View>
-            )}
-            {worker.accept === false && (
-              <View>
-                {manageName === worker.manager && (
-                  <View key={worker.name} style={styles.container}>
-                    <TouchableOpacity
-                      style={styles.containerOpa}
-                      onPress={() => handleWorkerClick(worker)}
-                    >
-                      <Text style={styles.workerName}>{worker.name}</Text>
-                      <Icon
-                        style={styles.workerIcon}
-                        name="close-circle"
-                        size={28}
-                        color="red"
-                      />
-                    </TouchableOpacity>
+                {worker.timeOffType === 'Rejected' && (
+                  <View>
+                    <View key={worker.employeeName} style={styles.container}>
+                      <TouchableOpacity
+                        style={styles.containerOpa}
+                        onPress={() => handleWorkerClick(worker)}
+                      >
+                        <Text style={styles.workerName}>{worker.employeeName}</Text>
+                        <Icon
+                          style={styles.workerIcon}
+                          name="close-circle"
+                          size={28}
+                          color="red"
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 )}
-              </View>
-            )}
-            {selectedWorker === worker && (
-              <View style={styles.workerDetails}>
-                <ListItem
-                  style={{
-                    marginTop: 10,
-                    fontSize: 23,
-                    padding: 10,
-                    paddingLeft: 36,
-                  }}
-                  title={worker.startDay}
-                  secondaryText="Başlangıç Tarihi"
-                />
-                {worker.endDay && (
-                  <ListItem
-                    style={{
-                      marginTop: 30,
-                      fontSize: 23,
-                      padding: 10,
-                      paddingLeft: 36,
-                    }}
-                    title={worker.endDay}
-                    secondaryText="Bitiş Tarihi"
-                  />
+                {selectedWorker === worker && (
+                  <View style={styles.workerDetails}>
+                    <ListItem
+                      style={{
+                        marginTop: 10,
+                        fontSize: 23,
+                        padding: 10,
+                        paddingLeft: 36,
+                      }}
+                      title={worker.startDay}
+                      secondaryText="Başlangıç Tarihi"
+                    />
+                    {worker.endDay && (
+                      <ListItem
+                        style={{
+                          marginTop: 30,
+                          fontSize: 23,
+                          padding: 10,
+                          paddingLeft: 36,
+                        }}
+                        title={worker.endDay}
+                        secondaryText="Bitiş Tarihi"
+                      />
+                    )}
+                    <ListItem
+                      style={{
+                        marginTop: 30,
+                        fontSize: 23,
+                        padding: 10,
+                        paddingLeft: 36,
+                      }}
+                      title={worker.reason}
+                      secondaryText="Sebep"
+                    />
+                    <Button
+                      onPress={handleDelete}
+                      style={styles.workerButton}
+                      title="İZİNİ İPTAL ET"
+                      color="error"
+                    />
+                  </View>
+
                 )}
-                <ListItem
-                  style={{
-                    marginTop: 30,
-                    fontSize: 23,
-                    padding: 10,
-                    paddingLeft: 36,
-                  }}
-                  title={worker.reason}
-                  secondaryText="Sebep"
-                />
-                <Button
-                  onPress={handleDelete}
-                  style={styles.workerButton}
-                  title="İZİNİ İPTAL ET"
-                  color="error"
-                />
+
               </View>
-              
-            )}
-            
-          </View>
-          
-        ))}
-        
+
+            ))
+          }
+        </View>
+      }
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   box: {
-    backgroundColor: "white",
+    backgroundColor: "red",
+
   },
   container: {
     padding: 10,
@@ -155,7 +171,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flexDirection: "row",
     width: "100%",
-    
+
   },
   workerName: {
     fontSize: 19,
@@ -176,6 +192,10 @@ const styles = StyleSheet.create({
     marginLeft: 40,
     marginBottom: 20,
     marginTop: 20,
+  },
+  mainContainer: {
+    overflow: 'scroll',
+    height: Platform.OS === "web" ? 500 : '100%'
   },
 });
 
