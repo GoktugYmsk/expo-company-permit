@@ -1,15 +1,15 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import axios from "axios";
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from "@react-native-material/core";
 
 function SignUp() {
     const [nameWorker, setNameWorker] = useState("");
-    const [lastNameWorker, setLastNameWorker] = useState("");
     const [emailWorker, setEmailWorker] = useState("");
+    const [lastNameWorker, setLastNameWorker] = useState("");
     const [passwordWorker, setPasswordWorker] = useState("");
     const [error, setError] = useState({ firstName: null, lastName: null, email: null, password: null })
 
@@ -55,8 +55,8 @@ function SignUp() {
                         userPassword: passwordWorker,
                     }
                 );
-
                 if (response.status === 200) {
+                    location.reload()
                     navigation.navigate("Login");
                 } else {
                 }

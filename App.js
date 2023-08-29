@@ -1,31 +1,25 @@
 // App.js
-import React, { useEffect } from "react";
-import { Provider, useDispatch, useSelector } from "react-redux";
-import { store } from "./app/store";
+import React from "react";
+import { Platform } from "react-native";
+import { Provider } from "react-redux";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+
+import { store } from "./app/store";
+
 import Login from "./components/login";
 import SignUp from "./components/signUp";
 import Menu from "./components/menu/menu";
 import Home from "./components/menu/home";
 import Profile from "./components/menu/profile";
-import PermissionRequest from "./components/permissionRequest";
-import MyRequest from "./components/permissionRequest/myRequest";
-import Approval from "./components/menu/approval";
 import OffDuty from "./components/menu/off-duty";
-import {
-  Platform,
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
-
+import Approval from "./components/menu/approval";
 import Sidebar from "./components/sidebar/Sidebar";
+import MyRequest from "./components/permissionRequest/myRequest";
+import PermissionRequest from "./components/permissionRequest";
 
 const Stack = createStackNavigator();
-
-
 
 export default function App() {
   if (Platform.OS === "web") {

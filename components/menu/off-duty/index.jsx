@@ -1,28 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
-import { Platform } from "react-native";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { Button, ListItem } from "@react-native-material/core";
+import { View, Platform, Text, TouchableOpacity, StyleSheet, ScrollView, } from "react-native";
 
-import { setWorkerInfo, setWorkerPerReq } from "../../configure";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { ListItem } from "@react-native-material/core";
+
 import api from "../../../intercepter";
-import { useEffect } from "react";
 
 function OffDuty() {
   const [selectedWorker, setSelectedWorker] = useState(null);
   const [regUserList, setRegUserList] = useState([])
 
   const isManager = useSelector((state) => state.management.isManager);
-
-  const dispatch = useDispatch();
-
 
   useEffect(() => {
     api.get(`time-off/getallmanager/${isManager}`)
@@ -34,9 +23,6 @@ function OffDuty() {
       });
   }, []);
 
-
-  // const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
-
   const handleWorkerClick = (worker) => {
     if (selectedWorker === worker) {
       setSelectedWorker(null);
@@ -45,15 +31,11 @@ function OffDuty() {
     }
   };
 
-  // const handleDelete = () => {
-  //   if (selectedWorker) {
-  //     const updatedWorkerInfo = workerPerReq.filter(
-  //       (worker) => worker !== selectedWorker
-  //     );
-  //     dispatch(setWorkerInfo(updatedWorkerInfo));
-  //     dispatch(setWorkerPerReq(updatedWorkerInfo));
-  //   }
-  // };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    return formattedDate;
+  };
 
   return (
     <ScrollView>
@@ -108,7 +90,7 @@ function OffDuty() {
                         padding: 10,
                         paddingLeft: 36,
                       }}
-                      title={worker.startDay}
+                      title={formatDate(worker.startDate)}
                       secondaryText="Başlangıç Tarihi"
                     />
                     {worker.endDay && (
@@ -119,7 +101,7 @@ function OffDuty() {
                           padding: 10,
                           paddingLeft: 36,
                         }}
-                        title={worker.endDay}
+                        title={formatDate(worker.endDate)}
                         secondaryText="Bitiş Tarihi"
                       />
                     )}
@@ -130,21 +112,12 @@ function OffDuty() {
                         padding: 10,
                         paddingLeft: 36,
                       }}
-                      title={worker.reason}
+                      title={worker.description}
                       secondaryText="Sebep"
                     />
-                    <Button
-                      onPress={handleDelete}
-                      style={styles.workerButton}
-                      title="İZİNİ İPTAL ET"
-                      color="error"
-                    />
                   </View>
-
                 )}
-
               </View>
-
             ))
           }
         </View>

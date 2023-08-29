@@ -1,42 +1,29 @@
-import React, { useState, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, } from "react-native";
 import { Platform } from "react-native";
 
 import { Calendar } from "react-native-calendars";
 import { Switch, TextInput, Button } from "@react-native-material/core";
 
-import { setWorkerPerReq, setRegUser } from '../configure';
 import api from "../../intercepter";
 import { useEffect } from 'react';
 
 function PermissionRequest() {
+  const [data, setData] = useState([])
   const [error, setError] = useState('');
+  const [putUsers, setPutUsers] = useState()
   const [sreason, setSreason] = useState('');
   const [checked, setChecked] = useState(false);
+  const [addRequest, setAddRequest] = useState([])
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
-  const [data, setData] = useState([])
-  const [addRequest, setAddRequest] = useState([])
-  const [putUsers, setPutUsers] = useState()
 
 
-  console.log('DATA', data.id)
-
-
-  const dispatch = useDispatch();
   const navigation = useNavigation();
 
   const manager = useSelector((state) => state.management.manager);
-  const regUser = useSelector((state) => state.saveRegUser.regUser);
-  const worker = useSelector((state) => state.workerInfoTotal.worker);
   const idControl = useSelector((state) => state.management.idControl);
 
   const handleStartDate = (e) => {
@@ -50,17 +37,12 @@ function PermissionRequest() {
     setSreason(e);
   };
 
-
-
-
   const startDate = new Date(selectedStartDate);
   const endDate = checked ? new Date(selectedEndDate) : startDate;
   const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
 
 
   useEffect(() => {
-
-    console.log('deneme', addRequest)
 
     api.post('/time-off/add', addRequest)
       .then((response) => {
@@ -70,9 +52,6 @@ function PermissionRequest() {
         console.error(error);
       });
   }, [addRequest]);
-
-
-
 
   useEffect(() => {
     api.get('/users')
@@ -87,13 +66,8 @@ function PermissionRequest() {
   }, [])
 
   const signWorkerId = data.find(item => item.id === idControl);
-  // ramainingDayOff
-  console.log('signWorkerId', signWorkerId)
-
 
   const writeData = data.find(item => item.id === idControl)
-
-  console.log('writeData', writeData)
 
   useEffect(() => {
 
@@ -115,8 +89,6 @@ function PermissionRequest() {
     }
 
   }, [putUsers]);
-
-
 
   const handleSendRequest = () => {
 
@@ -171,8 +143,6 @@ function PermissionRequest() {
           alert("Kullanabileceğiniz max izin 30 gündür");
         } else {
 
-          // dispatch(setRegUser(updatedRegUser));
-
           const newWorkerInfo = {
             employeeId: idControl,
             startDate: selectedStartDate,
@@ -189,7 +159,6 @@ function PermissionRequest() {
     } else if (manager && selectedStartDate) {
       if (data) {
         const isWorkerId = data.find((workerInfo) => workerInfo.id === idControl);
-        // const signWorkerId = regUserList.find((item) => item.id === idControl);
 
         const calculate = signWorkerId.ramainingDayOff - 1
 
@@ -206,7 +175,6 @@ function PermissionRequest() {
               managerId: manager,
             };
             setPutUsers(calculate)
-
             setAddRequest(newWorkerInfo)
 
             navigation.navigate("MyRequest");
@@ -264,7 +232,6 @@ function PermissionRequest() {
 
         setPutUsers(calculate)
         setAddRequest(newWorkerInfo)
-
         navigation.navigate("MyRequest");
       }
     }

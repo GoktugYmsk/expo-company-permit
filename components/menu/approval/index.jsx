@@ -6,22 +6,15 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { Button, ListItem } from "@react-native-material/core";
 
 import api from "../../../intercepter";
-import { setWorkerPerReq, setRegUser } from "../../configure";
 import { useEffect } from "react";
 
 function Approval() {
-  const dispatch = useDispatch();
-
-  const regUser = useSelector((state) => state.saveRegUser.regUser);
-  const idControl = useSelector((state) => state.management.idControl);
-  const isManager = useSelector((state) => state.management.isManager);
-  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
-  const [regUserList, setRegUserList] = useState([])
-  const [managerName, setManagerName] = useState('')
-  const [workerName, setWorkerName] = useState('')
   const [user, setUser] = useState([])
   const [update, setUpdate] = useState('')
+  const [managerName, setManagerName] = useState('')
+  const [regUserList, setRegUserList] = useState([])
 
+  const isManager = useSelector((state) => state.management.isManager);
 
   useEffect(() => {
     api.get(`time-off/getallmanager/${isManager}`)
@@ -55,9 +48,6 @@ function Approval() {
       });
   }, []);
 
-
-
-
   const workerId = regUserList.map(item => item.employeID)
 
   const workerData = regUserList.map(item => {
@@ -65,54 +55,17 @@ function Approval() {
     return userWithSameId;
   });
 
-  console.log('workerData', workerData);
-
-
-
   const isWorkerName = user.find(item => item.id === workerId)
 
-
-
-
   const deneme = user.map((item) => item.id)
-  console.log('deneme', deneme)
-  console.log('USER', user)
-
-
-  useEffect(() => {
-    console.log('isWorkerName', isWorkerName)
-    console.log('regUserList', regUserList)
-  }, [isWorkerName])
-
-
-
-  useEffect(() => {
-
-    if (workerId) {
-      console.log('workerId', workerId);
-      console.log('isWorkerName', isWorkerName)
-    }
-
-  }, [workerId]);
-
 
   const isManagerName = user.find(item => item.id === isManager)
 
-
-  useEffect(() => {
-    console.log('isManagerName', isManagerName)
-  }, [isManagerName])
-
-
   useEffect(() => {
     if (isManagerName || isWorkerName) {
-
       setManagerName(isManagerName.userName)
-      // setWorkerName(isWorkerName.userName)
     }
   }, [isManagerName || regUserList])
-
-
 
   const handleApprovalClick = (index) => {
     const item = regUserList[index];
@@ -131,15 +84,8 @@ function Approval() {
 
   const handleRejectClick = (index) => {
 
-    console.log('INDEX', index)
     const item = regUserList[index];
-
-    // const denemeID = item.map((u) => u.id)
-    console.log('ITEM', item)
-    console.log('ITEMID', item.id)
     const itemID = item.id
-    // console.log('denemeID', denemeID)
-
 
     api.put(`/time-off/updateTimeOff-Rejected/${itemID}`)
       .then((response) => {
@@ -159,14 +105,11 @@ function Approval() {
       });
   };
 
-
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     return formattedDate;
   };
-
 
   return (
     <ScrollView>

@@ -1,14 +1,9 @@
-import { useNavigation } from "@react-navigation/native";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import React from "react";
-import {
-  Platform,
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
 import { useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { View, Text, TouchableOpacity, StyleSheet, } from "react-native";
 
 export default function Sidebar() {
   const navigation = useNavigation();
@@ -25,16 +20,12 @@ export default function Sidebar() {
 
   return (
     <View style={styles.sidebar}>
-      {/* Profil Iconu ve Ad Soyad */}
       <View style={styles.profileContainer}>
         <View style={styles.profile} >
           <Icon style={styles.profileIcon} name="account" size={24} color="white" />
-
           <View style={styles.profileTextArea}>
             <Text style={styles.profileTextTop}>Profil</Text>
-            {/* <Text style={styles.profileText}>{manageName}</Text> */}
           </View>
-
         </View>
         <View style={styles.profileContainerContent}>
           <TouchableOpacity
@@ -96,7 +87,6 @@ export default function Sidebar() {
           </TouchableOpacity>
         </View>
       </View>
-
     </View>
   );
 }
@@ -131,7 +121,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginBottom: 15,
   },
-  // Yeni Stiller
   profile: {
     flexDirection: "row",
     marginTop: 100,
@@ -146,9 +135,6 @@ const styles = StyleSheet.create({
   profileContainerContent: {
     flexDirection: "column",
   },
-
-
-
   profileTextArea: {
     flexDirection: "column",
   },

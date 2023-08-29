@@ -1,30 +1,26 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { ScrollView } from "react-native";
 import { Platform } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Button, ListItem } from "@react-native-material/core";
+
 import api from "../../../intercepter";
-import { StyleSheet, Text, View } from "react-native";
-import { useState } from "react";
-import { useEffect } from "react";
 
 function MyRequest() {
+  const [user, setUser] = useState([])
+  const [isLoading, setIsLoading] = useState(true);
   const [regUserList, setRegUserList] = useState([])
 
   const idControl = useSelector((state) => state.management.idControl);
-  const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState([])
-
-
-  console.log(idControl)
 
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await api.get(`time-off/getallemployee/${idControl}`);
-        console.log('DENEME', response.data);
         setRegUserList(response.data);
         setIsLoading(false);
       } catch (error) {
@@ -46,17 +42,10 @@ function MyRequest() {
     api.get('/users')
       .then((response) => {
         setUser(response.data);
-        console.log('UsersArray', response.data);
       })
       .catch((error) => {
         console.error(error);
       });
-    const deneme = regUserList.find((item) => item.managerID)
-
-    console.log('denemeGöktuğ', deneme)
-
-    const isManagerName = user.find((item) => item.id === deneme.managerID);
-    console.log('isManagerName', isManagerName);
   }, [isLoading, regUserList]);
 
 
@@ -65,8 +54,6 @@ function MyRequest() {
     const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     return formattedDate;
   };
-
-
   const isManagerName = user.find((item) => item.id === regUserList.managerID)
 
   return (
@@ -82,7 +69,6 @@ function MyRequest() {
                 <View key={index}>
                   {console.log('regUserListItem', item)}
                   {item.employeID === idControl && (
-
                     < View key={index} >
                       {
                         item.timeOffType === 'Pending' && (
@@ -114,7 +100,6 @@ function MyRequest() {
                               />
                             )}
                             <ListItem title={item.description} secondaryText="sebep" />
-                            {/* <ListItem title={isManagerName.userName} secondaryText="yönetici" /> */}
                           </View>
                         )
                       }

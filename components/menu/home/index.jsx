@@ -1,12 +1,10 @@
-import React, { useState, useMemo } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useMemo, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView, Platform } from "react-native";
 
+import api from "../../../intercepter";
 import Accordion from "../../UI/Accordion";
 import { Calendar } from "react-native-calendars";
 import { Button, ListItem } from "@react-native-material/core";
-import { useEffect } from "react";
-import api from "../../../intercepter";
 function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [permitsOnCalendar, setPermitsOnCalendar] = useState([]);
@@ -15,13 +13,10 @@ function Home() {
 
   const formattedSelectedDate = selectedDate.toISOString().split("T")[0];
 
-  console.log('formattedSelectedDate', formattedSelectedDate)
-
   useEffect(() => {
     api.get(`/time-off/getallaccept/${formattedSelectedDate} `)
       .then((response) => {
         setRegUserList(response.data);
-        console.log('CALENDARDATE', response)
       })
       .catch((error) => {
         console.error(error);
@@ -62,7 +57,6 @@ function Home() {
       setMarkedDates({});
     }
   }
-
 
   const marked = useMemo(() => ({
     [formattedSelectedDate]: {

@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
+import axios from 'axios';
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from "@react-native-material/core";
-import axios from 'axios';
+
 import api from '../../intercepter';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { setIdControl, setIsManager } from '../configure';
 
 function Login() {
@@ -17,7 +17,7 @@ function Login() {
     const [user, setUser] = useState([])
 
     const dispatch = useDispatch()
-
+    const navigation = useNavigation();
 
     useEffect(() => {
         api.get('/users')
@@ -30,40 +30,14 @@ function Login() {
             });
     }, []);
 
-    api.put('/users')
-        .then((response) => {
-            setUser(response.data);
-            console.log('UsersArray', response)
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-
-
-
-    // useEffect(() => {
-
-    //     axios.get('https://time-off-tracker-api-4a95404d0134.herokuapp.com/users')
-    //         .then((response) => {
-    //             setUser(response.data);
-    //             console.log('GÖKTUĞ', response)
-    //         })
-    //         .catch((error) => {
-    //             console.error(error);
-    //         });
-    // }, [email]);
-
-
-
-    const navigation = useNavigation();
 
     const handleClick = async () => {
 
         try {
             const response = await axios.post('https://time-off-tracker-api-4a95404d0134.herokuapp.com/auth/login',
                 {
-                    userEmail: email,
-                    userPassword: password,
+                    email: email,
+                    password: password,
                 });
 
             if (response.data.token) {
@@ -90,34 +64,9 @@ function Login() {
         } catch (error) { alert('Hata Giriş yapılırken bir hata oluştu.'); }
     };
 
-
-
-    // const getTokenFromStorage = async () => {
-    //     try {
-    //         const token = await AsyncStorage.getItem('userToken');
-    //         return token;
-    //     } catch (error) {
-    //         return null;
-    //     }
-    // };
-
-
-    // const checkToken = async () => {
-    //     const token = await getTokenFromStorage();
-
-    //     if (token) {
-    //         navigation.navigate('Home');
-    //     } else {
-    //         navigation.navigate('Login');
-    //     }
-    // };
-
-
-
     const handleClickSignup = () => {
         navigation.navigate('SignUp');
     };
-
 
     return (
         <View style={styles.container}>

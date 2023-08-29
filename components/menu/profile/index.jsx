@@ -38,14 +38,21 @@ function Profile() {
   const isAdmin = manageName !== "";
 
   useEffect(() => {
-    api.get('/users')
-      .then((response) => {
+    const fetchDataWithDelay = async () => {
+      try {
+        await new Promise(resolve => setTimeout(resolve, 3000));  // 3 saniye gecikme
+        const response = await api.get('/users');
+        console.log('response', response);
         setRegUserList(response.data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(error);
-      });
+      }
+      console.log('IdControl', idControl)
+    };
+
+    fetchDataWithDelay();
   }, []);
+
 
   const handleRequestClick = () => {
     if (manager) {
@@ -62,7 +69,7 @@ function Profile() {
     switch (managerName) {
       case 'Selin':
         setSelectedManager(managerName)
-        dispatch(setManager(11));
+        dispatch(setManager(38));
         break;
       case 'Tolga':
         setSelectedManager(managerName)
@@ -102,7 +109,7 @@ function Profile() {
                 <View key={key}>
                   {item.id === idControl && (
                     <View style={styles.profileContent}>
-                      {!manageName && (
+                      {manageName && (
                         <View>
                           <Text>{item.userName}</Text>
                           <Text style={{ color: "gray", fontSize: 14 }}>
@@ -114,7 +121,7 @@ function Profile() {
                                 fontWeight: "bold",
                               }}
                             >
-                              {" "}
+                              {console.log('Bu bir Deneme Mesajıdır')}
                               {new Date(item.userCreateDate).toLocaleDateString('tr-TR')}
                             </Text>
                           </Text>
@@ -215,7 +222,7 @@ function Profile() {
               />
             </View>
           </Provider>
-          {!isAdmin && (
+          {isAdmin && (
             <>
               {isWorkerPermit && (
                 <Button
