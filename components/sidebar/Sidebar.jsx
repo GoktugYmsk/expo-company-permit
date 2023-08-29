@@ -1,21 +1,15 @@
-import { useNavigation } from "@react-navigation/native";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import React from "react";
-import {
-  Platform,
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
 import { useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { View, Text, TouchableOpacity, StyleSheet, } from "react-native";
 
 export default function Sidebar() {
   const navigation = useNavigation();
 
   const manager = useSelector((state) => state.management.manager);
-  const worker = useSelector((state) => state.workerInfoTotal.worker);
-  const manageName = useSelector((state) => state.management.manageName);
+  const isManager = useSelector((state) => state.management.isManager);
 
   function checkManager(page) {
     if (manager) {
@@ -27,16 +21,12 @@ export default function Sidebar() {
 
   return (
     <View style={styles.sidebar}>
-      {/* Profil Iconu ve Ad Soyad */}
       <View style={styles.profileContainer}>
         <View style={styles.profile} >
           <Icon style={styles.profileIcon} name="account" size={24} color="white" />
-
           <View style={styles.profileTextArea}>
             <Text style={styles.profileTextTop}>Profil</Text>
-            <Text style={styles.profileText}>{manageName}</Text>
           </View>
-
         </View>
         <View style={styles.profileContainerContent}>
           <TouchableOpacity
@@ -53,21 +43,25 @@ export default function Sidebar() {
             <Text style={styles.sidebarItem}>Profil</Text>
             <Icon style={styles.sidebarIcon} name="account" size={23} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.sidebarContainer}
-            onPress={() => checkManager("MyRequest")}
-          >
-            <Text style={styles.sidebarItem}>İzinlerim</Text>
-            <Icon style={styles.sidebarIcon} name="clock" size={23} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.sidebarContainer}
-            onPress={() => checkManager("PerRequest")}
-          >
-            <Text style={styles.sidebarItem}>İzin Alma Formu</Text>
-            <Icon style={styles.sidebarIcon} name="thumb-up" size={23} />
-          </TouchableOpacity>
-          {manageName && (
+          {!isManager &&
+            <TouchableOpacity
+              style={styles.sidebarContainer}
+              onPress={() => checkManager("MyRequest")}
+            >
+              <Text style={styles.sidebarItem}>İzinlerim</Text>
+              <Icon style={styles.sidebarIcon} name="clock" size={23} />
+            </TouchableOpacity>
+          }
+          {!isManager &&
+            <TouchableOpacity
+              style={styles.sidebarContainer}
+              onPress={() => checkManager("PerRequest")}
+            >
+              <Text style={styles.sidebarItem}>İzin Alma Formu</Text>
+              <Icon style={styles.sidebarIcon} name="thumb-up" size={23} />
+            </TouchableOpacity>
+          }
+          {isManager && (
             <TouchableOpacity
               style={styles.sidebarContainer}
               onPress={() => navigation.navigate("Approval")}
@@ -76,7 +70,7 @@ export default function Sidebar() {
               <Icon style={styles.sidebarIcon} name="progress-clock" size={23} />
             </TouchableOpacity>
           )}
-          {manageName && (
+          {isManager && (
             <TouchableOpacity
               style={styles.sidebarContainer}
               onPress={() => navigation.navigate("OffDuty")}
@@ -94,7 +88,6 @@ export default function Sidebar() {
           </TouchableOpacity>
         </View>
       </View>
-
     </View>
   );
 }
@@ -129,7 +122,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginBottom: 15,
   },
-  // Yeni Stiller
   profile: {
     flexDirection: "row",
     marginTop: 100,
@@ -144,9 +136,6 @@ const styles = StyleSheet.create({
   profileContainerContent: {
     flexDirection: "column",
   },
-
-
-
   profileTextArea: {
     flexDirection: "column",
   },

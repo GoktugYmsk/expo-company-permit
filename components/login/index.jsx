@@ -1,139 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
+import axios from 'axios';
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from "@react-native-material/core";
 
-import { useDispatch, useSelector } from 'react-redux';
-import { setManageName, setManager, setWorker, setIdControl, setReason, setStartDay, setEndDay, setWorkerInfo, setWorkerPerReq, setRegUser } from '../configure';
-import { db } from '../../firebase';
-import { collection, getDocs } from 'firebase/firestore';
-import { useEffect } from 'react';
+import api from '../../intercepter';
+import { setIdControl, setIsManager } from '../configure';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [regUserList, setRegUserList] = useState([]);
+    const [user, setUser] = useState([])
 
     const dispatch = useDispatch()
-
-    const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq) || [];
-
-    useEffect(() => {
-        console.log('DENEME', workerPerReq)
-    }, [])
-
     const navigation = useNavigation();
 
-    const validManagement = [
-        { name: 'Bora', email: 'bora@example.com', password: '123456' },
-        { name: 'Hakan', email: 'hakan@example.com', password: '123456' },
-        { name: 'Aydın', email: 'Aydın', password: '1' },
-        { name: 'Gökhan', email: 'Gökhan', password: '1' },
-    ];
-
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const regUserCollection = collection(db, 'regUser');
-                const snapshot = await getDocs(regUserCollection);
-                const regUserListData = snapshot.docs.map((doc) => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
-                console.log('ANKARA', regUserListData);
-
-                setRegUserList(regUserListData);
-                dispatch(setRegUser(regUserListData))
-            } catch (error) {
-                console.error('Hatalı veri alınırken: ', error);
-            }
-        };
-
-        fetchData();
-    }, [email]);
-
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const regUserCollection = collection(db, 'workerPerReq');
-                const snapshot = await getDocs(regUserCollection);
-                const regUserListData = snapshot.docs.map((doc) => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
-                console.log('ANKARA', regUserListData);
-                dispatch(setWorkerPerReq(regUserListData))
-            } catch (error) {
-                console.error('Hatalı veri alınırken: ', error);
-            }
-        };
-        fetchData();
+        api.get('/users')
+            .then((response) => {
+                setUser(response.data);
+                console.log('UsersArray', response)
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }, []);
 
 
-    const handleClick = () => {
-        const isValidWorker = regUserList.find(worker => worker.name === username);
-        const isValidManagement = validManagement.find(manager => manager.name === username);
+    const handleClick = async () => {
 
-        if (isValidWorker) {
-            const matchedUser = regUser.find(worker => worker.name === username && worker.email === email);
+        try {
+            const response = await axios.post('https://time-off-tracker-api-4a95404d0134.herokuapp.com/auth/login',
+                {
+                    email: email,
+                    password: password,
+                });
 
-            if (matchedUser && matchedUser.password === password) {
-                dispatch(setWorker(username));
-                dispatch(setManageName(''));
-                dispatch(setManager(''));
-                dispatch(setIdControl(isValidWorker.id))
-                setEmail('')
-                setPassword('')
-                setUsername('')
-                navigation.navigate('Menu');
-            }
-            else {
-                alert("Giriş Bilgileri Hatalı");
-            }
+            if (response.data.token) {
+                localStorage.setItem('userToken', response.data.token);
+                if (localStorage.getItem('userToken')) {
 
-        } else if (isValidManagement && isValidManagement.password === password) {
-            dispatch(setManageName(username));
-            setEmail('')
-            setPassword('')
-            setUsername('')
-            navigation.navigate('Menu');
-        } else {
-            alert("Çalışan bulunamadı");
-        }
+                    const isUser = user.find(u => u.userEmail === email);
+
+                    setEmail('')
+                    setPassword('')
+
+                    if (isUser.userRole === 'Manager') {
+                        dispatch(setIsManager(isUser.id))
+                        dispatch(setIdControl(isUser.id));
+                        navigation.navigate('Home');
+                    }
+                    else if (isUser.userRole === 'Employee') {
+                        dispatch(setIsManager(''))
+                        dispatch(setIdControl(isUser.id));
+                        navigation.navigate('Home');
+                    }
+                }
+            } else { alert('Hata Giriş yapılamadı. Kullanıcı adı veya şifre hatalı.'); }
+        } catch (error) { alert('Hata Giriş yapılırken bir hata oluştu.'); }
     };
-
-
-    // const getTokenFromStorage = async () => {
-    //     try {
-    //         const token = await AsyncStorage.getItem('userToken');
-    //         return token;
-    //     } catch (error) {
-    //         return null;
-    //     }
-    // };
-
-
-    // const checkToken = async () => {
-    //     const token = await getTokenFromStorage();
-
-    //     if (token) {
-    //         navigation.navigate('Home');
-    //     } else {
-    //         navigation.navigate('Login');
-    //     }
-    // };
-
-
 
     const handleClickSignup = () => {
         navigation.navigate('SignUp');
     };
-
 
     return (
         <View style={styles.container}>

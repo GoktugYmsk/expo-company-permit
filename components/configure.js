@@ -5,7 +5,7 @@ const initialState = {
     startDay: [],
     endDay: [],
     manager: '',
-    manageName: '',
+    isManager: '',
     worker: [],
     workerInfo: [],
     workerPerReq: [],
@@ -34,8 +34,8 @@ export const configure = createSlice({
         setManager: (state, action) => {
             state.manager = action.payload;
         },
-        setManageName: (state, action) => {
-            state.manageName = action.payload;
+        setIsManager: (state, action) => {
+            state.isManager = action.payload;
         },
         setWorker: (state, action) => {
             state.worker = action.payload;
@@ -67,6 +67,6 @@ export const configure = createSlice({
     }
 })
 
-export const { setPassengerAmount, setReason, setStartDay, setEndDay, setManager, setManageName, setWorker, setWorkerInfo, setWorkerPerReq, setAllPermits, setIsWorkerPermit, setHamburgerActive, setRegUser, setIdControl, setDeneme } = configure.actions
+export const { setPassengerAmount, setReason, setStartDay, setEndDay, setManager, setIsManager, setWorker, setWorkerInfo, setWorkerPerReq, setAllPermits, setIsWorkerPermit, setHamburgerActive, setRegUser, setIdControl, setDeneme } = configure.actions
 
 export default configure.reducer;

@@ -3,9 +3,6 @@ import { Platform, StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
-
-import axios from 'axios';
-
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import {
   Provider,
@@ -17,6 +14,7 @@ import {
   Text,
   ListItem,
 } from "@react-native-material/core";
+import api from "../../../intercepter";
 
 import { setManager } from "../../configure";
 import { collection, getDocs } from "@firebase/firestore";
@@ -26,7 +24,8 @@ import { useEffect } from "react";
 function Profile() {
   const [visible, setVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [regUserList, setRegUserList] = useState([]);
+  const [selectedManager, setSelectedManager] = useState('')
+  const [regUserList, setRegUserList] = useState([])
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -63,7 +62,21 @@ function Profile() {
 
   const isAdmin = manageName !== "";
 
+  useEffect(() => {
+    const fetchDataWithDelay = async () => {
+      try {
+        await new Promise(resolve => setTimeout(resolve, 3000));  // 3 saniye gecikme
+        const response = await api.get('/users');
+        console.log('response', response);
+        setRegUserList(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+      console.log('IdControl', idControl)
+    };
 
+    fetchDataWithDelay();
+  }, []);
 
 
   const handleRequestClick = () => {
@@ -76,11 +89,31 @@ function Profile() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+
   const handleSelectManager = (managerName) => {
-    dispatch(setManager(managerName));
+    switch (managerName) {
+      case 'Selin':
+        setSelectedManager(managerName)
+        dispatch(setManager(38));
+        break;
+      case 'Tolga':
+        setSelectedManager(managerName)
+        dispatch(setManager(7));
+        break;
+      case 'Aydın':
+        setSelectedManager(managerName)
+        dispatch(setManager(2));
+        break;
+      case 'Hakan':
+        setSelectedManager(managerName)
+        dispatch(setManager(3));
+        break;
+      default:
+        break;
+    }
   };
 
-  const managers = ["Bora", "Gökhan", "Aydın", "Hakan"];
+  const managers = ["Selin", "Tolga", "Aydın", "Hakan"];
 
   return (
     <View>
@@ -95,14 +128,15 @@ function Profile() {
                 <Text style={{ fontSize: 25 }} variant="h6">
                   Adı Soyadı
                 </Text>
-                {manageName ? <Text>{manageName}</Text> : <Text>{worker}</Text>}
+                {/* {manageName ? <Text>{manageName}</Text> : <Text>{regUserList.userName}</Text>} */}
               </View>
               {regUserList.map((item, key) => (
                 <View key={key}>
                   {item.id === idControl && (
                     <View style={styles.profileContent}>
-                      {!manageName && (
+                      {manageName && (
                         <View>
+                          <Text>{item.userName}</Text>
                           <Text style={{ color: "gray", fontSize: 14 }}>
                             İşe Başlama Tarihi :
                             <Text
@@ -112,8 +146,8 @@ function Profile() {
                                 fontWeight: "bold",
                               }}
                             >
-                              {" "}
-                              {item.startDate}
+                              {console.log('Bu bir Deneme Mesajıdır')}
+                              {new Date(item.userCreateDate).toLocaleDateString('tr-TR')}
                             </Text>
                           </Text>
                           <Text style={{ color: "gray", fontSize: 14 }}>
@@ -126,7 +160,7 @@ function Profile() {
                               }}
                             >
                               {" "}
-                              {item.perDateTotal}
+                              {item.ramainingDayOff}
                             </Text>
                           </Text>
                         </View>
@@ -137,18 +171,6 @@ function Profile() {
               ))}
             </View>
           </View>
-          {deneme &&
-            <View>
-              {deneme.firstName}
-              {deneme.role}
-            </View>
-          }
-          {denemeTime &&
-
-            <View>
-              <Text>Burada yazacak</Text> {denemeTime.description}
-            </View>
-          }
           <Text
             style={{
               marginTop: 30,
@@ -221,11 +243,11 @@ function Profile() {
               <Button
                 style={{ marginLeft: 36, marginRight: 36 }}
                 variant="outlined"
-                title={`${manager}`}
+                title={`${selectedManager}`}
               />
             </View>
           </Provider>
-          {!isAdmin && (
+          {isAdmin && (
             <>
               {isWorkerPermit && (
                 <Button

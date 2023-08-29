@@ -51,6 +51,18 @@ function Menu() {
     }
   };
 
+  const handleLogoutClick = async () => {
+
+    sessionStorage.removeItem('userToken')
+    navigation.navigate('Login')
+
+    // try {
+    //   await AsyncStorage.removeItem('userToken'); // Tokenı sil
+    //   navigation.navigate('Login'); // Login sayfasına yönlendir
+    // } catch (error) {
+    // }
+  };
+
 
 
   const handleProfileClick = () => {

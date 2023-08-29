@@ -1,179 +1,156 @@
-import React from "react";
+import React, { useState } from "react";
 import { Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 
 import { Button, ListItem } from "@react-native-material/core";
 
-import { setWorkerPerReq, setRegUser } from "../../configure";
-import { doc, updateDoc } from "@firebase/firestore";
-import { db } from "../../../firebase";
+import api from "../../../intercepter";
+import { useEffect } from "react";
 
 function Approval() {
-  const dispatch = useDispatch();
+  const [user, setUser] = useState([])
+  const [update, setUpdate] = useState('')
+  const [managerName, setManagerName] = useState('')
+  const [regUserList, setRegUserList] = useState([])
 
-  const regUser = useSelector((state) => state.saveRegUser.regUser);
-  const idControl = useSelector((state) => state.management.idControl);
-  const manageName = useSelector((state) => state.management.manageName);
-  const workerPerReq = useSelector(
-    (state) => state.workerInfoTotal.workerPerReq
-  );
+  const isManager = useSelector((state) => state.management.isManager);
 
-  const isAdmin = manageName !== "";
+  useEffect(() => {
+    api.get(`time-off/getallmanager/${isManager}`)
+      .then((response) => {
+        setRegUserList(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
+  useEffect(() => {
+    api.get(`time-off/getallmanager/${isManager}`)
+      .then((response) => {
+        setRegUserList(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-  const handleApprovalClick = async (index) => {
-    if (isAdmin && index >= 0 && index < workerPerReq.length) {
-      const approvedWorker = workerPerReq[index];
+  }, [update]);
 
-      const isWorkerAlreadyExists = workerPerReq.includes(
-        (worker) => worker.id === approvedWorker.id
-      );
+  useEffect(() => {
+    api.get('/users')
+      .then((response) => {
+        setUser(response.data);
+        console.log('UsersArray', response.data)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
-      if (!isWorkerAlreadyExists) {
-        const newWorkerInfo = {
-          name: approvedWorker.name,
-          startDay: approvedWorker.startDay,
-          endDay: approvedWorker.endDay,
-          reason: approvedWorker.reason,
-          manager: approvedWorker.manager,
-          id: idControl,
-          accept: true,
-        };
+  const workerId = regUserList.map(item => item.employeID)
 
-        try {
-          await updateDoc(doc(db, "workerPerReq", approvedWorker.id), newWorkerInfo);
-          dispatch(
-            setWorkerPerReq(
-              workerPerReq.map((worker, i) =>
-                i === index ? newWorkerInfo : worker
-              )
-            )
-          );
-        } catch (error) {
-          console.error("Veri güncellenirken hata oluştu: ", error);
-        }
-      }
+  const workerData = regUserList.map(item => {
+    const userWithSameId = user.find(u => u.id === item.employeID);
+    return userWithSameId;
+  });
+
+  const isWorkerName = user.find(item => item.id === workerId)
+
+  const deneme = user.map((item) => item.id)
+
+  const isManagerName = user.find(item => item.id === isManager)
+
+  useEffect(() => {
+    if (isManagerName || isWorkerName) {
+      setManagerName(isManagerName.userName)
     }
+  }, [isManagerName || regUserList])
+
+  const handleApprovalClick = (index) => {
+    const item = regUserList[index];
+    const itemID = item.id
+
+    api.put(`/time-off/updateTimeOff-Accept/${itemID}`)
+      .then((response) => {
+        setUpdate(response)
+        console.log('UsersArray', response)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
   };
 
-  const handleRejectClick = async (index) => {
-    if (isAdmin && index >= 0 && index < workerPerReq.length) {
-      const approvedWorker = workerPerReq[index];
+  const handleRejectClick = (index) => {
 
-      const starttDay = approvedWorker.startDay;
-      const enddDay = approvedWorker.endDay;
+    const item = regUserList[index];
+    const itemID = item.id
 
-      const isWorkerAlreadyExists = workerPerReq.includes(
-        (worker) => worker.id === approvedWorker.id
-      );
+    api.put(`/time-off/updateTimeOff-Rejected/${itemID}`)
+      .then((response) => {
+        setUpdate(response)
+        console.log('UsersArray', response)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-      if (!isWorkerAlreadyExists) {
-        const newWorkerInfo = {
-          name: approvedWorker.name,
-          startDay: approvedWorker.startDay,
-          endDay: approvedWorker.endDay,
-          reason: approvedWorker.reason,
-          manager: approvedWorker.manager,
-          accept: false,
-        };
+    api.get(`time-off/getallmanager/${isManager}`)
+      .then((response) => {
+        setRegUserList(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
-        const startDate = new Date(newWorkerInfo.startDay);
-        const endDate = new Date(newWorkerInfo.endDay);
-
-        if (starttDay && enddDay) {
-          const daysDifference = Math.ceil(
-            (endDate - startDate) / (1000 * 60 * 60 * 24)
-          );
-
-          const updatedRegUser = regUser.map((user) => {
-            if (user.id === idControl) {
-              const calculate = user.perDateTotal + daysDifference;
-              return { ...user, perDateTotal: calculate };
-            }
-            return user;
-          });
-
-          try {
-            await updateDoc(doc(db, "workerPerReq", approvedWorker.id), newWorkerInfo);
-            dispatch(
-              setWorkerPerReq(
-                workerPerReq.map((worker, i) =>
-                  i === index ? newWorkerInfo : worker
-                )
-              )
-            );
-            dispatch(setRegUser(updatedRegUser));
-          } catch (error) {
-            console.error("Veri güncellenirken hata oluştu: ", error);
-          }
-        } else if (starttDay) {
-          const updatedRegUser = regUser.map((user) => {
-            if (user.id === idControl) {
-              const calculate = user.perDateTotal + 1;
-              return { ...user, perDateTotal: calculate };
-            }
-            return user;
-          });
-
-          try {
-            await updateDoc(doc(db, "workerPerReq", approvedWorker.id), newWorkerInfo);
-            dispatch(
-              setWorkerPerReq(
-                workerPerReq.map((worker, i) =>
-                  i === index ? newWorkerInfo : worker
-                )
-              )
-            );
-            dispatch(setRegUser(updatedRegUser));
-          } catch (error) {
-            console.error("Veri güncellenirken hata oluştu: ", error);
-          }
-        }
-      }
-    }
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    return formattedDate;
   };
 
   return (
     <ScrollView>
       <View>
-        {isAdmin && (
+        {isManager && (
           <View style={styles.mainContainer}>
             <View style={styles.header}>
               <Text style={styles.headerText}>Onay Bekleyen İzinler</Text>
             </View>
-            {workerPerReq &&
-              workerPerReq.some((item) => item.accept === null) ? (
-              workerPerReq.map((item, index) => (
+            {regUserList &&
+              regUserList.some((item) => item.timeOffType === 'Pending') ? (
+              regUserList.map((item, index) => (
                 <View key={index}>
-                  {item.manager === manageName && (
+                  {item.managerID === isManager && (
                     <View>
-                      {item.accept === null ? (
+                      {item.timeOffType === 'Pending' ? (
                         <View style={styles.container} key={index}>
                           <View style={styles.permitTextContainer}>
-                            <ListItem title={item.name} secondaryText="İsim" />
+                            <ListItem title={item.employeeName} secondaryText="İsim" />
                           </View>
                           <View style={styles.permitTextContainer}>
                             <ListItem
-                              title={item.startDay}
+                              title={formatDate(item.startDate)}
                               secondaryText="Başlangıç Tarihi"
                             />
                           </View>
                           <View style={styles.permitTextContainer}>
                             <ListItem
-                              title={item.endDay}
+                              title={formatDate(item.endDate)}
                               secondaryText="Bitiş Tarihi"
                             />
                           </View>
                           <View style={styles.permitTextContainer}>
                             <ListItem
-                              title={item.reason}
+                              title={item.description}
                               secondaryText="Sebep"
                             />
                           </View>
                           <View style={styles.permitTextContainer}>
                             <ListItem
-                              title={item.manager}
+                              title={managerName}
                               secondaryText="Yönetici"
                             />
                           </View>
@@ -210,7 +187,7 @@ function Approval() {
             )}
           </View>
         )}
-        {!isAdmin && (
+        {!isManager && (
           <Button
             title="İzinleri onaylama yetkiniz yok."
             variant="outlined"

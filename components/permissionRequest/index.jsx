@@ -1,38 +1,32 @@
-import React, { useState, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, } from "react-native";
 import { Platform } from "react-native";
 
 import { Calendar } from "react-native-calendars";
 import { Switch, TextInput, Button } from "@react-native-material/core";
 
-import { setWorkerPerReq, setRegUser } from '../configure';
+import api from "../../intercepter";
 import { useEffect } from 'react';
 import { collection, getDocs } from "@firebase/firestore";
 import { db } from "../../firebase";
 
 function PermissionRequest() {
+  const [data, setData] = useState([])
   const [error, setError] = useState('');
+  const [putUsers, setPutUsers] = useState()
   const [sreason, setSreason] = useState('');
   const [checked, setChecked] = useState(false);
+  const [addRequest, setAddRequest] = useState([])
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
 
-  const dispatch = useDispatch();
+
   const navigation = useNavigation();
 
   const manager = useSelector((state) => state.management.manager);
-  const regUser = useSelector((state) => state.saveRegUser.regUser);
-  const worker = useSelector((state) => state.workerInfoTotal.worker);
   const idControl = useSelector((state) => state.management.idControl);
-  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq) || [];
 
   const handleStartDate = (e) => {
     setSelectedStartDate(e);
@@ -45,186 +39,145 @@ function PermissionRequest() {
     setSreason(e);
   };
 
-  const signWorkerId = regUser.find(item => item.id === idControl);
-
   const startDate = new Date(selectedStartDate);
   const endDate = checked ? new Date(selectedEndDate) : startDate;
   const daysDifference = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const regUserCollection = collection(db, 'regUser');
-        const snapshot = await getDocs(regUserCollection);
-        const regUserListData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        console.log('ANKARA', regUserListData);
-
-        setRegUserList(regUserListData);
-      } catch (error) {
-        console.error('Hatalı veri alınırken: ', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const regUserCollection = collection(db, 'workerPerReq');
-        const snapshot = await getDocs(regUserCollection);
-        const regUserListData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        console.log('ANKARA', regUserListData);
-        setFireWorkerPer(regUserListData);
-      } catch (error) {
-        console.error('Hatalı veri alınırken: ', error);
-      }
-    };
-    fetchData();
-  }, []);
 
+    api.post('/time-off/add', addRequest)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [addRequest]);
+
+  useEffect(() => {
+    api.get('/users')
+      .then((response) => {
+        setData(response.data)
+        console.log(response.data);
+      })
+      .catch((error) => {
+
+        console.error(error);
+      });
+  }, [])
+
+  const signWorkerId = data.find(item => item.id === idControl);
+
+  const writeData = data.find(item => item.id === idControl)
+
+  useEffect(() => {
+
+
+    if (writeData) {
+      const updateUserRemainingDayOff = async () => {
+        console.log('İzmir', putUsers);
+        try {
+          const response = await api.put('/users/update ', {
+            ramainingDayOff: putUsers,
+          });
+
+          console.log('İzmir', response.data);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      updateUserRemainingDayOff();
+    }
+
+  }, [putUsers]);
 
   const handleSendRequest = () => {
 
     if (manager && selectedStartDate && selectedEndDate) {
-      if (fireWorkerPer) {
-        const isWorkerId = fireWorkerPer.find(
-          (workerInfo) => workerInfo.id === idControl
-        );
-        const signWorkerId = regUserList.find((item) => item.id === idControl);
+      if (data) {
+        const isWorkerId = data.find((workerInfo) => workerInfo.id === idControl);
+        // const signWorkerId = regUserList.find((item) => item.id === idControl);
 
-        const calculate = signWorkerId.perDateTotal - daysDifference - 1;
+        const calculate = signWorkerId.ramainingDayOff - daysDifference - 1;
 
         if (isWorkerId) {
           if (calculate < 0) {
             alert('Kullanabileceğiniz max izin 30 gündür');
           } else {
-            setFireCalculate(calculate)
 
             const newWorkerInfo = {
-              name: worker,
-              startDay: selectedStartDate,
-              endDay: selectedEndDate,
-              reason: sreason,
-              manager: manager,
-              accept: null,
-              id: idControl,
+              employeeId: idControl,
+              startDate: selectedStartDate,
+              endDate: selectedEndDate,
+              description: sreason,
+              managerId: manager,
             };
-
-            const workersCollectionRef = collection(db, "workerPerReq");
-            addDoc(workersCollectionRef, newWorkerInfo)
-              .then(() => {
-                console.log("Veri başarıyla Firestore'a eklendi.");
-              })
-              .catch((error) => {
-                console.error("Veri eklenirken hata oluştu: ", error);
-              });
-
+            setPutUsers(calculate)
+            setAddRequest(newWorkerInfo)
             navigation.navigate("MyRequest");
           }
+
         } else {
           if (calculate < 0) {
             alert("Kullanabileceğiniz max izin 30 gündür");
           } else {
-            setFireCalculate(calculate)
 
             const newWorkerInfo = {
-              name: worker,
-              startDay: selectedStartDate,
-              endDay: selectedEndDate,
-              reason: sreason,
-              manager: manager,
-              accept: null,
-              id: idControl,
+              employeeId: idControl,
+              startDate: selectedStartDate,
+              endDate: selectedEndDate,
+              description: sreason,
+              managerId: manager,
             };
-
-            const workersCollectionRef = collection(db, "workerPerReq");
-            addDoc(workersCollectionRef, newWorkerInfo)
-              .then(() => {
-                console.log("Veri başarıyla Firestore'a eklendi.");
-              })
-              .catch((error) => {
-                console.error("Veri eklenirken hata oluştu: ", error);
-              });
+            setPutUsers(calculate)
+            setAddRequest(newWorkerInfo)
 
             navigation.navigate("MyRequest");
           }
         }
       } else {
 
-        const calculate = signWorkerId.perDateTotal - daysDifference - 1;
+        const calculate = signWorkerId.ramainingDayOff - daysDifference - 1;
+
 
         if (calculate < 0) {
           alert("Kullanabileceğiniz max izin 30 gündür");
         } else {
-          setFireCalculate(calculate)
-
-          dispatch(setRegUser(updatedRegUser));
 
           const newWorkerInfo = {
-            name: worker,
-            startDay: selectedStartDate,
-            endDay: selectedEndDate,
-            reason: sreason,
-            manager: manager,
-            accept: null,
-            id: idControl,
+            employeeId: idControl,
+            startDate: selectedStartDate,
+            endDate: selectedEndDate,
+            description: sreason,
+            managerId: manager,
           };
+          setPutUsers(calculate)
+          setAddRequest(newWorkerInfo)
 
-          const workersCollectionRef = collection(db, "workerPerReq");
-          addDoc(workersCollectionRef, newWorkerInfo)
-            .then(() => {
-              console.log("Veri başarıyla Firestore'a eklendi.");
-            })
-            .catch((error) => {
-              console.error("Veri eklenirken hata oluştu: ", error);
-            });
-
-          // dispatch(setWorkerPerReq([newWorkerInfo]));
           navigation.navigate("MyRequest");
         }
       }
     } else if (manager && selectedStartDate) {
-      if (fireWorkerPer) {
-        const isWorkerId = fireWorkerPer.find(
-          (workerInfo) => workerInfo.id === idControl
-        );
-        const signWorkerId = regUserList.find((item) => item.id === idControl);
+      if (data) {
+        const isWorkerId = data.find((workerInfo) => workerInfo.id === idControl);
 
-        const calculate = signWorkerId.perDateTotal - 1
+        const calculate = signWorkerId.ramainingDayOff - 1
 
         if (isWorkerId) {
           if (calculate < 0) {
             alert("Kullanabileceğiniz max izin 30 gündür");
           } else {
-            setFireCalculate(calculate)
 
             const newWorkerInfo = {
-              name: worker,
-              startDay: selectedStartDate,
-              endDay: selectedEndDate,
-              reason: sreason,
-              manager: manager,
-              accept: null,
-              id: idControl,
+              employeeId: idControl,
+              startDate: selectedStartDate,
+              endDate: selectedStartDate,
+              description: sreason,
+              managerId: manager,
             };
-
-            const workersCollectionRef = collection(db, "workerPerReq");
-            addDoc(workersCollectionRef, newWorkerInfo)
-              .then(() => {
-                console.log("Veri başarıyla Firestore'a eklendi.");
-              })
-              .catch((error) => {
-                console.error("Veri eklenirken hata oluştu: ", error);
-              });
+            setPutUsers(calculate)
+            setAddRequest(newWorkerInfo)
 
             navigation.navigate("MyRequest");
           }
@@ -232,27 +185,16 @@ function PermissionRequest() {
           if (calculate < 0) {
             alert("Kullanabileceğiniz max izin 30 gündür");
           } else {
-            setFireCalculate(calculate)
 
             const newWorkerInfo = {
-              name: worker,
-              startDay: selectedStartDate,
-              endDay: selectedEndDate,
-              reason: sreason,
-              manager: manager,
-              accept: null,
-              id: idControl,
+              employeeId: idControl,
+              startDate: selectedStartDate,
+              endDate: selectedStartDate,
+              description: sreason,
+              managerId: manager,
             };
-
-            const workersCollectionRef = collection(db, "workerPerReq");
-            addDoc(workersCollectionRef, newWorkerInfo)
-              .then(() => {
-                console.log("Veri başarıyla Firestore'a eklendi.");
-              })
-              .catch((error) => {
-                console.error("Veri eklenirken hata oluştu: ", error);
-              });
-
+            setPutUsers(calculate)
+            setAddRequest(newWorkerInfo)
             navigation.navigate("MyRequest");
           }
         }
@@ -261,57 +203,37 @@ function PermissionRequest() {
           alert('Kullanabileceğiniz max izin 30 gündür')
         }
         else {
-          const updatedRegUser = regUser.map(user => {
-            if (user.id === idControl) {
-              const calculate = user.perDateTotal - 1;
-              return { ...user, perDateTotal: calculate };
-            }
-            return user;
-          });
-          dispatch(setRegUser(updatedRegUser));
 
           const newWorkerInfo = {
-            name: worker,
-            startDay: selectedStartDate,
-            endDay: selectedEndDate,
-            reason: sreason,
-            manager: manager,
-            accept: null,
-            id: idControl,
+            employeeId: idControl,
+            startDate: selectedStartDate,
+            endDate: selectedStartDate,
+            description: sreason,
+            managerId: manager,
           };
-          dispatch(setWorkerPerReq([...workerPerReq, newWorkerInfo]));
+          setPutUsers(calculate)
+          setAddRequest(newWorkerInfo)
           navigation.navigate("MyRequest");
         }
       }
     }
     else {
-      const calculate = signWorkerId.perDateTotal - 1
+      const calculate = signWorkerId.ramainingDayOff - 1
 
       if (calculate < 0) {
         alert("Kullanabileceğiniz max izin 30 gündür");
       } else {
-        setFireCalculate(calculate)
 
         const newWorkerInfo = {
-          name: worker,
-          startDay: selectedStartDate,
-          endDay: selectedEndDate,
-          reason: sreason,
-          manager: manager,
-          accept: null,
-          id: idControl,
+          employeeId: idControl,
+          startDate: selectedStartDate,
+          endDate: selectedEndDate,
+          description: sreason,
+          managerId: manager,
         };
 
-        const workersCollectionRef = collection(db, "workerPerReq");
-        addDoc(workersCollectionRef, newWorkerInfo)
-          .then(() => {
-            console.log("Veri başarıyla Firestore'a eklendi.");
-          })
-          .catch((error) => {
-            console.error("Veri eklenirken hata oluştu: ", error);
-          });
-
-        // dispatch(setWorkerPerReq([newWorkerInfo]));
+        setPutUsers(calculate)
+        setAddRequest(newWorkerInfo)
         navigation.navigate("MyRequest");
       }
     }
@@ -365,7 +287,6 @@ function PermissionRequest() {
                 selected={selectedStartDate}
                 monthFormat={"yyyy MMMM"}
                 markingType={"multi-dot"}
-                markedDates={marked1}
               />
             </View>
             {checked && (
@@ -382,7 +303,6 @@ function PermissionRequest() {
                   style={styles.calendar}
                   onDayPress={(day) => handleEndDate(day.dateString)}
                   selected={selectedEndDate}
-                  markedDates={marked2}
                 />
               </View>
             )}

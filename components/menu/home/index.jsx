@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { StyleSheet, Text, View, ScrollView, Platform } from "react-native";
 
+import api from "../../../intercepter";
 import Accordion from "../../UI/Accordion";
 import { Calendar } from "react-native-calendars";
 import { Button, ListItem } from "@react-native-material/core";
@@ -9,23 +9,33 @@ function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [permitsOnCalendar, setPermitsOnCalendar] = useState([]);
   const [markedDates, setMarkedDates] = useState({});
-
-  const workerPerReq = useSelector((state) => state.workerInfoTotal.workerPerReq);
+  const [regUserList, setRegUserList] = useState([])
 
   const formattedSelectedDate = selectedDate.toISOString().split("T")[0];
+
+  useEffect(() => {
+    api.get(`/time-off/getallaccept/${formattedSelectedDate} `)
+      .then((response) => {
+        setRegUserList(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [formattedSelectedDate]);
+
 
   const updatePermitsOnCalendar = (selectedDay) => {
     const newSelectedDate = new Date(selectedDay.dateString);
 
-    if (workerPerReq) {
-      const permitsOnSelectedDate = workerPerReq.filter((user) => {
-        const startDate = new Date(user.startDay);
+    if (regUserList) {
+      const permitsOnSelectedDate = regUserList.filter((user) => {
+        const startDay = new Date(user.startDate);
 
-        if (user.endDay) {
-          const endDate = new Date(user.endDay);
-          return startDate <= newSelectedDate && endDate >= newSelectedDate;
+        if (user.endDate) {
+          const endDate = new Date(user.endDate);
+          return startDay <= newSelectedDate && endDate >= newSelectedDate;
         }
-        return startDate.getTime() === newSelectedDate.getTime();
+        return startDay.getTime() === newSelectedDate.getTime();
       });
       setPermitsOnCalendar(permitsOnSelectedDate);
 
@@ -33,8 +43,8 @@ function Home() {
       const markedDates = {};
 
       permitsOnSelectedDate.forEach((user) => {
-        const startDate = new Date(user.startDay);
-        const endDate = user.endDay ? new Date(user.endDay) : startDate;
+        const startDate = new Date(user.startDate);
+        const endDate = new Date(user.endDate);
         const currentDate = new Date(startDate);
 
         while (currentDate <= endDate) {
@@ -66,7 +76,6 @@ function Home() {
           current={selectedDate}
           onDayPress={updatePermitsOnCalendar}
           monthFormat={"yyyy MMMM"}
-          // markedDates={{ ...marked, ...markedDates }}
           markedDates={markedDates}
           hideExtraDays={false}
         />
@@ -82,17 +91,17 @@ function Home() {
                 content={
                   <View style={styles.permitBoxDown}>
                     <ListItem
-                      title={user.reason}
+                      title={user.description}
                       secondaryText="İzin Sebebi : "
                     />
                     <ListItem
-                      title={user.startDay}
+                      title={user.startDate}
                       secondaryText="Başlangıç Tarihi"
                     />
                     {
                       user.endDay &&
                       <ListItem
-                        title={user.endDay || "Belirtilmemiş"}
+                        title={user.endDate || "Belirtilmemiş"}
                         secondaryText="Bitiş Tarihi "
                       />
                     }

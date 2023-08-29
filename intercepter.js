@@ -1,6 +1,6 @@
 import axios from 'axios';
 const api = axios.create({
-    baseURL: 'http://localhost:8080/',
+    baseURL: 'https://time-off-tracker-api-4a95404d0134.herokuapp.com/',
 });
 
 api.interceptors.request.use(
